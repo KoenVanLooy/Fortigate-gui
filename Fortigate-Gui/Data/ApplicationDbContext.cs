@@ -11,6 +11,7 @@ namespace Fortigate_Gui.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
         }
     }
 }
