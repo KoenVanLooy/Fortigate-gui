@@ -7,7 +7,7 @@ namespace Fortigate_Gui.Models
 {
     public class VPNtunnel
     {
-        public int VPNID { get; set; }
+        public int VPNtunnelID { get; set; }
         public bool TunnelMode { get; set; }
         public bool SplitTunneling { get; set; }
         public string IpPool { get; set; }
