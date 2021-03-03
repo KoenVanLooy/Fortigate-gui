@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Fortigate_Gui.Areas.Identity.Data;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,5 +16,10 @@ namespace Fortigate_Gui.Models
         public string Type { get; set; }
         public ConfigFile Configfile { get; set; }
         public ICollection<ConfigFile> Configfiles { get; set; }
+
+        [ForeignKey("CustomUser")]
+        public string UserID { get; set; }
+        public CustomUser CustomUser { get; set; }
+
     }
 }
