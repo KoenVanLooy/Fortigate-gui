@@ -2,9 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Fortigate_Gui.Areas.Identity.Data;
+using Fortigate_Gui.Data;
+using Fortigate_Gui.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Fortigate_Gui.Areas.Identity.Pages.Account.Manage
@@ -14,15 +17,18 @@ namespace Fortigate_Gui.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<CustomUser> _userManager;
         private readonly SignInManager<CustomUser> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly ApplicationDbContext _context;
 
         public DeletePersonalDataModel(
             UserManager<CustomUser> userManager,
             SignInManager<CustomUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            ILogger<DeletePersonalDataModel> logger,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
         }
 
         [BindProperty]
@@ -66,6 +72,10 @@ namespace Fortigate_Gui.Areas.Identity.Pages.Account.Manage
                     return Page();
                 }
             }
+
+            Customer customer = await _context.Customers.FirstOrDefaultAsync(x => x.UserID == user.Id);
+            _context.Customers.Remove(customer);
+            await _context.SaveChangesAsync();
 
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);

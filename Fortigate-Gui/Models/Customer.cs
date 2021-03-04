@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Fortigate_Gui.Models
@@ -20,6 +21,16 @@ namespace Fortigate_Gui.Models
         [ForeignKey("CustomUser")]
         public string UserID { get; set; }
         public CustomUser CustomUser { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append($"CustomerID: {CustomerID}; ");
+            stringBuilder.Append($"Firstname: {Firstname}; ");
+            stringBuilder.Append($"Lastname: {Lastname}; ");
+
+            return stringBuilder.ToString();
+        }
 
     }
 }
