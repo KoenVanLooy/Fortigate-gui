@@ -1,0 +1,10 @@
+config system interface
+edit Koen
+set vdom root
+set mode static
+set ip 192.168.65.5 255.255.255.0
+set allowaccess ping
+set vlanid 1
+set interface internal
+next
+end

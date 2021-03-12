@@ -18,7 +18,6 @@ namespace Fortigate_Gui.Data
         public DbSet<ConfigFile> ConfigFiles { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EnumAcces> EnumAcces { get; set; }
-        public DbSet<EnumAlias> EnumAliases { get; set; }
         public DbSet<EnumMode> EnumModes { get; set; }
         public DbSet<Filter> Filters { get; set; }
         public DbSet<Interface> Interfaces { get; set; }
@@ -40,7 +39,6 @@ namespace Fortigate_Gui.Data
             modelbuilder.Entity<ConfigFile>().ToTable("ConfigFile");
             modelbuilder.Entity<Employee>().ToTable("Employee");
             modelbuilder.Entity<EnumAcces>().ToTable("EnumAcces");
-            modelbuilder.Entity<EnumAlias>().ToTable("EnumAlias");
             modelbuilder.Entity<EnumMode>().ToTable("EnumMode");
             modelbuilder.Entity<Filter>().ToTable("Filter");
             modelbuilder.Entity<Interface>().ToTable("Interface");

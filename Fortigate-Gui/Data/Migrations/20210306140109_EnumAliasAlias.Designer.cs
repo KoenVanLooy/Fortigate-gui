@@ -4,14 +4,16 @@ using Fortigate_Gui.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fortigate_Gui.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210306140109_EnumAliasAlias")]
+    partial class EnumAliasAlias
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,7 +264,10 @@ namespace Fortigate_Gui.Data.Migrations
                     b.Property<int>("EnumAccesID")
                         .HasColumnType("int");
 
-                    b.Property<int>("EnumModeID")
+                    b.Property<string>("EnumModeID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EnumModeID1")
                         .HasColumnType("int");
 
                     b.Property<string>("Ip")
@@ -287,7 +292,7 @@ namespace Fortigate_Gui.Data.Migrations
 
                     b.HasIndex("EnumAccesID");
 
-                    b.HasIndex("EnumModeID");
+                    b.HasIndex("EnumModeID1");
 
                     b.HasIndex("ZoneInterfaceID");
 
@@ -659,9 +664,7 @@ namespace Fortigate_Gui.Data.Migrations
 
                     b.HasOne("Fortigate_Gui.Models.EnumMode", "EnumMode")
                         .WithMany()
-                        .HasForeignKey("EnumModeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EnumModeID1");
 
                     b.HasOne("Fortigate_Gui.Models.ZoneInterface", null)
                         .WithMany("Interfaces")
