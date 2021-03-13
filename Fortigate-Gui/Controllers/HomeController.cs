@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Fortigate_Gui.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fortigate_Gui.Controllers
 {
@@ -23,6 +24,7 @@ namespace Fortigate_Gui.Controllers
             return View();
         }
 
+        [Authorize(Roles ="Admin")]
         public IActionResult Privacy()
         {
             return View();

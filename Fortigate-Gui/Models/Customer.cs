@@ -13,8 +13,7 @@ namespace Fortigate_Gui.Models
         public int CustomerID { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
-        public string Username { get; set; }
-        public string Type { get; set; }
+        public bool Admin { get; set; }
         public ConfigFile Configfile { get; set; }
         public ICollection<ConfigFile> Configfiles { get; set; }
 

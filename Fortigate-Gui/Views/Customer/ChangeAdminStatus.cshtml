@@ -1,0 +1,39 @@
+﻿@model Fortigate_Gui.Models.Customer
+
+    @{
+        ViewData["Title"] = "Change Admin Status";
+    }
+
+    <h1>Delete</h1>
+
+    <h2>Change Admin Status?</h2>
+    <div>
+        <h3>Customer</h3>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Firstname)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Firstname)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Lastname)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Lastname)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Admin)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Admin)
+            </dd class>
+        </dl>
+
+        <form asp-action="ChangeAdminStatus">
+            <input type="hidden" asp-for="CustomerID" />
+            <input type="submit" value="ChangeAdminStatus" class="btn btn-danger" /> |
+            <a asp-action="Index">Back to List</a>
+        </form>
+    </div>
