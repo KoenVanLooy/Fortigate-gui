@@ -35,6 +35,7 @@ namespace Fortigate_Gui
             services.AddDefaultIdentity<CustomUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddSession();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -55,6 +56,7 @@ namespace Fortigate_Gui
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 

@@ -1,8 +1,41 @@
-﻿@{
+﻿@model Fortigate_Gui.ViewModels.CreateConfViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<h2>Configuration file</h2>
+<table class="table table-hover col col-6">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Alias</th>
+            <th scope="col">Detail</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Interface _interface in Model.Interfaces)
+        {
+            int i = 1;
+            <tr>
+                <th scope="row">@i</th>
+                <td>@_interface.Alias</td>
+                <td>@_interface.Name</td>
+                <td>Detail</td>
+            </tr>
+            i++;
+        }
+
+        <tr>
+            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="Interface" asp-action="Index">+</a></td>
+        </tr>
+    </tbody>
+</table>
+<div class="col-6 float-left">
+    <a asp-controller="Home" asp-action="Download" class="btn btn-primary">Download conffile</a>
 </div>
