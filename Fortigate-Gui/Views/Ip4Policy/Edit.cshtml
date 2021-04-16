@@ -1,0 +1,51 @@
+﻿@model Fortigate_Gui.Models.Ip4Policy
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Ip4Policy</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Ip4PolicyID" />
+            <div class="form-group">
+                <label asp-for="SourceInterface" class="control-label"></label>
+                <input asp-for="SourceInterface" class="form-control" />
+                <span asp-validation-for="SourceInterface" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DestinationInterface" class="control-label"></label>
+                <input asp-for="DestinationInterface" class="form-control" />
+                <span asp-validation-for="DestinationInterface" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SourceAddress" class="control-label"></label>
+                <input asp-for="SourceAddress" class="form-control" />
+                <span asp-validation-for="SourceAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DestinationAddress" class="control-label"></label>
+                <input asp-for="DestinationAddress" class="form-control" />
+                <span asp-validation-for="DestinationAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                <input asp-for="Type" class="form-control" />
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fortigate_Gui.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<CustomUser>
+    public class ApplicationDbContext :/* Identity*/DbContext/*<CustomUser>*/
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -22,15 +22,13 @@ namespace Fortigate_Gui.Data
         public DbSet<Filter> Filters { get; set; }
         public DbSet<Interface> Interfaces { get; set; }
         public DbSet<Ip4Policy> Ip4Policies { get; set; }
+        public DbSet<Setting> Settings { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<VpnPortal> VpnPortals { get; set; }
+        public DbSet<VPNtunnel> VPNtunnels { get; set; }
         public DbSet<Zone> Zones { get; set; }
         public DbSet<ZoneInterface> ZoneInterfaces { get; set; }
         public DbSet<ZonePolicy> ZonePolicies { get; set; }
-        public DbSet<VpnSetting> VpnSettings { get; set; }
-        public DbSet<FortiUser> FortiUsers { get; set; }
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<UserGroup> UserGroups { get; set; }
+        public DbSet<FirewallAddress> FirewallAddresses { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
@@ -46,15 +44,13 @@ namespace Fortigate_Gui.Data
             modelbuilder.Entity<Filter>().ToTable("Filter");
             modelbuilder.Entity<Interface>().ToTable("Interface");
             modelbuilder.Entity<Ip4Policy>().ToTable("Ip4Policy");
-            modelbuilder.Entity<VpnSetting>().ToTable("VpnSetting");
+            modelbuilder.Entity<Setting>().ToTable("Setting");
             modelbuilder.Entity<Customer>().ToTable("Customer");
-            modelbuilder.Entity<VpnPortal>().ToTable("VpnPortal");
+            modelbuilder.Entity<VPNtunnel>().ToTable("VPNtunnel");
             modelbuilder.Entity<Zone>().ToTable("Zone");
             modelbuilder.Entity<ZoneInterface>().ToTable("ZoneInterface");
             modelbuilder.Entity<ZonePolicy>().ToTable("ZonePolicy");
-            modelbuilder.Entity<FortiUser>().ToTable("User");
-            modelbuilder.Entity<Group>().ToTable("Group");
-            modelbuilder.Entity<UserGroup>().ToTable("UserGroup");
+            modelbuilder.Entity<FirewallAddress>().ToTable("FirewallAddress");
 
         }
     }

@@ -3,6 +3,16 @@
 
 // Write your JavaScript code.
 
+$(function () {
+    $("#loaderbody").addClass('hide');
+
+    $(document).bind('ajaxStart', function () {
+        $("#loaderbody").removeClass('hide');
+    }).bind('ajaxStop', function () {
+        $("#loaderbody").addClass('hide');
+    });
+});
+
 showInPopup = (url, title) => {
     $.ajax({
         type: "GET",
@@ -13,40 +23,42 @@ showInPopup = (url, title) => {
             $("#form-modal").modal('show');
         }
     })
-};
+}
 
 jQueryAjaxPost = form => {
     try {
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: form.action,
             data: new FormData(form),
             contentType: false,
             processData: false,
             success: function (res) {
                 if (res.isValid) {
-                    $("#index").html(res.html);
-                    $("#form-modal .modal-body").html('');
-                    $("#form-modal .modal-title").html('');
-                    $("#form-modal").modal('hide');
+                    $('#view-all').html(res.html)
+                    $('#form-modal .modal-body').html('');
+                    $('#form-modal .modal-title').html('');
+                    $('#form-modal').modal('hide');
+                    $.notify('Submitted succesfully', { globalPosition: 'top center', className: 'success' });
                 }
-                else {
-                    $("#form-modal .modal-body").html(res.html);
-                }
+                else
+                    $('#form-modal .modal-body').html(res.html);
             },
             error: function (err) {
-                console.log(err);
+                console.log(err)
             }
         })
-    } catch (e) {
-        console.log(e);
+        //to prevent default form submit event
+        return false;
+    } catch (ex) {
+        console.log(ex)
     }
-    //to prevent default form submit event
-    return false;
-};
+
+   
+}
 
 jQueryAjaxDelete = form => {
-    if (confirm('Are you sure to delete this record ?')) {
+    if (confirm('are you sure to delete this record?') ){
         try {
             $.ajax({
                 type: 'POST',
@@ -55,16 +67,19 @@ jQueryAjaxDelete = form => {
                 contentType: false,
                 processData: false,
                 success: function (res) {
-                    $('#index').html(res.html);
+                    $('#view-all').html(res.html)
+                    $.notify('Deleted succesfully', { globalPosition: 'top center', className: 'success' });
                 },
                 error: function (err) {
                     console.log(err)
                 }
             })
-        } catch (ex) {
-            console.log(ex)
+
+        } catch (e) {
+            console.log(e);
         }
     }
-    //prevent default form submit event
+
+    //to prevent default form submit event
     return false;
 }

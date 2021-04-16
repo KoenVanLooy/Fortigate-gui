@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20210413121300_vpnsetting.cs" />
-    <Compile Remove="Data\Migrations\20210413121300_vpnsetting.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210416134725_vpn-rewrite.cs" />
-    <Compile Remove="Data\Migrations\20210416134725_vpn-rewrite.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210416135726_VpnRewrite.cs" />
-    <Compile Remove="Data\Migrations\20210416135726_VpnRewrite.Designer.cs" />
+    <Compile Remove="Migrations\20210325124125_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210325124125_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210325155123_FWAD-ZonID.cs" />
+    <Compile Remove="Migrations\20210325155123_FWAD-ZonID.Designer.cs" />
+    <Compile Remove="Migrations\20210325155249_FWAD-ZoneID.cs" />
+    <Compile Remove="Migrations\20210325155249_FWAD-ZoneID.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

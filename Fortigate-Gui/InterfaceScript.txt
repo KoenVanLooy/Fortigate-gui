@@ -1,9 +1,9 @@
 config system interface
-edit test
-set vdom test
-set mode static
-set ip 128.244.134.154 test
-set allowaccess telnet
+edit internal1
+set vdom root
+set mode dhcp
+set ip 192.168.10.5 255.255.255.0
+set allowaccess ping
 set vlanid 1
 set interface internal
 next

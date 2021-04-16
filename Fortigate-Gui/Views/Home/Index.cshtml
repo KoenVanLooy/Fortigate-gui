@@ -1,15 +1,44 @@
 ﻿@model Fortigate_Gui.ViewModels.CreateConfViewModel
 
-@{
-    ViewData["Title"] = "Home Page";
-}
+@{ ViewData["Title"] = "Home Page"; }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
 <h2>Configuration file</h2>
-<table class="table table-hover col col-6">
+<h3 class="col col-6 float-left">Interfaces</h3>
+<h3 class="col col-6 float-left">Zones</h3>
+<table class="table table-hover col col-5 float-left">
+
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Alias</th>
+            <th scope="col">Details</th>
+            <th scope="col">Del</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (Interface _interface in Model.Interfaces)
+        {
+
+        <tr>
+            <th scope="row">@(i + 1)</th>
+            <td>@_interface.Alias</td>
+            <td>@_interface.Name</td>
+            <td><a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = _interface.InterfaceID },Context.Request.Scheme)','Edit Interface')" class="btn btn-primary">Create</a></td>
+            <td><a asp-action="DelInterface" asp-route-id="@i">Delete</a></td>
+            @{ i++;}
+        </tr>
+                }
+
+        <tr>
+            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="Interface" asp-action="Index">+</a></td>
+        </tr>
+    </tbody>
+</table>
+<div class="col col-1 float-left"></div>
+<table class="table table-hover col col-5 float-left ml-4">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -19,23 +48,54 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (Interface _interface in Model.Interfaces)
+        @{ int j = 0; }
+        @foreach (Zone _zone in Model.Zones)
         {
-            int i = 1;
-            <tr>
-                <th scope="row">@i</th>
-                <td>@_interface.Alias</td>
-                <td>@_interface.Name</td>
-                <td>Detail</td>
-            </tr>
-            i++;
+
+        <tr>
+            <th scope="row">@(j+1)</th>
+            <td>@_zone.Name</td>
+            <td><a asp-action="DelZone" asp-route-id="@j">Delete</a></td>
+            @{j++;}
+        </tr> 
         }
 
         <tr>
-            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="Interface" asp-action="Index">+</a></td>
+            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="Zone" asp-action="Index">+</a></td>
         </tr>
     </tbody>
 </table>
-<div class="col-6 float-left">
+<h3 class="col col-12 float-left">Firewall Adress</h3>
+
+<table class="table table-hover col col-5 float-left">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Alias</th>
+            <th scope="col">Detail</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int k = 0; }
+        @foreach (FirewallAddress _fwAdress in Model.FirewallAddresses)
+        {
+
+        <tr>
+            <th scope="row">@(k+1)</th>
+            <td>@_fwAdress.Name</td>
+            <td><a asp-action="DelFWAdress" asp-route-id="@k">Delete</a></td>
+            @{k++;}
+        </tr>
+       }
+        <tr>
+            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="FirewallAddress" asp-action="Index">+</a></td>
+        </tr>
+    </tbody>
+</table>
+<div class="col col-12 float-left">
     <a asp-controller="Home" asp-action="Download" class="btn btn-primary">Download conffile</a>
+
+
+    <a asp-controller="Home" asp-action="StreamConf" class="btn btn-primary">Stream conffile</a>
 </div>

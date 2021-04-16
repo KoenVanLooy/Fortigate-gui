@@ -1,0 +1,52 @@
+﻿@model Fortigate_Gui.ViewModels.CreateInterfaceViewModel
+@{ ViewData["Title"] = "Interface - Home Page";
+    Layout = null;}
+<div class="container">
+    <form asp-action="Create" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
+        <div class="col-6 float-left">
+            <div class="form-group">
+                <label asp-for="Interface.Vdom" class="control-label"></label>
+                <input asp-for="Interface.Vdom" class="form-control" />
+                <span asp-validation-for="Interface.Vdom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IpAddress" class="control-label"></label>
+                <input asp-for="IpAddress" class="form-control" />
+                <span asp-validation-for="IpAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Interface.EnumModeID" class="control-label"></label>
+                <select asp-for="Interface.EnumModeID" asp-items="Model.Modes" class="form-control"></select>
+                <span asp-validation-for="Interface.EnumModeID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-6 float-left">
+            <div class="form-group">
+                <label asp-for="Interface.Name" class="control-label"></label>
+                <input asp-for="Interface.Name" class="form-control" />
+                <span asp-validation-for="Interface.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Interface.Alias" class="control-label"></label>
+                <input asp-for="Interface.Alias" class="form-control" />
+                <span asp-validation-for="Interface.Alias" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Interface.Subnet" class="control-label"></label>
+                <input asp-for="Interface.Subnet" class="form-control" />
+                <span asp-validation-for="Interface.Subnet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Interface.EnumAccesID" class="control-label"></label>
+                <select asp-for="Interface.EnumAccesID" asp-items="Model.AccessList" class="form-control"></select>
+                <span asp-validation-for="Interface.EnumAccesID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 float-left">
+            <button type="submit" class="btn btn-primary">Create script</button>
+        </div>
+    </form>
+    <a asp-action="Stream" asp-controller="Interface">Test stream</a>
+</div>
+

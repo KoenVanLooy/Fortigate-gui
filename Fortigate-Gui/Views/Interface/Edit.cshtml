@@ -1,0 +1,71 @@
+﻿@model Fortigate_Gui.Models.Interface
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Edit";
+}
+
+        <form asp-action="Edit" asp-route-id="@Model.InterfaceID" onsubmit="return jQueryAjaxPost(this);">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="InterfaceID" />
+            <div class="row">
+                <div class="col col-6">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col col-6">
+                    <div class="form-group">
+                        <label asp-for="Vdom" class="control-label"></label>
+                        <input asp-for="Vdom" class="form-control" />
+                        <span asp-validation-for="Vdom" class="text-danger"></span>
+                    </div>
+                 </div>
+            </div>
+            <div class="row">
+                <div class="form-group col col-6">
+                    <label asp-for="Alias" class="control-label"></label>
+                    <input asp-for="Alias" class="form-control" />
+                    <span asp-validation-for="Alias" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-6">
+                    <label asp-for="Ip" class="control-label"></label>
+                    <input asp-for="Ip" class="form-control" />
+                    <span asp-validation-for="Ip" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col col-6">
+                    <label asp-for="Subnet" class="control-label"></label>
+                    <input asp-for="Subnet" class="form-control" />
+                    <span asp-validation-for="Subnet" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-6">
+                    <label asp-for="EnumAccesID" class="control-label"></label>
+                    <select asp-for="EnumAccesID" class="form-control" asp-items="ViewBag.EnumAccesID"></select>
+                    <span asp-validation-for="EnumAccesID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col col-6">
+                    <label asp-for="EnumModeID" class="control-label"></label>
+                    <select asp-for="EnumModeID" class="form-control" asp-items="ViewBag.EnumModeID"></select>
+                    <span asp-validation-for="EnumModeID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col col-12">
+                    <input type="submit" value="Save" class="w-100 btn btn-primary" />
+                </div>
+            </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

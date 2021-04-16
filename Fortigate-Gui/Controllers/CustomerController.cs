@@ -64,7 +64,7 @@ namespace Fortigate_Gui.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", customer.UserID);
+            //ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", customer.UserID);
             return View(customer);
         }
 
@@ -100,7 +100,7 @@ namespace Fortigate_Gui.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", customer.UserID);
+            //ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", customer.UserID);
             return View(customer);
         }
 

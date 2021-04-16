@@ -1,0 +1,66 @@
+﻿@model Fortigate_Gui.Models.Interface
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Interface</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Vdom)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Vdom)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Alias)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Alias)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Ip)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ip)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SecondaryIp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SecondaryIp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Subnet)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Subnet)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EnumAcces)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EnumAcces.EnumAccesID)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EnumMode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EnumMode.EnumModeID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.InterfaceID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

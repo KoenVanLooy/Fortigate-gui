@@ -5,10 +5,14 @@ using System.Threading.Tasks;
 
 namespace Fortigate_Gui.Models
 {
-    public class Zone
+    public class FirewallAddress
     {
-        public int ZoneID { get; set; }
+        public int FirewallAddressID { get; set; }
         public string Name { get; set; }
-        public List<ZoneInterface> ZoneInterfaces { get; set; }
+        public string AssociatedZone { get; set; }
+
+        public string Subnet { get; set; }
+
+        
     }
 }
