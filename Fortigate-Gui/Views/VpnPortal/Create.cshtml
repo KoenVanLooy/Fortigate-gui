@@ -1,0 +1,74 @@
+﻿@model Fortigate_Gui.Models.VpnPortal
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>VpnPortal</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PortalName" class="control-label"></label>
+                <input asp-for="PortalName" class="form-control" />
+                <span asp-validation-for="PortalName" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TunnelMode" /> @Html.DisplayNameFor(model => model.TunnelMode)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="SplitTunneling" /> @Html.DisplayNameFor(model => model.SplitTunneling)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="WebMode" /> @Html.DisplayNameFor(model => model.WebMode)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="AutoConnect" /> @Html.DisplayNameFor(model => model.AutoConnect)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="KeepAlive" /> @Html.DisplayNameFor(model => model.KeepAlive)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="SavePassword" /> @Html.DisplayNameFor(model => model.SavePassword)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="IpPool" class="control-label"></label>
+                <input asp-for="IpPool" class="form-control" />
+                <span asp-validation-for="IpPool" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SplitTunnelingRoute" class="control-label"></label>
+                <input asp-for="SplitTunnelingRoute" class="form-control" />
+                <span asp-validation-for="SplitTunnelingRoute" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfigFileID" class="control-label"></label>
+                <select asp-for="ConfigFileID" class ="form-control" asp-items="ViewBag.ConfigFileID"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

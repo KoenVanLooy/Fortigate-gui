@@ -1,9 +1,9 @@
 config system interface
-edit Koen
-set vdom root
+edit test
+set vdom test
 set mode static
-set ip 192.168.65.5 255.255.255.0
-set allowaccess ping
+set ip 128.244.134.154 test
+set allowaccess telnet
 set vlanid 1
 set interface internal
 next

@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Fortigate_Gui.Models.VpnPortal>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class=" text-center">VPN Portals</h1>
+
+<p>
+    <a onclick="showInPopup('@Url.Action("AddOrEdit", "VpnPortal", null, Context.Request.Scheme)', 'New VPN Portal')" class="btn btn-success">New VPN Portal</a>
+</p>
+
+<div id="view-all">
+    @await Html.PartialAsync("_ViewAll", Model)
+</div>

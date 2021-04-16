@@ -16,7 +16,7 @@ namespace Fortigate_Gui.Models
         public Filter Filter { get; set; }
         public Ip4Policy Ip4Policy { get; set; }
         public ICollection<Ip4Policy> Ip4Policies { get; set; }
-        public VPNtunnel VPNtunnel { get; set; }
-        public ICollection<VPNtunnel> VPNtunnels { get; set; }
+        public ICollection<VpnPortal> VpnPortals { get; set; }
+        public ICollection<Group> Groups { get; set; }
     }
 }

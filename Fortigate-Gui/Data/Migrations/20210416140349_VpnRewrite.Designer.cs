@@ -4,14 +4,16 @@ using Fortigate_Gui.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fortigate_Gui.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210416140349_VpnRewrite")]
+    partial class VpnRewrite
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -392,7 +394,7 @@ namespace Fortigate_Gui.Data.Migrations
                     b.Property<bool>("AutoConnect")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ConfigFileID")
+                    b.Property<int>("ConfigFileID")
                         .HasColumnType("int");
 
                     b.Property<string>("IpPool")
@@ -789,7 +791,9 @@ namespace Fortigate_Gui.Data.Migrations
                 {
                     b.HasOne("Fortigate_Gui.Models.ConfigFile", "configFile")
                         .WithMany("VpnPortals")
-                        .HasForeignKey("ConfigFileID");
+                        .HasForeignKey("ConfigFileID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Fortigate_Gui.Models.VpnSetting", b =>
