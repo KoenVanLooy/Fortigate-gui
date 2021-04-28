@@ -1,4 +1,4 @@
-﻿using Fortigate_Gui.Models.Fortigate_Gui.Models;
+﻿using Fortigate_Gui.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,0 +1,68 @@
+﻿@model Fortigate_Gui.Models.VpnSetting
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = null;
+}
+
+<h1>Edit</h1>
+
+<h2>VpnSetting</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOrEdit" asp-route-id="@Model.VpnSettingID" onsubmit="return jQueryAjaxPost(this);">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="VpnSettingID" />
+            <div class="form-group">
+                <label asp-for="ServerCert" class="control-label"></label>
+                <input asp-for="ServerCert" class="form-control" />
+                <span asp-validation-for="ServerCert" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TunnelIpPool" class="control-label"></label>
+                <input asp-for="TunnelIpPool" class="form-control" />
+                <span asp-validation-for="TunnelIpPool" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TunnelIpv6Pool" class="control-label"></label>
+                <input asp-for="TunnelIpv6Pool" class="form-control" />
+                <span asp-validation-for="TunnelIpv6Pool" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SourceInterface" class="control-label"></label>
+                <input asp-for="SourceInterface" class="form-control" />
+                <span asp-validation-for="SourceInterface" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SourceAddress" class="control-label"></label>
+                <input asp-for="SourceAddress" class="form-control" />
+                <span asp-validation-for="SourceAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SourceAddressV6" class="control-label"></label>
+                <input asp-for="SourceAddressV6" class="form-control" />
+                <span asp-validation-for="SourceAddressV6" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DefaultPort" class="control-label"></label>
+                <input asp-for="DefaultPort" class="form-control" />
+                <span asp-validation-for="DefaultPort" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupID" class="control-label"></label>
+                <select asp-for="GroupID" class="form-control" asp-items="ViewBag.GroupID"></select>
+                <span asp-validation-for="GroupID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VpnPortalID" class="control-label"></label>
+                <select asp-for="VpnPortalID" class="form-control" asp-items="ViewBag.VpnPortalID"></select>
+                <span asp-validation-for="VpnPortalID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary btn-block" />
+            </div>
+        </form>
+    </div>
+</div>
+

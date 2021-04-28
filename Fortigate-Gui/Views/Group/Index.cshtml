@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Fortigate_Gui.Models.Group>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center">Index</h1>
+
+<p>
+    <a onclick="showInPopup('@Url.Action("AddOrEdit","Group",null,Context.Request.Scheme)','New Group')" class="btn btn-success">New Group</a>
+</p>
+
+<div id="view-all">
+    @await Html.PartialAsync("_ViewAll", Model)
+</div>

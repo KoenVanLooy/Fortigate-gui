@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Fortigate_Gui.Areas.Identity.Data;
 using Fortigate_Gui.Models;
-using Fortigate_Gui.Models.Fortigate_Gui.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
