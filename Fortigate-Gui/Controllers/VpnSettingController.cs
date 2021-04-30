@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Fortigate_Gui.Data;
 using Fortigate_Gui.Models;
 using Fortigate_Gui.Helper;
+using Fortigate_Gui.ValidationAttributes;
 
 namespace Fortigate_Gui.Controllers
 {
@@ -29,6 +30,7 @@ namespace Fortigate_Gui.Controllers
 
         // GET: VpnSetting/AddOrEdit
         // GET: VpnSetting/AddOrEdit/5
+        [NoDirectAccessAttribute]
         public async Task<IActionResult> AddOrEdit(int id=0)
         {
             if (id==0)
@@ -51,6 +53,7 @@ namespace Fortigate_Gui.Controllers
         }
 
         // POST: VpnSetting/AddOrEdit
+        // POST: VpnSetting/AddOrEdit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -90,26 +93,6 @@ namespace Fortigate_Gui.Controllers
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "AddOrEdit", vpnSetting) });
         }
 
-        // GET: VpnSetting/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vpnSetting = await _context.VpnSettings
-                .Include(v => v.group)
-                .Include(v => v.vpnPortal)
-                .FirstOrDefaultAsync(m => m.VpnSettingID == id);
-            if (vpnSetting == null)
-            {
-                return NotFound();
-            }
-
-            return View(vpnSetting);
-        }
-
         // POST: VpnSetting/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -118,7 +101,7 @@ namespace Fortigate_Gui.Controllers
             var vpnSetting = await _context.VpnSettings.FindAsync(id);
             _context.VpnSettings.Remove(vpnSetting);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.VpnSettings.ToList()) });
         }
 
         private bool VpnSettingExists(int id)

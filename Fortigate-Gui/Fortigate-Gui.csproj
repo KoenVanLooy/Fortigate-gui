@@ -17,8 +17,6 @@
 
   <ItemGroup>
     <None Include="Views\VpnPortal\AddOrEdit.cshtml" />
-    <None Include="Views\VpnPortal\Create.cshtml" />
-    <None Include="Views\VpnPortal\Delete.cshtml" />
     <None Include="Views\VpnPortal\Index.cshtml" />
     <None Include="Views\VpnPortal\_ViewAll.cshtml" />
   </ItemGroup>

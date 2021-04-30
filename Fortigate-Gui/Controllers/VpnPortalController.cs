@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Fortigate_Gui.Data;
 using Fortigate_Gui.Models;
 using Fortigate_Gui.Helper;
+using Fortigate_Gui.ValidationAttributes;
 
 namespace Fortigate_Gui.Controllers
 {
@@ -29,6 +30,7 @@ namespace Fortigate_Gui.Controllers
 
         // GET: VpnPortal/AddOrEdit
         // GET: VpnPortal/AddOrEdit/5
+        [NoDirectAccessAttribute]
         public async Task<IActionResult> AddOrEdit(int id=0)
         {
             if (id==0)
@@ -88,25 +90,6 @@ namespace Fortigate_Gui.Controllers
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "AddOrEdit", vpnPortal) });
         }
 
-        // GET: VpnPortal/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vpnPortal = await _context.VpnPortals
-                .Include(v => v.configFile)
-                .FirstOrDefaultAsync(m => m.VpnPortalID == id);
-            if (vpnPortal == null)
-            {
-                return NotFound();
-            }
-
-            return View(vpnPortal);
-        }
-
         // POST: VpnPortal/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -115,7 +98,7 @@ namespace Fortigate_Gui.Controllers
             var vpnPortal = await _context.VpnPortals.FindAsync(id);
             _context.VpnPortals.Remove(vpnPortal);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.VpnPortals.ToList()) });
         }
 
         private bool VpnPortalExists(int id)

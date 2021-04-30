@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Fortigate_Gui.Data;
 using Fortigate_Gui.Models;
 using Fortigate_Gui.Helper;
+using Fortigate_Gui.ValidationAttributes;
 
 namespace Fortigate_Gui.Controllers
 {
@@ -30,6 +31,7 @@ namespace Fortigate_Gui.Controllers
 
         // GET: Group/AddOrEdit
         // GET: Group/AddOrEdit/5
+        [NoDirectAccessAttribute]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
             if (id == 0)
@@ -89,24 +91,6 @@ namespace Fortigate_Gui.Controllers
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "AddOrEdit", group) });
         }
 
-        // GET: Group/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var @group = await _context.Groups
-                .Include(c => c.configFile)
-                .FirstOrDefaultAsync(m => m.GroupID == id);
-            if (@group == null)
-            {
-                return NotFound();
-            }
-
-            return View(@group);
-        }
 
         // POST: Group/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -116,7 +100,7 @@ namespace Fortigate_Gui.Controllers
             var @group = await _context.Groups.FindAsync(id);
             _context.Groups.Remove(@group);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.Groups.ToList()) });
         }
 
         private bool GroupExists(int id)
