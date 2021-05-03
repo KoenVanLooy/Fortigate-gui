@@ -19,7 +19,7 @@ namespace Fortigate_Gui.Models
 
         //navigation properties
         //meerdere usergroups
-        public List<UserGroup> userGroups { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
 
     }
 }

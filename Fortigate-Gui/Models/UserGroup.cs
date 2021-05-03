@@ -11,9 +11,9 @@ namespace Fortigate_Gui.Models
 
         //navigation properties, meer op meer relatie tussen users en groups
         public int FortiUserID { get; set; }
-        public FortiUser fortiUser { get; set; }
+        public FortiUser FortiUser { get; set; }
 
         public int GroupID { get; set; }
-        public Group group { get; set; }
+        public Group Group { get; set; }
     }
 }

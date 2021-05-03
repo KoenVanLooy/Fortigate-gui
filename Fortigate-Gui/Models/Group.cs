@@ -16,10 +16,10 @@ namespace Fortigate_Gui.Models
         //navigation properties
         //één configfile
         public int? ConfigFileID { get; set; }
-        public ConfigFile configFile { get; set; }
+        public ConfigFile ConfigFile { get; set; }
 
         
         //meerdere usergroups
-        public List<UserGroup> userGroups { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
     }
 }

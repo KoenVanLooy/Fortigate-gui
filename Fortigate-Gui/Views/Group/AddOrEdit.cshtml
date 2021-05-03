@@ -1,4 +1,4 @@
-﻿@model Fortigate_Gui.Models.Group
+﻿@model Fortigate_Gui.ViewModels.AddOrEditGroupViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -11,19 +11,22 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddOrEdit" asp-route-id="@Model.GroupID" onsubmit="return jQueryAjaxPost(this);">
+        <form asp-action="AddOrEdit" asp-route-id="@Model.Group.GroupID" onsubmit="return jQueryAjaxPost(this);">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="GroupID" />
+            <input type="hidden" asp-for="Group.GroupID" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Group.Name" class="control-label"></label>
+                <input asp-for="Group.Name" class="form-control" />
+                <span asp-validation-for="Group.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <select asp-for="SelectedFortiUsers" asp-items="Model.FortiUserList"></select>
+            </div>
+            @*<div class="form-group">
                 <label asp-for="ConfigFileID" class="control-label"></label>
                 <select asp-for="ConfigFileID" class="form-control" asp-items="ViewBag.ConfigFileID"></select>
                 <span asp-validation-for="ConfigFileID" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Submit" class="btn btn-primary btn-block" />
             </div>

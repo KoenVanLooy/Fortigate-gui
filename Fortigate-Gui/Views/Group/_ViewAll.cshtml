@@ -6,9 +6,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.configFile)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -19,9 +19,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.configFile.ConfigfileID)
-                </td>
+                </td>*@
                 <td>
                     <a onclick="showInPopup('@Url.Action("AddOrEdit", "Group", new { id = item.GroupID}, Context.Request.Scheme)', 'Update Group')" class="btn btn-success">Edit</a>
                     <form asp-action="Delete" asp-route-id="@item.GroupID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
