@@ -20,7 +20,7 @@ namespace Fortigate_Gui.Script
         public List<Group> _groups;
         public List<VpnSetting> _vpnSettings { get; set; }
         private readonly ApplicationDbContext _context;
-        public StreamScript(List<Interface> interfaces, List<FirewallAddress> firewallAddresses, 
+        public StreamScript(List<Interface> interfaces, List<FirewallAddress> firewallAddresses,
             List<Zone> zones, List<Ip4Policy> ip4Policies, List<StaticRoute> staticRoutes, List<Group> groups, List<VpnSetting> vpnSettings, ApplicationDbContext context)
         {
             _zones = zones;
@@ -31,7 +31,7 @@ namespace Fortigate_Gui.Script
             _groups = groups;
             _vpnSettings = vpnSettings;
             _context = context;
-          
+
         }
 
         public async Task<string> StreamScriptAsync()
@@ -41,7 +41,7 @@ namespace Fortigate_Gui.Script
 
             sshClient.Connect();
             var stream = sshClient.CreateShellStream("", 0, 0, 0, 0, 0);
-            
+
             ReadFilter readFilter = new ReadFilter();
             List<string> Lines = readFilter.ReadLines();
             foreach (string Line in Lines)
@@ -62,15 +62,15 @@ namespace Fortigate_Gui.Script
                     .ThenInclude(ai => ai.EnumAcces)
                     .Include(x => x.EnumPhysical)
                     .SingleOrDefaultAsync(z => z.InterfaceID == item.InterfaceID);
-               
+
                 stream.WriteLine("edit " + item.Name);
                 stream.WriteLine("set vdom root");
                 stream.WriteLine("set mode " + @interface.EnumMode.Name);
-                stream.WriteLine("set ip " + item.Ip + " " + item.Subnet);
+                stream.WriteLine("set ip " + @interface.Ip + " " + @interface.Subnet);
                 string AllowAccess = "";
                 foreach (var accessInterface in @interface.AccessInterfaces)
                 {
-                     AllowAccess += accessInterface.EnumAcces.Name + " ";
+                    AllowAccess += accessInterface.EnumAcces.Name + " ";
                 }
                 stream.WriteLine("set allowaccess " + AllowAccess);
                 stream.WriteLine("next");
@@ -136,7 +136,7 @@ namespace Fortigate_Gui.Script
                 stream.WriteLine("set action " + ip4Policy.Action.Name);
                 stream.WriteLine("set service ALL");
                 stream.WriteLine("set logtraffic all");
-                stream.WriteLine("set nat "+ ip4Policy.Nat.Name);
+                stream.WriteLine("set nat " + ip4Policy.Nat.Name);
                 stream.WriteLine("set utm-status enable");
                 if (ip4Policy.AvFilter == true)
                 {
@@ -162,7 +162,7 @@ namespace Fortigate_Gui.Script
                 j++;
                 StaticRoute staticRoute = await _context.StaticRoutes
                     .Include(x => x.Interface)
-                    .SingleOrDefaultAsync(y=> y.StaticRouteID == item.StaticRouteID);
+                    .SingleOrDefaultAsync(y => y.StaticRouteID == item.StaticRouteID);
                 stream.WriteLine("config router static");
                 stream.WriteLine("edit " + j.ToString());
                 stream.WriteLine("set dst " + item.DestinationSubnet);

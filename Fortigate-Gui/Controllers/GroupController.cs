@@ -131,7 +131,7 @@ namespace Fortigate_Gui.Controllers
                 }
                 return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.Groups.ToList()) });
             }
-
+                
             //ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID", group.ConfigFileID);
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "AddOrEdit", viewModel) });
         }

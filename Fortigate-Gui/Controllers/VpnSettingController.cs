@@ -32,7 +32,7 @@ namespace Fortigate_Gui.Controllers
         // GET: VpnSetting/AddOrEdit
         // GET: VpnSetting/AddOrEdit/5
         [NoDirectAccessAttribute]
-        public async Task<IActionResult> AddOrEdit(int id=0) 
+        public async Task<IActionResult> AddOrEdit(int id=0)
         {
             // eerst controleren of de id is overschreven, indien neen, nieuw model aanmaken, indien ja model ophalen en tonen
             if (id==0)
@@ -80,7 +80,19 @@ namespace Fortigate_Gui.Controllers
                 else
                 {
                     _context.Update(viewModel.VpnSetting);
-                    await _context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!VpnSettingExists(vpnSetting.VpnSettingID))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                 }
                 return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.VpnSettings.ToList()) });
             }

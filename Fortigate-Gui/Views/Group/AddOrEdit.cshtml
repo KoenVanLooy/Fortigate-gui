@@ -5,6 +5,10 @@
     Layout = null;
 }
 
+<h1>Edit</h1>
+
+<h2>Group</h2>
+<hr />
 <div class="row">
     <div class="col">
         <form asp-action="AddOrEdit" asp-route-id="@Model.Group.GroupID" onsubmit="return jQueryAjaxPost(this);">
@@ -25,10 +29,10 @@
             </div>
             
             @*<div class="form-group">
-            <label asp-for="ConfigFileID" class="control-label"></label>
-            <select asp-for="ConfigFileID" class="form-control" asp-items="ViewBag.ConfigFileID"></select>
-            <span asp-validation-for="ConfigFileID" class="text-danger"></span>
-        </div>*@
+                <label asp-for="ConfigFileID" class="control-label"></label>
+                <select asp-for="ConfigFileID" class="form-control" asp-items="ViewBag.ConfigFileID"></select>
+                <span asp-validation-for="ConfigFileID" class="text-danger"></span>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Submit" class="btn btn-outline-primary btn-block" />
             </div>

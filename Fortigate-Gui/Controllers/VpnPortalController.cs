@@ -73,8 +73,10 @@ namespace Fortigate_Gui.Controllers
                 }
                 else
                 {
-                    _context.Update(vpnPortal);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        _context.Update(vpnPortal);
+                        await _context.SaveChangesAsync();
                     
                     
                 }

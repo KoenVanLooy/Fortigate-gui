@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-    namespace Fortigate_Gui.Models
-    {
         public class VpnPortal
         {
             public int VpnPortalID { get; set; }

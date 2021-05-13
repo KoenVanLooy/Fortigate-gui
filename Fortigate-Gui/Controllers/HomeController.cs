@@ -26,7 +26,23 @@ namespace Fortigate_Gui.Controllers
             _logger = logger;
             _context = context;
         }
+        public async Task<IActionResult> Reader()
+        {
+            ReadConfigfile readConfigfile = new ReadConfigfile(_context);
 
+            var sessionInterfaces = SessionHelper.GetObjectFromJson<List<Interface>>(HttpContext.Session, "sessionInterfaces");
+            sessionInterfaces = await readConfigfile.ReadLinesAsync();
+            if (sessionInterfaces == null)
+            {
+                sessionInterfaces = new List<Interface>();
+            }
+            foreach (var item in sessionInterfaces)
+            {
+                await AddObjectAsync(item.InterfaceID, "sessionInterfaces", "Interface");
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
         //httpGet
         public IActionResult Index()
         {
@@ -37,6 +53,8 @@ namespace Fortigate_Gui.Controllers
             var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
             var sessionGroups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, "sessionGroups");
             var sessionVpnSettings = SessionHelper.GetObjectFromJson<List<VpnSetting>>(HttpContext.Session, "sessionVpnSettings");
+            var sessionIp4Policies = SessionHelper.GetObjectFromJson<List<Ip4Policy>>(HttpContext.Session, "sessionIp4policies");
+            var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
             if (sessionInterfaces == null)
             {
                 sessionInterfaces = new List<Interface>();
@@ -65,6 +83,14 @@ namespace Fortigate_Gui.Controllers
             {
                 sessionVpnSettings = new List<VpnSetting>();
             }
+            if (sessionIp4Policies == null)
+            {
+                sessionIp4Policies = new List<Ip4Policy>();
+            }
+            if (sessionStaticRoutes == null)
+            {
+                sessionStaticRoutes = new List<StaticRoute>();
+            }
             CreateConfViewModel viewModel = new CreateConfViewModel
             {
                 Zones = sessionZones,
@@ -74,12 +100,15 @@ namespace Fortigate_Gui.Controllers
                 StaticRoutes = sessionStaticRoutes,
                 Groups = sessionGroups,
                 VpnSettings = sessionVpnSettings
+                FirewallAddresses = sessionFwAddresses,
+                Ip4Policies = sessionIp4Policies,
+                StaticRoutes = sessionStaticRoutes
             };
             return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(int? id,CreateConfViewModel viewModel)
+        public async Task<IActionResult> Index(int? id, CreateConfViewModel viewModel)
         {
             if (id == 1)
             {
@@ -98,7 +127,7 @@ namespace Fortigate_Gui.Controllers
                 return File(memory, GetMimeTypes()[ext], Path.GetFileName(path));
             }
             bool test = viewModel.DnsFilter;
-             return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin")]
@@ -145,13 +174,48 @@ namespace Fortigate_Gui.Controllers
             await AddObjectAsync(id, "sessionStaticRoutes", "StaticRoute");
             return RedirectToAction("Index");
         }
-        public async Task<IActionResult> AddGroup(int? id)
-        {
-            await AddObjectAsync(id, "sessionGroups", "Group");
-            return RedirectToAction("Index");
-        }
+
+        //General AddObject Method Defined by switch case on string Type
+        public async Task AddObjectAsync(int? id, string name, string Type)
         public async Task<IActionResult> AddVpnSetting (int? id)
         {
+            List<Interface> interfaces = new List<Interface>();
+            List<Zone> zones = new List<Zone>();
+            List<Ip4Policy> ip4Policies = new List<Ip4Policy>();
+            List<FirewallAddress> firewallAddresses = new List<FirewallAddress>();
+            List<StaticRoute> staticRoutes = new List<StaticRoute>();
+            if (SessionHelper.GetObjectFromJson<object>(HttpContext.Session, name) == null)
+            {
+                switch (Type)
+                {
+                    case "Interface":
+                        interfaces.Add(await _context.Interfaces.FindAsync(id));
+                        SessionHelper.SetObjectAsJson(HttpContext.Session, name, interfaces);
+                        break;
+
+                    case "Zone":
+                        zones.Add(_context.Zones.Find(id));
+                        SessionHelper.SetObjectAsJson(HttpContext.Session, name, zones);
+                        break;
+
+                    case "Ip4Policy":
+                        ip4Policies.Add(_context.Ip4Policies.Find(id));
+                        SessionHelper.SetObjectAsJson(HttpContext.Session, name, ip4Policies);
+                        break;
+
+                    case "FWAddress":
+                        firewallAddresses.Add(_context.FirewallAddresses.Find(id));
+                        SessionHelper.SetObjectAsJson(HttpContext.Session, name, firewallAddresses);
+                        break;
+                    case "StaticRoute":
+                        staticRoutes.Add(_context.StaticRoutes.Find(id));
+                        SessionHelper.SetObjectAsJson(HttpContext.Session, name, staticRoutes);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
             await AddObjectAsync(id, "sessionVpnSettings", "VpnSetting");
             return RedirectToAction("Index");
         }
@@ -211,6 +275,122 @@ namespace Fortigate_Gui.Controllers
             }
             else
             {
+                switch (Type)
+                {
+                    case "Interface":
+                        interfaces = SessionHelper.GetObjectFromJson<List<Interface>>(HttpContext.Session, name);
+                        int index = Exists(interfaces, id, Type);
+                        if (index == -1)
+                        {
+                            interfaces.Add(_context.Interfaces.Find(id));
+                            SessionHelper.SetObjectAsJson(HttpContext.Session, name, interfaces);
+                        }
+                        break;
+                    case "Zone":
+                        zones = SessionHelper.GetObjectFromJson<List<Zone>>(HttpContext.Session, name);
+                        int zoneIndex = Exists(zones, id, Type);
+                        if (zoneIndex == -1)
+                        {
+                            zones.Add(_context.Zones.Find(id));
+                            SessionHelper.SetObjectAsJson(HttpContext.Session, name, zones);
+                        }
+                        break;
+                    case "Ip4Policy":
+                        ip4Policies = SessionHelper.GetObjectFromJson<List<Ip4Policy>>(HttpContext.Session, name);
+                        int ip4policyindex = Exists(ip4Policies, id, Type);
+                        if (ip4policyindex == -1)
+                        {
+                            ip4Policies.Add(_context.Ip4Policies.Find(id));
+                            SessionHelper.SetObjectAsJson(HttpContext.Session, name, ip4Policies);
+                        }
+                        break;
+                    case "FWAddress":
+                        firewallAddresses = SessionHelper.GetObjectFromJson<List<FirewallAddress>>(HttpContext.Session, name);
+                        int fwIndex = Exists(firewallAddresses, id, Type);
+                        if (fwIndex == -1)
+                        {
+                            firewallAddresses.Add(_context.FirewallAddresses.Find(id));
+                            SessionHelper.SetObjectAsJson(HttpContext.Session, name, firewallAddresses);
+                        }
+                        break;
+                    case "StaticRoute":
+                        staticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, name);
+                        int SRIndex = Exists(staticRoutes, id, Type);
+                        if (SRIndex == -1)
+                        {
+                            staticRoutes.Add(_context.StaticRoutes.Find(id));
+                            SessionHelper.SetObjectAsJson(HttpContext.Session, name, staticRoutes);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+
+        }
+
+        //General validation of object already exists in sessionattibutes
+        private int Exists(object objectList, int? id, string type)
+        {
+            switch (type)
+            {
+                case "Ip4Policy":
+                    List<Ip4Policy> ip4Policies = (List<Ip4Policy>)objectList;
+                    for (int i = 0; i < ip4Policies.Count; i++)
+                    {
+                        if (ip4Policies[i].Ip4PolicyID == id)
+                        {
+                            return i;
+                        }
+                    }
+                    return -1;
+
+                case "Interface":
+                    List<Interface> interfaces = (List<Interface>)objectList;
+                    for (int i = 0; i < interfaces.Count; i++)
+                    {
+                        if (interfaces[i].InterfaceID == id)
+                        {
+                            return i;
+                        }
+                    }
+                    return -1;
+
+                case "Zone":
+                    List<Zone> zones = (List<Zone>)objectList;
+                    for (int i = 0; i < zones.Count; i++)
+                    {
+                        if (zones[i].ZoneID == id)
+                        {
+                            return i;
+                        }
+                    }
+                    return -1;
+
+                case "FWAddress":
+                    List<FirewallAddress> firewallAddresses = (List<FirewallAddress>)objectList;
+                    for (int i = 0; i < firewallAddresses.Count; i++)
+                    {
+                        if (firewallAddresses[i].FirewallAddressID == id)
+                        {
+                            return i;
+                        }
+                    }
+                    return -1;
+                case "StaticRoute":
+                    List<StaticRoute> staticRoutes = (List<StaticRoute>)objectList;
+                    for (int i = 0; i < staticRoutes.Count; i++)
+                    {
+                        if (staticRoutes[i].StaticRouteID == id)
+                        {
+                            return i;
+                        }
+                    }
+                    return -1;
+
+                default:
+                    break;
                     switch (Type)
                     {
                         case "Interface":
@@ -363,7 +543,7 @@ namespace Fortigate_Gui.Controllers
                     break;
             }
             return -1;
-           
+
         }
 
         public IActionResult DelInterface(int id)
@@ -386,6 +566,22 @@ namespace Fortigate_Gui.Controllers
             var sessionFwAddresses = SessionHelper.GetObjectFromJson<List<FirewallAddress>>(HttpContext.Session, "sessionFwAddresses");
             sessionFwAddresses.RemoveAt(id);
             SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionFwAddresses", sessionFwAddresses);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult DelIp4Policy(int id)
+        {
+            var sessionIp4policies = SessionHelper.GetObjectFromJson<List<Ip4Policy>>(HttpContext.Session, "sessionIp4policies");
+            sessionIp4policies.RemoveAt(id);
+            SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionIp4policies", sessionIp4policies);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult DelStaticRoute(int id)
+        {
+            var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
+            sessionStaticRoutes.RemoveAt(id);
+            SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionStaticRoutes", sessionStaticRoutes);
             return RedirectToAction("Index");
         }
 
@@ -442,11 +638,20 @@ namespace Fortigate_Gui.Controllers
         }
 
 
+        public async Task<IActionResult> StreamConf()
+
+
         public async Task<IActionResult> StreamConf ()
         {
             var sessionInterfaces = SessionHelper.GetObjectFromJson<List<Interface>>(HttpContext.Session, "sessionInterfaces");
             var sessionZones = SessionHelper.GetObjectFromJson<List<Zone>>(HttpContext.Session, "sessionZone");
             var sessionFwAddresses = SessionHelper.GetObjectFromJson<List<FirewallAddress>>(HttpContext.Session, "sessionFwAddresses");
+            var ip4policies = SessionHelper.GetObjectFromJson<List<Ip4Policy>>(HttpContext.Session, "sessionIp4policies");
+            var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
+            StreamScript Script = new StreamScript(sessionInterfaces, sessionFwAddresses, sessionZones, ip4policies, sessionStaticRoutes, _context);
+            await Script.StreamScriptAsync();
+            return RedirectToAction("Index");
+        }
             var ip4policies = SessionHelper.GetObjectFromJson<List<Ip4Policy>>(HttpContext.Session, "sessionIp4policies");
             var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
             var sessionGroups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, "sessionGroups");
@@ -467,6 +672,14 @@ namespace Fortigate_Gui.Controllers
             };
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> TestStream(TestConnectionViewModel viewModel)
+        {
+            string UserName = viewModel.UserName;
+            string Password = viewModel.PassWord;
+            string IpAddress = viewModel.IpAddress;
+
 
         [HttpPost]
         public async Task<IActionResult> TestStream(TestConnectionViewModel viewModel)
@@ -499,6 +712,5 @@ namespace Fortigate_Gui.Controllers
         }
     }
 }
-
 
 

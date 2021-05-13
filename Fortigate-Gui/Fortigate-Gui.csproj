@@ -12,6 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\VpnPortal\AddOrEdit.cshtml" />
+    <None Include="Views\VpnPortal\Index.cshtml" />
+    <None Include="Views\VpnPortal\_ViewAll.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.12" />
@@ -26,16 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\image\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\VpnPortal\AddOrEdit.cshtml" />
-    <None Include="Views\VpnPortal\Index.cshtml" />
-    <None Include="Views\VpnPortal\_ViewAll.cshtml" />
-    <None Include="Views\VpnSetting\AddOrEdit.cshtml" />
-    <None Include="Views\VpnSetting\Index.cshtml" />
-    <None Include="Views\VpnSetting\_ViewAll.cshtml" />
+    <Folder Include="Fortigate_Gui\" />
   </ItemGroup>
 
 </Project>

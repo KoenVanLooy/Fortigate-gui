@@ -34,7 +34,6 @@ namespace Fortigate_Gui.Data
         public DbSet<ZoneInterface> ZoneInterfaces { get; set; }
         public DbSet<ZonePolicy> ZonePolicies { get; set; }
         public DbSet<FirewallAddress> FirewallAddresses { get; set; }
-
         public DbSet<Ip4PolicyService> Ip4PolicyServices { get; set; }
 
         public DbSet<Service> Services { get; set; }
@@ -44,6 +43,7 @@ namespace Fortigate_Gui.Data
         public DbSet<Nat> Nat { get; set; }
 
         public DbSet<StaticRoute> StaticRoutes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
