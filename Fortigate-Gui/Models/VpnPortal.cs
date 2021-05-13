@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Fortigate_Gui.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-        public class VpnPortal
+namespace Fortigate_Gui.Models
+{
+    public class VpnPortal
         {
             public int VpnPortalID { get; set; }
 

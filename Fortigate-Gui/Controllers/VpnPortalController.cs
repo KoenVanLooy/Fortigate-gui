@@ -31,10 +31,10 @@ namespace Fortigate_Gui.Controllers
         // GET: VpnPortal/AddOrEdit
         // GET: VpnPortal/AddOrEdit/5
         [NoDirectAccessAttribute]
-        public async Task<IActionResult> AddOrEdit(int id=0)
+        public async Task<IActionResult> AddOrEdit(int id = 0)
         {
             // eerst controleren of de id is overschreven, indien neen, nieuw model aanmaken, indien ja model ophalen en tonen
-            if (id==0)
+            if (id == 0)
             {
                 ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID");
                 return View(new VpnPortal());
@@ -49,11 +49,10 @@ namespace Fortigate_Gui.Controllers
                 ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID", vpnPortal.ConfigFileID);
                 return View(vpnPortal);
             }
-            
         }
 
         // POST: VpnPortal/AddOrEdit
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -73,14 +72,10 @@ namespace Fortigate_Gui.Controllers
                 }
                 else
                 {
-                    try
-                    {
-                        _context.Update(vpnPortal);
-                        await _context.SaveChangesAsync();
-                    
-                    
+                    _context.Update(vpnPortal);
+                    await _context.SaveChangesAsync();
                 }
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this,"_ViewAll",_context.VpnPortals.ToList())});
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.VpnPortals.ToList()) });
             }
             ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID", vpnPortal.ConfigFileID);
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "AddOrEdit", vpnPortal) });

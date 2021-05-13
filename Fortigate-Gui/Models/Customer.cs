@@ -14,8 +14,6 @@ namespace Fortigate_Gui.Models
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public bool Admin { get; set; }
-        public ConfigFile Configfile { get; set; }
-        public ICollection<ConfigFile> Configfiles { get; set; }
 
         [ForeignKey("CustomUser")]
         public string UserID { get; set; }
