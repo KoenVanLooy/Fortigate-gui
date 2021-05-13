@@ -7,9 +7,9 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a onclick="showInPopup('@Url.Action("Create","FirewallAddress",null,Context.Request.Scheme)','Create FirewallAddress')" class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
+<table class="table" id="datatable">
     <thead>
         <tr>
             <th>
@@ -22,21 +22,38 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subnet)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.FirewallAddressID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FirewallAddressID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FirewallAddressID">Delete</a>
-                <a asp-controller="Home" asp-action="AddFirewallAddress" asp-route-id="@item.FirewallAddressID" class="btn btn-primary">Add conffile</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subnet)
+                </td>
+                <td>
+                    <a onclick="showInPopup('@Url.Action("Edit","FirewallAddress",new { id = item.FirewallAddressID },Context.Request.Scheme)','Edit FirewallAddress')" class="btn btn-success">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        Edit
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@item.FirewallAddressID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                        <button type="submit" class="btn btn-danger"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                    </form>
+                    <a asp-controller="Home" asp-action="AddFirewallAddress" asp-route-id="@item.FirewallAddressID" class="btn btn-primary">Add conffile</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+@section scripts{
+    @*<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.24/af-2.3.5/datatables.min.css" />*@
+    @*<link href="~/css/dataTables.bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+    <script src="~/js/datatables.min.js"></script>
+    @*<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.24/af-2.3.5/datatables.min.js"></script>*@
+    <script>
+        $(document).ready(function () {
+            $("#datatable").DataTable();
+        });
+    </script>
+}

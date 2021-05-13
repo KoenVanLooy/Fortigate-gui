@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Fortigate_Gui.Areas.Identity.Data;
 using Fortigate_Gui.Models;
-using Fortigate_Gui.Models.Fortigate_Gui.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +19,8 @@ namespace Fortigate_Gui.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EnumAcces> EnumAcces { get; set; }
         public DbSet<EnumMode> EnumModes { get; set; }
+        public DbSet<EnumType> EnumTypes { get; set; }
+        public DbSet<EnumPhysical> EnumPhysicals { get; set; }
         public DbSet<Filter> Filters { get; set; }
         public DbSet<Interface> Interfaces { get; set; }
         public DbSet<Ip4Policy> Ip4Policies { get; set; }
@@ -32,7 +33,17 @@ namespace Fortigate_Gui.Data
         public DbSet<Zone> Zones { get; set; }
         public DbSet<ZoneInterface> ZoneInterfaces { get; set; }
         public DbSet<ZonePolicy> ZonePolicies { get; set; }
-        public DbSet<FirewallAddress> FirewallAddresses { get; set; } 
+        public DbSet<FirewallAddress> FirewallAddresses { get; set; }
+
+        public DbSet<Ip4PolicyService> Ip4PolicyServices { get; set; }
+
+        public DbSet<Service> Services { get; set; }
+
+        public DbSet<Models.Action> Actions { get; set; }
+
+        public DbSet<Nat> Nat { get; set; }
+
+        public DbSet<StaticRoute> StaticRoutes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
@@ -58,6 +69,13 @@ namespace Fortigate_Gui.Data
             modelbuilder.Entity<FortiUser>().ToTable("User");
             modelbuilder.Entity<Group>().ToTable("Group");
             modelbuilder.Entity<UserGroup>().ToTable("UserGroup");
+            modelbuilder.Entity<EnumType>().ToTable("EnumType");
+            modelbuilder.Entity<EnumPhysical>().ToTable("EnumPhysical");
+            modelbuilder.Entity<Service>().ToTable("Service");
+            modelbuilder.Entity<Ip4PolicyService>().ToTable("Ip4PolicyService");
+            modelbuilder.Entity<Models.Action>().ToTable("Action");
+            modelbuilder.Entity<Nat>().ToTable("Nat");
+            modelbuilder.Entity<StaticRoute>().ToTable("StaticRoute");
 
         }
     }

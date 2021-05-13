@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-    <h1 class="text-center"><i class="fas fa-info-circle"></i> Interfaces</h1>
+<h1 class="text-center"><i class="fas fa-info-circle"></i> Interfaces</h1>
 
 <p>
-     <a onclick="showInPopup('@Url.Action("Create","Interface",null,Context.Request.Scheme)','Edit Interface')" class="btn btn-primary">Create New</a>
+     <a onclick="showInPopup('@Url.Action("Create","Interface",null,Context.Request.Scheme)','Create Interface')" class="btn btn-primary">Create New</a>
 </p>
 <div id="view-all">
     @await Html.PartialAsync("_ViewAll",Model)

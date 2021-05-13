@@ -76,35 +76,35 @@ namespace Fortigate_Gui
 
         // https://stackoverflow.com/questions/42471866/how-to-create-roles-in-asp-net-core-and-assign-them-to-users
 
-        //private async Task CreateUserRoles(IServiceProvider serviceProvider)
-        //{
-        //    RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-        //    ApplicationDbContext Context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            ApplicationDbContext Context = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-        //    IdentityResult roleResult;
+            IdentityResult roleResult;
 
-        //    bool roleCheck = await roleManager.RoleExistsAsync("Admin");
-        //    if (!roleCheck)
-        //    {
-        //        roleResult = await roleManager.CreateAsync(new IdentityRole("Admin"));
-        //    }
+            bool roleCheck = await roleManager.RoleExistsAsync("Admin");
+            if (!roleCheck)
+            {
+                roleResult = await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
 
-        //    CustomUser user = Context.Users.FirstOrDefault(u => u.Email == "tom@sch.com");
-        //    if (user != null)
-        //    {
-        //        DbSet<IdentityUserRole<string>> roles = Context.UserRoles;
-        //        IdentityRole adminRole = Context.Roles.FirstOrDefault(r => r.Name == "Admin");
-        //        if (adminRole != null)
-        //        {
-        //            if (!roles.Any(ur => ur.UserId == user.Id && ur.RoleId == adminRole.Id))
-        //            {
-        //                roles.Add(new IdentityUserRole<string>() { UserId = user.Id, RoleId = adminRole.Id });
-        //                Customer customer = Context.Customers.FirstOrDefault(x => x.CustomUser == user);
-        //                customer.Admin = true;
-        //                Context.SaveChanges();
-        //            }
-        //        }
-        //    }
-        //}
+            CustomUser user = Context.Users.FirstOrDefault(u => u.Email == "tom@sch.com");
+            if (user != null)
+            {
+                DbSet<IdentityUserRole<string>> roles = Context.UserRoles;
+                IdentityRole adminRole = Context.Roles.FirstOrDefault(r => r.Name == "Admin");
+                if (adminRole != null)
+                {
+                    if (!roles.Any(ur => ur.UserId == user.Id && ur.RoleId == adminRole.Id))
+                    {
+                        roles.Add(new IdentityUserRole<string>() { UserId = user.Id, RoleId = adminRole.Id });
+                        Customer customer = Context.Customers.FirstOrDefault(x => x.CustomUser == user);
+                        customer.Admin = true;
+                        Context.SaveChanges();
+                    }
+                }
+            }
+        }
     }
 }

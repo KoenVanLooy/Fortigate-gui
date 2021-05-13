@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +10,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fortigate_Gui.Data;
 using Fortigate_Gui.Models;
+using Fortigate_Gui.ViewModels;
+using Fortigate_Gui.Helper;
+using Fortigate_Gui.ValidationAttributes;
 
 namespace Fortigate_Gui.Controllers
 {
@@ -44,9 +50,21 @@ namespace Fortigate_Gui.Controllers
         }
 
         // GET: Ip4Policy/Create
-        public IActionResult Create()
+
+        [NoDirectAccessAttribute]
+        public async Task<IActionResult> Create()
         {
-            return View();
+            CreateIp4PolicyViewModel viewModel = new CreateIp4PolicyViewModel
+            {
+                ip4Policy = new Ip4Policy(),
+                SourceInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name"),
+                DestinationInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name"),
+                Actions = new SelectList(await _context.Actions.ToListAsync(), "ActionID", "Name"),
+                Nat = new SelectList(await _context.Nat.ToArrayAsync(),"NatID","Name"),
+                SelectedService = new List<int>(),
+                ServiceList = new SelectList(_context.Services, "ServiceID", "Name")
+            };
+            return View(viewModel);
         }
 
         // POST: Ip4Policy/Create
@@ -54,15 +72,39 @@ namespace Fortigate_Gui.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Ip4PolicyID,SourceInterface,DestinationInterface,SourceAddress,DestinationAddress,Type")] Ip4Policy ip4Policy)
+        public async Task<IActionResult> Create(CreateIp4PolicyViewModel viewModel)
         {
+            Ip4Policy policy = viewModel.ip4Policy;
             if (ModelState.IsValid)
             {
-                _context.Add(ip4Policy);
+                List<Ip4PolicyService> newLines = new List<Ip4PolicyService>();
+                foreach (int serviceID in viewModel.SelectedService)
+                {
+                    Ip4PolicyService ip4PolicyService = new Ip4PolicyService();
+                    ip4PolicyService.ServiceID = serviceID;
+                    ip4PolicyService.Ip4PolicyID = viewModel.ip4Policy.Ip4PolicyID;
+
+                    newLines.Add(ip4PolicyService);
+                }
+                _context.Add(viewModel.ip4Policy);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+
+                Ip4Policy ip4Policy = await _context.Ip4Policies
+                    .Where(x => x.Ip4PolicyID == viewModel.ip4Policy.Ip4PolicyID)
+                    .Include(y => y.Ip4PolicyServices)
+                    .SingleOrDefaultAsync();
+                foreach (Ip4PolicyService ip4PolicyService1 in newLines)
+                {
+                    ip4Policy.Ip4PolicyServices.Add(ip4PolicyService1);
+                }
+
+                await _context.SaveChangesAsync();
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "Index", await _context.Ip4Policies.ToListAsync()) });
             }
-            return View(ip4Policy);
+            viewModel.SourceInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name");
+            viewModel.DestinationInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name");
+            return View(viewModel);
         }
 
         // GET: Ip4Policy/Edit/5
@@ -72,13 +114,19 @@ namespace Fortigate_Gui.Controllers
             {
                 return NotFound();
             }
-
-            var ip4Policy = await _context.Ip4Policies.FindAsync(id);
+            Ip4Policy ip4Policy = await _context.Ip4Policies.FindAsync(id);
+            EditIp4PolicyViewModel viewModel = new EditIp4PolicyViewModel
+            {
+                ip4Policy = ip4Policy,
+                SourceInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name",ip4Policy.SourceInterfaceID),
+                DestinationInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name",ip4Policy.DestinationInterfaceID)
+            };
+            
             if (ip4Policy == null)
             {
                 return NotFound();
             }
-            return View(ip4Policy);
+            return View(viewModel);
         }
 
         // POST: Ip4Policy/Edit/5
@@ -86,9 +134,9 @@ namespace Fortigate_Gui.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Ip4PolicyID,SourceInterface,DestinationInterface,SourceAddress,DestinationAddress,Type")] Ip4Policy ip4Policy)
+        public async Task<IActionResult> Edit(int id, EditIp4PolicyViewModel viewModel)
         {
-            if (id != ip4Policy.Ip4PolicyID)
+            if (id != viewModel.ip4Policy.Ip4PolicyID)
             {
                 return NotFound();
             }
@@ -97,12 +145,12 @@ namespace Fortigate_Gui.Controllers
             {
                 try
                 {
-                    _context.Update(ip4Policy);
+                    _context.Update(viewModel.ip4Policy);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!Ip4PolicyExists(ip4Policy.Ip4PolicyID))
+                    if (!Ip4PolicyExists(viewModel.ip4Policy.Ip4PolicyID))
                     {
                         return NotFound();
                     }
@@ -113,7 +161,7 @@ namespace Fortigate_Gui.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(ip4Policy);
+            return View(viewModel.ip4Policy);
         }
 
         // GET: Ip4Policy/Delete/5

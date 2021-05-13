@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Fortigate_Gui.Models.StaticRoute>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Interface)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DestinationSubnet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gateway)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Interface.Alias)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestinationSubnet)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gateway)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.StaticRouteID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.StaticRouteID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.StaticRouteID">Delete</a>
+                <a asp-controller="Home" asp-action="AddStaticRoute" class="btn btn-primary" asp-route-id="@item.StaticRouteID">Add Conffile</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

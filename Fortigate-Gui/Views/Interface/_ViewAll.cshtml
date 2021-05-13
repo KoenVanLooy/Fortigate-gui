@@ -8,7 +8,10 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Vdom)
+                Physical
+            </th>
+            <th>
+                Type
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Alias)
@@ -17,16 +20,13 @@
                 @Html.DisplayNameFor(model => model.Ip)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SecondaryIp)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Subnet)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EnumAcces)
+                @*@Html.DisplayNameFor(model => model.EnumAcces)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EnumMode)
+                Mode
             </th>
             <th></th>
         </tr>
@@ -39,7 +39,10 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Vdom)
+                    @Html.DisplayFor(modelItem => item.EnumPhysical.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnumType.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Alias)
@@ -48,19 +51,17 @@
                     @Html.DisplayFor(modelItem => item.Ip)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SecondaryIp)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Subnet)
                 </td>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.EnumAcces.EnumAccesID)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnumMode.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EnumMode.EnumModeID)
-                </td>
-                <td>
-                    <a onclick="showInPopup('@Url.Action("Edit","Interface",new { id = item.InterfaceID },Context.Request.Scheme)','Edit Interface')" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                    <a onclick="showInPopup('@Url.Action("Edit","Interface",new { id = item.InterfaceID },Context.Request.Scheme)','Edit Interface')" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i>
+                    Edit</a>
                     <form asp-action="Delete" asp-route-id="@item.InterfaceID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
                         <button type="submit" class="btn btn-danger" ><i class="fas fa-trash" aria-hidden="true"></i></button>
                     </form>

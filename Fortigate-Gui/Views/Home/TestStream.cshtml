@@ -1,0 +1,21 @@
+﻿@model Fortigate_Gui.ViewModels.TestConnectionViewModel
+@{ 
+    ViewData["Title"] = "TestStream";
+    Layout = null;
+}
+    <form asp-action="TestStream" onsubmit="return jQueryAjaxPostTestStream(this);">
+        <div class="form-group">
+            <label asp-for="UserName"></label>
+            <input type="text" asp-for="UserName" />
+        </div>
+        <div class="form-group">
+            <label asp-for="PassWord"></label>
+            <input type="password" asp-for="PassWord" />
+        </div>  
+         <div class="form-group">
+            <label asp-for="IpAddress"></label>
+            <input type="text" asp-for="IpAddress" />
+         </div>
+         <input type="submit" class="btn btn-primary" value="Test connection" />
+</form>
+

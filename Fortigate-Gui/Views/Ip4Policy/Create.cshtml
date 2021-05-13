@@ -1,50 +1,106 @@
-﻿@model Fortigate_Gui.Models.Ip4Policy
+﻿@model Fortigate_Gui.ViewModels.CreateIp4PolicyViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create - Ip4Policy";
+    Layout = null;
 }
 
-<h1>Create</h1>
-
-<h4>Ip4Policy</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="SourceInterface" class="control-label"></label>
-                <input asp-for="SourceInterface" class="form-control" />
-                <span asp-validation-for="SourceInterface" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DestinationInterface" class="control-label"></label>
-                <input asp-for="DestinationInterface" class="form-control" />
-                <span asp-validation-for="DestinationInterface" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SourceAddress" class="control-label"></label>
-                <input asp-for="SourceAddress" class="form-control" />
-                <span asp-validation-for="SourceAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DestinationAddress" class="control-label"></label>
-                <input asp-for="DestinationAddress" class="form-control" />
-                <span asp-validation-for="DestinationAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Create" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.SourceInterfaceID" class="control-label"></label>
+        <select asp-for="ip4Policy.SourceInterfaceID" asp-items="Model.SourceInterface" class="form-control"></select>
+        <span asp-validation-for="ip4Policy.SourceInterfaceID" class="text-danger"></span>
     </div>
-</div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.DestinationInterfaceID" class="control-label"></label>
+        <select asp-for="ip4Policy.DestinationInterfaceID" asp-items="Model.DestinationInterface" class="form-control"></select>
+        <span asp-validation-for="ip4Policy.DestinationInterfaceID" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.SourceAddress" class="control-label"></label>
+        <input asp-for="ip4Policy.SourceAddress" class="form-control" />
+        <span asp-validation-for="ip4Policy.SourceAddress" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.DestinationAddress" class="control-label"></label>
+        <input asp-for="ip4Policy.DestinationAddress" class="form-control" />
+        <span asp-validation-for="ip4Policy.DestinationAddress" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.ActionID" class="control-label"></label>
+        <select asp-for="ip4Policy.ActionID" asp-items="Model.Actions" id="type" class="form-control"></select>
+        <span asp-validation-for="ip4Policy.ActionID" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.NatID" class="control-label"></label>
+        <select asp-for="ip4Policy.NatID" asp-items="Model.Nat" id="type" class="form-control"></select>
+        <span asp-validation-for="ip4Policy.NatID" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SelectedService" class="control-label"></label>
+        <select class="custom-select" multiple asp-for="SelectedService" asp-items="Model.ServiceList"></select>
+    </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div id="div_hide">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="ip4Policy.DnsFilter">
+            <label class="form-check-label" asp-for="ip4Policy.DnsFilter">
+                DNS_FILTER
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="ip4Policy.AppFilter">
+            <label class="form-check-label" asp-for="ip4Policy.AppFilter">
+                APP_FILTER
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="ip4Policy.AvFilter">
+            <label class="form-check-label" asp-for="ip4Policy.AvFilter">
+                AV_FILTER
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="ip4Policy.IpsFilter">
+            <label class="form-check-label" asp-for="ip4Policy.IpsFilter">
+                IPS_FILTER
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="ip4Policy.ProxyFilter">
+            <label class="form-check-label" asp-for="ip4Policy.ProxyFilter">
+                PROXY_FILTER
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="ip4Policy.SslFilter">
+            <label class="form-check-label" asp-for="ip4Policy.SslFilter">
+                SSL_FILTER
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="ip4Policy.WebFilter">
+            <label class="form-check-label" asp-for="ip4Policy.WebFilter">
+                WEB_FILTER
+            </label>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+<script>
+    $(function () {
+        $('#div_hide').show()
+        $('#type').change(function () {
+            if ($('#type').val() == 2) {
+                $('#div_hide').hide();
+            } else {
+                $('#div_hide').show();
+            }
+        });
+    });
+</script>
 

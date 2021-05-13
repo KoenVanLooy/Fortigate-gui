@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Fortigate_Gui.Models.VpnSetting>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ServerCert)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TunnelIpPool)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TunnelIpv6Pool)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SourceInterface)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SourceAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SourceAddressV6)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DefaultPort)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Group)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VpnPortal)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ServerCert)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TunnelIpPool)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TunnelIpv6Pool)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SourceInterface)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SourceAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SourceAddressV6)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DefaultPort)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VpnPortal.IpPool)
+                </td>
+                <td>
+                    <a onclick="ShowInPopup('@Url.Action("AddOrEdit", "VpnSetting", new { id = item.VpnSettingID}, Context.Request.Scheme)', 'Edit VPN Setting')" class="btn btn-outline-success"><i class="far fa-edit"></i></a>
+                    <form asp-action="Delete" asp-route-id="@item.VpnSettingID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                    </form>
+                    <a asp-controller="Home" asp-action="AddVpnSetting" class="btn btn-outline-primary" asp-route-id="@item.VpnSettingID"><i class="far fa-plus-square"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

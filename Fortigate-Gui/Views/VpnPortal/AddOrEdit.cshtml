@@ -1,0 +1,94 @@
+﻿@model Fortigate_Gui.Models.VpnPortal
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col">
+        <form asp-action="AddOrEdit" asp-route-id="@Model.VpnPortalID" onsubmit="return jQueryAjaxPost(this);">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="VpnPortalID" />
+            <div class="form-group">
+                <label asp-for="PortalName" class="control-label"></label>
+                <input asp-for="PortalName" class="form-control" />
+                <span asp-validation-for="PortalName" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TunnelMode" /> @Html.DisplayNameFor(model => model.TunnelMode)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="SplitTunneling" id="CheckSplit" required /> @Html.DisplayNameFor(model => model.SplitTunneling)
+                </label>
+            </div>
+            <div class="form-group" id="DivSplit" style="display:none">
+                <label asp-for="SplitTunnelingRoute" class="control-label"></label>
+                <input asp-for="SplitTunnelingRoute" class="form-control" />
+                <span asp-validation-for="SplitTunnelingRoute" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="WebMode" /> @Html.DisplayNameFor(model => model.WebMode)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="AutoConnect" /> @Html.DisplayNameFor(model => model.AutoConnect)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="KeepAlive" /> @Html.DisplayNameFor(model => model.KeepAlive)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="SavePassword" /> @Html.DisplayNameFor(model => model.SavePassword)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="IpPool" class="control-label"></label>
+                <input asp-for="IpPool" class="form-control" />
+                <span asp-validation-for="IpPool" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                    <label asp-for="ConfigFileID" class="control-label"></label>
+                    <select asp-for="ConfigFileID" class="form-control" asp-items="ViewBag.ConfigFileID"></select>
+                    <span asp-validation-for="ConfigFileID" class="text-danger"></span>
+                </div>*@
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-outline-primary btn-block" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@*script to show/hide splittunnelingroute when splittunneling is enabled, only needed on this page*@
+@*<script>
+        $("#CheckSplit").change(function () {
+            $("#DivSplit").toggle();
+        })
+    </script>*@
+<script>
+    if (('#CheckSplit').prop('checked')) {
+        $('#DivSplit').show();
+    };
+</script>
+
+<script>
+    $('#CheckSplit').change(function () {
+        if ($(this).prop("checked")) {
+            $('#DivSplit').show();
+        } else {
+            $('#DivSplit').hide();
+        }
+    });
+</script>
+
+
+

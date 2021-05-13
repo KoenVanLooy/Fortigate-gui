@@ -16,6 +16,7 @@ namespace Fortigate_Gui.Controllers
 {
     public class InterfaceController : Controller
     {
+
         private readonly ApplicationDbContext _context;
         public InterfaceController(ApplicationDbContext context)
         {
@@ -24,7 +25,10 @@ namespace Fortigate_Gui.Controllers
         //Get Create:index
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Interfaces.ToListAsync());
+            return View(await _context.Interfaces.Include(x => x.EnumType)
+                .Include(x => x.EnumPhysical) 
+                .Include(x => x.EnumMode)
+                .ToListAsync());
         }
 
         // GET: Interfacess/Details/5
@@ -36,7 +40,7 @@ namespace Fortigate_Gui.Controllers
             }
 
             var @interface = await _context.Interfaces
-                .Include(x => x.EnumAcces)
+                .Include(x => x.AccessInterfaces)
                 .Include(y => y.EnumMode)
                 .FirstOrDefaultAsync(m => m.InterfaceID == id);
             if (@interface == null)
@@ -53,6 +57,9 @@ namespace Fortigate_Gui.Controllers
             {
                 Interface = new Interface(),
                 Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name"),
+                Types = new SelectList(_context.EnumTypes,"EnumTypeID","Name"),
+                Physicals = new SelectList(_context.EnumPhysicals,"EnumPhysicalID","Name"),
+                SelectedEnumAcces = new List<int>(),
                 AccessList = new SelectList(_context.EnumAcces, "EnumAccesID", "Name")
             };
 
@@ -67,36 +74,54 @@ namespace Fortigate_Gui.Controllers
         public async Task<IActionResult> Create(CreateInterfaceViewModel viewModel)
         {
             viewModel.Interface.Ip = viewModel.IpAddress;
+            EnumPhysical physical = _context.EnumPhysicals.SingleOrDefault(x => x.EnumPhysicalID == viewModel.Interface.EnumPhysicalID);
+            if (viewModel.VlanName == "NO_VLAN")
+            {
+                viewModel.Interface.Name = physical.Name;
+            }
+            else
+            {
+                viewModel.Interface.Name = viewModel.Interface.Name;
+            }
+
             if (ModelState.IsValid)
 
             {
+                List<AccessInterface> newLines = new List<AccessInterface>();
+                foreach (int enumAccesID in viewModel.SelectedEnumAcces)
+                {
+                    AccessInterface accessInterface = new AccessInterface();
+                    accessInterface.EnumAccesID = enumAccesID;
+                    accessInterface.InterfaceID = viewModel.Interface.InterfaceID;
+
+                    newLines.Add(accessInterface);
+                }
                 _context.Add(viewModel.Interface);
                 await _context.SaveChangesAsync();
-
                 Interface @interface = await _context.Interfaces
-                    .Where(x => x.InterfaceID == viewModel.Interface.InterfaceID)
-                    .Include(y => y.EnumAcces)
-                    .Include(z => z.EnumMode)
-                    .SingleOrDefaultAsync();
+                  .Where(x => x.InterfaceID == viewModel.Interface.InterfaceID)
+                  .Include(y => y.AccessInterfaces)
+                  .Include(t => t.EnumPhysical)
+                  .Include(z => z.EnumMode)
+                  .SingleOrDefaultAsync();
 
-                //using (StreamWriter writer = new StreamWriter("InterfaceScript.txt"))
-                //{
-                //    writer.WriteLine("config system interface");
-                //    writer.WriteLine("edit " + @interface.Name);
-                //    writer.WriteLine("set vdom " + @interface.Vdom);
-                //    writer.WriteLine("set mode " + @interface.EnumMode.Name);
-                //    writer.WriteLine("set ip " + viewModel.IpAddress + " " + @interface.Subnet);
-                //    writer.WriteLine("set allowaccess " + @interface.EnumAcces.Name);
-                //    writer.WriteLine("set vlanid 1");
-                //    writer.WriteLine("set interface internal");
-                //    writer.WriteLine("next");
-                //    writer.WriteLine("end");
-                //}
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll",await _context.Interfaces.ToListAsync())});
+
+                foreach (AccessInterface accessInterface1 in newLines)
+                {
+                    @interface.AccessInterfaces.Add(accessInterface1);
+                }
+                await _context.SaveChangesAsync();
+
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Interfaces.Include(x => x.EnumType)
+                .Include(x => x.EnumPhysical)
+                .Include(x => x.EnumMode)
+                .ToListAsync())});
 
             }
             viewModel.Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name", viewModel.Interface.EnumModeID);
-            viewModel.AccessList = new SelectList(_context.EnumAcces, "EnumAccesID", "Name", viewModel.Interface.EnumAccesID);
+            viewModel.AccessList = new SelectList(_context.EnumAcces, "EnumAccesID", "Name");
+            viewModel.Types = new SelectList(_context.EnumTypes, "EnumTypeID", "Name");
+            viewModel.Physicals = new SelectList(_context.EnumPhysicals, "EnumPhysicalID", "Name");
           return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", viewModel)}); 
         }
 
@@ -141,14 +166,23 @@ namespace Fortigate_Gui.Controllers
                 return NotFound();
             }
 
-            var @interface = await _context.Interfaces.FindAsync(id);
+            var @interface = await _context.Interfaces.Include(x => x.AccessInterfaces).
+                SingleOrDefaultAsync(y => y.InterfaceID == id);
             if (@interface == null)
             {
                 return NotFound();
             }
-            ViewData["EnumAccesID"] = new SelectList(_context.EnumAcces, "EnumAccesID", "Name", @interface.EnumAccesID);
-            ViewData["EnumModeID"] = new SelectList(_context.EnumModes, "EnumModeID", "Name", @interface.EnumModeID);
-            return View(@interface);
+            EditInterfaceViewModel viewModel = new EditInterfaceViewModel
+            {
+                Interface = @interface,
+                IpAddress = @interface.Ip,
+                Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name", @interface.EnumModeID),
+                AccessList = new SelectList(_context.EnumAcces, "EnumAccesID", "Name"),
+                SelectedEnumAcces = @interface.AccessInterfaces.Select(ai => ai.EnumAccesID)
+            };
+            ////ViewData["EnumAccesID"] = new SelectList(_context.EnumAcces, "EnumAccesID", "Name", @interface.EnumAccesID);
+            //ViewData["EnumModeID"] = new SelectList(_context.EnumModes, "EnumModeID", "Name", @interface.EnumModeID);
+            return View(viewModel);
         }
 
         // POST: Interfacess/Edit/5
@@ -156,36 +190,52 @@ namespace Fortigate_Gui.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InterfaceID,Name,Vdom,Alias,Ip,SecondaryIp,Subnet,EnumAccesID,EnumModeID")] Interface @interface)
+        public async Task<IActionResult> Edit(int id, EditInterfaceViewModel viewModel)
         {
-            if (id != @interface.InterfaceID)
+            Interface @interface = await _context.Interfaces.Include(i => i.AccessInterfaces)
+               .SingleOrDefaultAsync(x => x.InterfaceID == id);
+            if (id != viewModel.Interface.InterfaceID)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                @interface.Alias = viewModel.Interface.Alias;
+                @interface.Name = viewModel.Interface.Name;
+                @interface.Ip = viewModel.IpAddress;
+                @interface.Subnet = viewModel.Interface.Subnet;
+                @interface.EnumTypeID = viewModel.Interface.EnumTypeID;
+                @interface.EnumModeID = viewModel.Interface.EnumModeID;
+
+                List<AccessInterface> accessInterfaces = new List<AccessInterface>();
+                if (viewModel.SelectedEnumAcces == null)
                 {
+                    return View(viewModel);
+                }
+                foreach (int enumAccessID in viewModel.SelectedEnumAcces)
+                {
+                    accessInterfaces.Add(
+                    new AccessInterface
+                    {
+                        EnumAccesID = enumAccessID,
+                        InterfaceID = viewModel.Interface.InterfaceID
+                    }
+                  );
+                }
+                @interface.AccessInterfaces.RemoveAll(ai => !accessInterfaces.Contains(ai));
+                @interface.AccessInterfaces.AddRange(accessInterfaces.Where(zi => !@interface.AccessInterfaces.Contains(zi)));
+                
                     _context.Update(@interface);
                     await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InterfaceExists(@interface.InterfaceID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                
                 return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Interfaces.ToListAsync()) });
             }
-            ViewData["EnumAccesID"] = new SelectList(_context.EnumAcces, "EnumAccesID", "Name", @interface.EnumAccesID);
-            ViewData["EnumModeID"] = new SelectList(_context.EnumModes, "EnumModeID", "Name", @interface.EnumModeID);
-            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", @interface) });
+            viewModel.AccessList = new SelectList(_context.Interfaces, "InterfaceID", "Name");
+            viewModel.SelectedEnumAcces = @interface.AccessInterfaces.Select(ai => ai.EnumAccesID);
+            viewModel.Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name", @interface.EnumModeID);
+
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", viewModel) });
         }
 
        

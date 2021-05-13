@@ -1,5 +1,4 @@
-﻿using Fortigate_Gui.Models.Fortigate_Gui.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -50,10 +49,10 @@ namespace Fortigate_Gui.Models
 
         //één group
         public int GroupID { get; set; }
-        public Group group { get; set; }
+        public Group Group { get; set; }
 
         //één portal
         public int? VpnPortalID { get; set; }
-        public VpnPortal vpnPortal { get; set; }
+        public VpnPortal VpnPortal { get; set; }
     }
 }

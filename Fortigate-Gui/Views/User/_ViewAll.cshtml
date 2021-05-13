@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Fortigate_Gui.Models.FortiUser>
+
+<table class="table" id="datatable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th class="text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td class="text-right">
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit", "User", new { id = item.FortiUserID}, Context.Request.Scheme)', 'Edit User')" class="btn btn-outline-danger"><i class="btn-outline-danger fas fa-edit"></i></a>
+                    <form asp-action="Delete" asp-route-id="@item.FortiUserID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></button>
+                    </form>
+                    <a asp-controller="Home" asp-action="AddGroup" class="btn btn-outline-danger" asp-route-id="@item.FortiUserID"><i class="far fa-edit"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

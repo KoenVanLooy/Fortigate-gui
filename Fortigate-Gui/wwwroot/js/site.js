@@ -53,12 +53,8 @@ jQueryAjaxPost = form => {
     } catch (ex) {
         console.log(ex)
     }
-
-   
 }
-
-jQueryAjaxDelete = form => {
-    if (confirm('are you sure to delete this record?') ){
+    jQueryAjaxPostTestStream = form => {
         try {
             $.ajax({
                 type: 'POST',
@@ -67,19 +63,51 @@ jQueryAjaxDelete = form => {
                 contentType: false,
                 processData: false,
                 success: function (res) {
-                    $('#view-all').html(res.html)
-                    $.notify('Deleted succesfully', { globalPosition: 'top center', className: 'success' });
+                    if (res.isValid) {
+                        $('#view-all').html(res.html)
+                        $('#form-modal .modal-body').html('Test Connection');
+                        $('#form-modal .modal-title').html('Succesfully connected');
+                        $('#form-modal').modal('show');
+                        $.notify('connected succesfully', { globalPosition: 'top center', className: 'success' });
+                    }
+                    else
+                        $('#form-modal .modal-body').html(res.html);
                 },
                 error: function (err) {
                     console.log(err)
                 }
             })
-
-        } catch (e) {
-            console.log(e);
+            //to prevent default form submit event
+            return false;
+        } catch (ex) {
+            console.log(ex)
         }
     }
 
-    //to prevent default form submit event
-    return false;
-}
+    jQueryAjaxDelete = form => {
+        if (confirm('are you sure to delete this record?')) {
+            try {
+                $.ajax({
+                    type: 'POST',
+                    url: form.action,
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        $('#view-all').html(res.html)
+                        $.notify('Deleted succesfully', { globalPosition: 'top center', className: 'success' });
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                })
+
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        //to prevent default form submit event
+        return false;
+    }
+

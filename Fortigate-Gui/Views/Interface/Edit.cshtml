@@ -1,65 +1,66 @@
-﻿@model Fortigate_Gui.Models.Interface
+﻿@model Fortigate_Gui.ViewModels.EditInterfaceViewModel
 
 @{
     Layout = null;
     ViewData["Title"] = "Edit";
 }
 
-        <form asp-action="Edit" asp-route-id="@Model.InterfaceID" onsubmit="return jQueryAjaxPost(this);">
+        <form asp-action="Edit" asp-route-id="@Model.Interface.InterfaceID" onsubmit="return jQueryAjaxPost(this);">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="InterfaceID" />
+            <input type="hidden" asp-for="Interface.InterfaceID" />
             <div class="row">
                 <div class="col col-6">
                     <div class="form-group">
-                        <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <label asp-for="Interface.Name" class="control-label"></label>
+                        <input asp-for="Interface.Name" class="form-control" />
+                        <span asp-validation-for="Interface.Name" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col col-6">
                     <div class="form-group">
-                        <label asp-for="Vdom" class="control-label"></label>
-                        <input asp-for="Vdom" class="form-control" />
-                        <span asp-validation-for="Vdom" class="text-danger"></span>
+                        <label asp-for="Interface.EnumTypeID" class="control-label"></label>
+                        <select asp-for="Interface.EnumTypeID" class="form-control" asp-items="Model.Modes"></select>
+                        <span asp-validation-for="Interface.EnumTypeID" class="text-danger"></span>
                     </div>
                  </div>
             </div>
             <div class="row">
                 <div class="form-group col col-6">
-                    <label asp-for="Alias" class="control-label"></label>
-                    <input asp-for="Alias" class="form-control" />
-                    <span asp-validation-for="Alias" class="text-danger"></span>
+                    <label asp-for="Interface.Alias" class="control-label"></label>
+                    <input asp-for="Interface.Alias" class="form-control" />
+                    <span asp-validation-for="Interface.Alias" class="text-danger"></span>
                 </div>
                 <div class="form-group col col-6">
-                    <label asp-for="Ip" class="control-label"></label>
-                    <input asp-for="Ip" class="form-control" />
-                    <span asp-validation-for="Ip" class="text-danger"></span>
+                    <label asp-for="IpAddress" class="control-label"></label>
+                    <input asp-for="IpAddress" class="form-control" />
+                    <span asp-validation-for="IpAddress" class="text-danger"></span>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col col-6">
-                    <label asp-for="Subnet" class="control-label"></label>
-                    <input asp-for="Subnet" class="form-control" />
-                    <span asp-validation-for="Subnet" class="text-danger"></span>
-                </div>
-                <div class="form-group col col-6">
-                    <label asp-for="EnumAccesID" class="control-label"></label>
-                    <select asp-for="EnumAccesID" class="form-control" asp-items="ViewBag.EnumAccesID"></select>
-                    <span asp-validation-for="EnumAccesID" class="text-danger"></span>
+                    <label asp-for="Interface.Subnet" class="control-label"></label>
+                    <input asp-for="Interface.Subnet" class="form-control" />
+                    <span asp-validation-for="Interface.Subnet" class="text-danger"></span>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col col-6">
-                    <label asp-for="EnumModeID" class="control-label"></label>
-                    <select asp-for="EnumModeID" class="form-control" asp-items="ViewBag.EnumModeID"></select>
-                    <span asp-validation-for="EnumModeID" class="text-danger"></span>
+                    <label asp-for="SelectedEnumAcces"></label>
+                    <select class="custom-select" multiple asp-for="SelectedEnumAcces" asp-items="Model.AccessList"></select>
                 </div>
             </div>
-            <div class="row">
-                <div class="form-group col col-12">
-                    <input type="submit" value="Save" class="w-100 btn btn-primary" />
+                <div class="row">
+                    <div class="form-group col col-6">
+                        <label asp-for="Interface.EnumModeID" class="control-label"></label>
+                        <select asp-for="Interface.EnumModeID" class="form-control" asp-items="Model.Modes"></select>
+                        <span asp-validation-for="Interface.EnumModeID" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="form-group col col-12">
+                        <input type="submit" value="Save" class="w-100 btn btn-primary" />
+                    </div>
+                </div>
 </form>
 
 <div>

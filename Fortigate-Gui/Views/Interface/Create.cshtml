@@ -5,9 +5,14 @@
     <form asp-action="Create" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
         <div class="col-6 float-left">
             <div class="form-group">
-                <label asp-for="Interface.Vdom" class="control-label"></label>
-                <input asp-for="Interface.Vdom" class="form-control" />
-                <span asp-validation-for="Interface.Vdom" class="text-danger"></span>
+                <label asp-for="Interface.EnumTypeID" class="control-label"></label>
+                <select asp-for="Interface.EnumTypeID" asp-items="Model.Types" id="type" class="form-control"></select>
+                <span asp-validation-for="Interface.EnumTypeID" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="div_hide">
+                <label asp-for="Interface.VlanId" class="control-label"></label>
+                <input asp-for="Interface.VlanId" class="form-control" />
+                <span asp-validation-for="Interface.VlanId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IpAddress" class="control-label"></label>
@@ -22,10 +27,15 @@
             </div>
         </div>
         <div class="col-6 float-left">
-            <div class="form-group">
-                <label asp-for="Interface.Name" class="control-label"></label>
-                <input asp-for="Interface.Name" class="form-control" />
-                <span asp-validation-for="Interface.Name" class="text-danger"></span>
+            <div class="form-group" id="div_name_select">
+                <label asp-for="Interface.EnumPhysicalID" class="control-label"></label>
+                <select asp-for="Interface.EnumPhysicalID" id="name_selectval" asp-items="Model.Physicals" class="form-control"></select>
+                <span asp-validation-for="Interface.EnumPhysicalID" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="div_name_input">
+                <label asp-for="VlanName" class="control-label"></label>
+                <input asp-for="VlanName" value="NO_VLAN" id="name_inputval" class="form-control" />
+                <span asp-validation-for="VlanName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Interface.Alias" class="control-label"></label>
@@ -38,9 +48,7 @@
                 <span asp-validation-for="Interface.Subnet" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Interface.EnumAccesID" class="control-label"></label>
-                <select asp-for="Interface.EnumAccesID" asp-items="Model.AccessList" class="form-control"></select>
-                <span asp-validation-for="Interface.EnumAccesID" class="text-danger"></span>
+                <select class="custom-select" multiple asp-for="SelectedEnumAcces" asp-items="Model.AccessList"></select>
             </div>
         </div>
         <div class="col-12 float-left">
@@ -49,4 +57,22 @@
     </form>
     <a asp-action="Stream" asp-controller="Interface">Test stream</a>
 </div>
-
+<script>
+    $(function () {
+        $('#div_hide').hide();
+        $('#div_name_input').hide();
+        $('#type').change(function () {
+            if ($('#type').val() == 2) {
+                $('#div_hide').show();
+                $('#name_inputval').val('');
+                $('#div_name_input').show();
+                $('#div_name_select').hide();
+            } else {
+                $('#div_hide').hide();
+                $('#div_name_input').hide();
+                $('#name_inputval').val('NO_VLAN');
+                $('#div_name_select').show();
+            }
+        });
+    });
+</script>

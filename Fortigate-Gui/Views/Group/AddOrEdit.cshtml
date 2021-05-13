@@ -1,0 +1,38 @@
+﻿@model Fortigate_Gui.ViewModels.AddOrEditGroupViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col">
+        <form asp-action="AddOrEdit" asp-route-id="@Model.Group.GroupID" onsubmit="return jQueryAjaxPost(this);">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Group.GroupID" />
+            <div class="form-group">
+                <label asp-for="Group.Name" class="control-label"></label>
+                <input asp-for="Group.Name" class="form-control" />
+                <span asp-validation-for="Group.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <select asp-for="SelectedFortiUsers" asp-items="Model.FortiUserList"></select>
+            </div>
+            <div>
+                 <p>
+                     <a onclick="showInPopup('@Url.Action("AddOrEdit","User",null,Context.Request.Scheme)','Add User')" class="btn btn-outline-success">New User</a>
+                     </p>
+            </div>
+            
+            @*<div class="form-group">
+            <label asp-for="ConfigFileID" class="control-label"></label>
+            <select asp-for="ConfigFileID" class="form-control" asp-items="ViewBag.ConfigFileID"></select>
+            <span asp-validation-for="ConfigFileID" class="text-danger"></span>
+        </div>*@
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-outline-primary btn-block" />
+            </div>
+        </form>
+    </div>
+</div>
+

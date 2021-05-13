@@ -13,7 +13,7 @@ namespace Fortigate_Gui.ValidationAttributes
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            CreateInterfaceViewModel viewModel = (CreateInterfaceViewModel)validationContext.ObjectInstance;
+            IpInterfaceViewmodel viewModel = (IpInterfaceViewmodel)validationContext.ObjectInstance;
 
             const string regexPattern = @"^([\d]{1,3}\.){3}[\d]{1,3}$";
             var regex = new Regex(regexPattern);

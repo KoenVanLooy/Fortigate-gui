@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fortigate_Gui.Data;
+using Fortigate_Gui.Helper;
 using Fortigate_Gui.Models;
 using Fortigate_Gui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -88,7 +89,7 @@ namespace Fortigate_Gui.Controllers
                     }
                     await _context.SaveChangesAsync();
 
-                    return RedirectToAction(nameof(Index));
+                return Json(new{isValid = true,html = RenderRazorHelper.RenderRazorViewToString(this, "Index", await _context.Zones.ToListAsync())});
                 }
                 viewModel.InterfaceList = new SelectList(_context.Interfaces, "InterfaceID", "Name");
                 return View(viewModel);

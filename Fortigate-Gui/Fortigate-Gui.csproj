@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,12 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20210325124125_InitialCreate.cs" />
-    <Compile Remove="Migrations\20210325124125_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\20210325155123_FWAD-ZonID.cs" />
-    <Compile Remove="Migrations\20210325155123_FWAD-ZonID.Designer.cs" />
-    <Compile Remove="Migrations\20210325155249_FWAD-ZoneID.cs" />
-    <Compile Remove="Migrations\20210325155249_FWAD-ZoneID.Designer.cs" />
+    <Compile Remove="Migrations\20210510165517_ChangeNavigationProperties.cs" />
+    <Compile Remove="Migrations\20210510165517_ChangeNavigationProperties.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +23,19 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\image\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\VpnPortal\AddOrEdit.cshtml" />
+    <None Include="Views\VpnPortal\Index.cshtml" />
+    <None Include="Views\VpnPortal\_ViewAll.cshtml" />
+    <None Include="Views\VpnSetting\AddOrEdit.cshtml" />
+    <None Include="Views\VpnSetting\Index.cshtml" />
+    <None Include="Views\VpnSetting\_ViewAll.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -12,15 +12,9 @@ namespace Fortigate_Gui.Models
         public int InterfaceID { get; set; }
 
 
-        [Required(ErrorMessage = "This Field is required.")]
-        [MaxLength(20,ErrorMessage ="Max 20 characters.")]
+        //[Required(ErrorMessage = "This Field is required.")]
+        //[MaxLength(20,ErrorMessage ="Max 20 characters.")]
         public string Name { get; set; }
-
-
-        [Required(ErrorMessage = "This Field is required.")]
-        [MaxLength(20, ErrorMessage = "Max 20 characters.")]
-        public string Vdom { get; set; }
-
 
         [Required(ErrorMessage = "This Field is required.")]
         [MaxLength(20, ErrorMessage = "Max 20 characters.")]
@@ -29,28 +23,30 @@ namespace Fortigate_Gui.Models
         //[DisplayName("Ip Address")]
         //[Required(ErrorMessage = "This Field is required.")]
         public string Ip { get; set; }
-        public bool SecondaryIp { get; set; }
+
+        [Required(ErrorMessage = "This Field is required.")]
+        public int VlanId { get; set; }
+
 
         [MaxLength(20, ErrorMessage = "Max 20 characters.")]
-
-
-
         [Required(ErrorMessage = "This Field is required.")]
         public string Subnet { get; set; }
 
 
-        [DisplayName("Allow Access")]
-        [Required(ErrorMessage = "This Field is required.")] 
-        public int EnumAccesID { get; set; }
-
-        public EnumAcces EnumAcces { get; set; }
+        public List<AccessInterface> AccessInterfaces { get; set; }
 
 
         [DisplayName("Mode")]
         [Required(ErrorMessage = "This Field is required.")]
         public int EnumModeID { get; set; }
-
-       
         public EnumMode EnumMode { get; set; }
+
+        [DisplayName("Type")]
+        [Required(ErrorMessage = "This Field is required.")]
+        public int EnumTypeID { get; set; }
+        public EnumType EnumType { get; set; }
+        [DisplayName("Name")]
+        public virtual int? EnumPhysicalID { get; set; }
+        public EnumPhysical EnumPhysical { get; set; }
     }
 }

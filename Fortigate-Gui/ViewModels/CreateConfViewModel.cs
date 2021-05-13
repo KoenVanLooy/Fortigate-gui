@@ -11,5 +11,15 @@ namespace Fortigate_Gui.ViewModels
         public List<Interface> Interfaces { get; set; }
         public List<Zone> Zones { get; set; }
         public List<FirewallAddress> FirewallAddresses { get; set; }
+        public List<Ip4Policy> Ip4Policies { get; set; }
+
+        public List<StaticRoute> StaticRoutes { get; set; }
+
+        public List<Group> Groups { get; set; }
+        public List<VpnSetting> VpnSettings { get; set; }
+
+        public bool DnsFilter { get; set; }
+
+       
     }
 }
