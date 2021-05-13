@@ -8,6 +8,22 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" data-rocket-async="style" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+    <style>
+        .form-control {
+            border-color: #dc3545;
+        }
+        .form-control:focus {
+            border-color: #dc3545;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+        }
+
+        .has-error .form-control:focus {
+            box-shadow: none;
+            -webkit-box-shadow: none;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -45,7 +61,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"></h5>
+                    <h5 class="text-center modal-title"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -69,6 +85,12 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/notify.min.js" asp-append-version="true"></script>
+    <script src="~/js/datatables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#datatable").DataTable();
+        });
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

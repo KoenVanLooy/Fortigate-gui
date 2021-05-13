@@ -1,14 +1,10 @@
 ﻿@model Fortigate_Gui.ViewModels.AddOrEditUserViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "AddOrEdit";
     Layout = null;
 }
 
-<h1>Edit</h1>
-
-<h2>FortiUser</h2>
-<hr />
 <div class="row">
     <div class="col">
         <form asp-action="AddOrEdit" asp-route-id="@Model.FortiUser.FortiUserID" onsubmit="return jQueryAjaxPost(this);">
@@ -28,7 +24,7 @@
                 <select asp-for="SelectedGroups" asp-items="Model.GroupList"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Submit" class="btn btn-outline-primary btn-block" />
+                <input type="submit" value="Submit" class="btn btn-outline-danger btn-block" />
             </div>
         </form>
     </div>

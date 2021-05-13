@@ -3,227 +3,255 @@
 @{ ViewData["Title"] = "Home Page"; }
 
 
-
-<h3 class="col col-6 float-left mx-0">Interfaces</h3>
-<h3 class="col col-6 float-left mx-0">Zones</h3>
-<div class="tab">
-    <table class="table table-hover col col-5 float-left">
-
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Details</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @{ int i = 0; }
-            @foreach (Interface _interface in Model.Interfaces)
-            {
-
+<div class="row">
+    <div class="col-6">
+        <h3 class="text-center"><i class="fas fa-info-circle"></i> Interfaces</h3>
+        <table class="table">
+            <thead>
                 <tr>
-                    <th scope="row">@(i + 1)</th>
-                    <td>@_interface.Name</td>
-                    <td><a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = _interface.InterfaceID },Context.Request.Scheme)','Edit Interface')" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</a></td>
-                    <td><a asp-action="DelInterface" asp-route-id="@i" class="btn btn-danger"><i class="fas fa-trash" aria-hidden="true"></i></a></td>
-                    @{ i++;}
+                    <th style="width: 33%">#</th>
+                    <th style="width: 33%">Name</th>
+                    <th style="width: 33%" class="text-right">Actions</th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @{ int i = 0; }
+                @foreach (Interface _interface in Model.Interfaces)
+                {
 
+                    <tr>
+                        <td scope="row">@(i + 1)</td>
+                        <td>@_interface.Name</td>
+                        <td class="text-right">
+                            <a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = _interface.InterfaceID },Context.Request.Scheme)','Edit Interface')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit" aria-hidden="true"></i></a>
+                            <a asp-action="DelInterface" asp-route-id="@i" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
+                        </td>
+                        @{ i++;}
+                    </tr>
+                }
+            </tbody>
             <tr>
-                <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="Interface" asp-action="Index">+</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Interface" asp-action="Create">Add New</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Interface" asp-action="Index">View All</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Interface" asp-action="Index">Delete All</a></td>
             </tr>
-        </tbody>
-    </table>
-    <div class="col col-1"></div>
-    <table class="table table-hover col col-5 float-left">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Alias</th>
-                <th scope="col">Detail</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{ int j = 0; }
-            @foreach (Zone _zone
-             in Model.Zones)
-            {
-
+        </table>
+    </div>
+    <div class="col-6">
+        <h3 class="text-center"><i class="fas fa-code"></i> Zones</h3>
+        <table class="table">
+            <thead>
                 <tr>
-                    <th scope="row">@(j+1)</th>
-                    <td>@_zone.Name</td>
-                    <td><a onclick="showInPopup('@Url.Action("Edit","Zone",new {id = _zone.ZoneID },Context.Request.Scheme)','Edit Zone')" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</a></td>
-                    <td><a asp-action="DelZone" asp-route-id="@j" class="btn btn-danger"><i class="fas fa-trash" aria-hidden="true"></i></a></td>
-                    @{j++;}
+                    <th style="width: 33%">#</th>
+                    <th style="width: 33%">Name</th>
+                    <th style="width: 33%" class="text-right">Actions</th>
                 </tr>
+            </thead>
+            <tbody>
+                @{ int k = 0; }
+                @foreach (Zone _zone in Model.Zones)
+                {
 
-            }
-
+                    <tr>
+                        <td scope="row">@(k + 1)</td>
+                        <td>@_zone.Name</td>
+                        <td class="text-right">
+                            <a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = _zone.ZoneID },Context.Request.Scheme)','Edit Zone')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit" aria-hidden="true"></i></a>
+                            <a asp-action="DelInterface" asp-route-id="@k" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
+                        </td>
+                        @{ k++;}
+                    </tr>
+                }
+            </tbody>
             <tr>
-                <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="Zone" asp-action="Index">+</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Zone" asp-action="Create">Add New</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Zone" asp-action="Index">View All</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Zone" asp-action="Index">Delete All</a></td>
             </tr>
-        </tbody>
-    </table>
+        </table>
+    </div>
 </div>
-<h3 class="col col-6 float-left">Address Objects</h3>
-<h3 class="col col-6 float-left">IPv4 policies</h3>
-<table class="table table-hover col col-5 float-left">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Alias</th>
-            <th scope="col">Detail</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{ int k = 0; }
-        @foreach (FirewallAddress _fwAdress in Model.FirewallAddresses)
-        {
 
+<div class="row">
+    <div class="col-6">
+        <h3 class="text-center"><i class="fas fa-at"></i> Address Objects</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 33%">#</th>
+                    <th style="width: 33%">Name</th>
+                    <th style="width: 33%" class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int j = 0; }
+                @foreach (FirewallAddress _fwAdress in Model.FirewallAddresses)
+                {
+                    <tr>
+                        <th scope="row">@(j + 1)</th>
+                        <td>@_fwAdress.Name</td>
+                        <td class="text-right">
+                            <a onclick="showInPopup('@Url.Action("Edit","Zone",new {id = _fwAdress.FirewallAddressID },Context.Request.Scheme)','Edit Firewall Address')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit" aria-hidden="true"></i></a>
+                            <a asp-action="DelFWAdress" asp-route-id="@j" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
+                        </td>
+                        @{j++;}
+                    </tr>
+                }
+            </tbody>
             <tr>
-                <th scope="row">@(k+1)</th>
-                <td>@_fwAdress.Name</td>
-                <td><a onclick="showInPopup('@Url.Action("Edit","FirewallAddress",new {id = _fwAdress.FirewallAddressID },Context.Request.Scheme)','Edit FirewallAddress')" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</a></td>
-                <td><a asp-action="DelFWAdress" asp-route-id="@k" class="btn btn-danger"><i class="fas fa-trash" aria-hidden="true"></i></a></td>
-                @{k++;}
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="FirewallAddress" asp-action="Index">Add New</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="FirewallAddress" asp-action="Index">View All</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="FirewallAddress" asp-action="Index">Delete All</a></td>
             </tr>
-        }
-        <tr>
-            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="FirewallAddress" asp-action="Index">+</a></td>
-        </tr>
-    </tbody>
-</table>
-
-<table class="table table-hover col col-5 float-left ml-4">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Alias</th>
-            <th scope="col">Detail</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{ int h = 0; }
-        @foreach (Ip4Policy ip4Policy in Model.Ip4Policies)
-        {
-
-            <tr>
-                <th scope="row">@(h+1)</th>
-                <td>@ip4Policy.SourceAddress</td>
-                <td><a onclick="showInPopup('@Url.Action("Edit","Ip4Policy",new {id = ip4Policy.Ip4PolicyID },Context.Request.Scheme)','Edit Ip4Policy')" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</a></td>
-                <td><a asp-action="DelIp4Policy" asp-route-id="@h" class="btn btn-danger"><i class="fas fa-trash" aria-hidden="true"></i></a></td>
-                @{h++;}
-            </tr>
-
-        }
-
-        <tr>
-            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="Ip4Policy" asp-action="Index">+</a></td>
-        </tr>
-    </tbody>
-</table>
-<table class="table table-hover col col-5 float-left">
-
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Details</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{ int a = 0; }
-        @foreach (StaticRoute staticRoute in Model.StaticRoutes)
-        {
-
-            <tr>
-                <th scope="row">@(a+ 1)</th>
-                <td>@staticRoute.DestinationSubnet</td>
-                @*<td><a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = _interface.InterfaceID },Context.Request.Scheme)','Edit Interface')" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</a></td>*@
-                <td><a asp-action="DelStaticRoute" asp-route-id="@a" class="btn btn-danger"><i class="fas fa-trash" aria-hidden="true"></i></a></td>
-                @{ a++;}
-            </tr>
-        }
-
-        <tr>
-            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="StaticRoute" asp-action="Index">+</a></td>
-        </tr>
-    </tbody>
-</table>
-<table class="table table-hover col col-5 float-left">
-
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{ int b = 0; }
-        @foreach (Group group in Model.Groups)
-        {
-
-            <tr>
-                <th scope="row">@(b+ 1)</th>
-                <td>@group.Name</td>
-                @*<td><a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = _interface.InterfaceID },Context.Request.Scheme)','Edit Interface')" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</a></td>*@
-                <td><a asp-action="DelGroup" asp-route-id="@a" class="btn btn-danger"><i class="fas fa-trash" aria-hidden="true"></i></a></td>
-                @{ b++;}
-            </tr>
-        }
-
-        <tr>
-            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="Group" asp-action="Index">+</a></td>
-        </tr>
-    </tbody>
-</table>
-<table class="table table-hover col col-5 float-left">
-
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Portal</th>
-            <th scope="col">Group</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{ int c = 0; }
-        @foreach (VpnSetting vpn in Model.VpnSettings)
-        {
-
-        <tr>
-            <th scope="row">@(c+ 1)</th>
-            <td>@vpn.VpnPortal.PortalName</td>
-            <td>@vpn.Group.Name</td>
-            @*<td><a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = _interface.InterfaceID },Context.Request.Scheme)','Edit Interface')" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</a></td>*@
-            <td><a asp-action="DelVpnSetting" asp-route-id="@a" class="btn btn-danger"><i class="fas fa-trash" aria-hidden="true"></i></a></td>
-            @{ c++;}
-        </tr>
-        }
-
-        <tr>
-            <td class="text-center" colspan="4"><a class="btn btn-primary w-100" asp-controller="VpnSetting" asp-action="Index">+</a></td>
-        </tr>
-    </tbody>
-</table>
-
-<form asp-action="Index">
-    <div class="col col-12 float-left">
-        <a onclick="showInPopup('@Url.Action("TestStream","Home",null,Context.Request.Scheme)','Test Connection')" class="btn btn-primary my-1 text-white">Test Connection</a>
+        </table>
     </div>
-    <div class="col col-12 float-left">
-        <a asp-action="StreamConf" asp-controller="Home" class="btn btn-primary my-1">StreamConf</a>
-    </div>
-    <div class="col col-12 float-left">
-        <button type="submit" asp-route-id="1" class="btn btn-primary my-1">Download conffile</button>
-    </div>
+    <div class="col-6">
+        <h3 class="text-center"><i class="fas fa-code"></i> IPv4 Policies</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 33%">#</th>
+                    <th style="width: 33%">Name</th>
+                    <th style="width: 33%" class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int l = 0; }
+                @foreach (Ip4Policy ip4Policy in Model.Ip4Policies)
+                {
 
-</form>
+                    <tr>
+                        <td scope="row">@(l + 1)</td>
+                        <td>@ip4Policy.SourceAddress</td>
+                        <td class="text-right">
+                            <a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = ip4Policy.Ip4PolicyID },Context.Request.Scheme)','Edit IPv4 Policy')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit" aria-hidden="true"></i></a>
+                            <a asp-action="DelIp4Policy" asp-route-id="@l" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
+                        </td>
+                        @{ l++;}
+                    </tr>
+                }
+            </tbody>
+            <tr>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Ip4Policy" asp-action="Index">Add New</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Ip4Policy" asp-action="Index">View All</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Ip4Policy" asp-action="Index">Delete All</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <h3 class="text-center"><i class="fas fa-route"></i> Static Routes</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 33%">#</th>
+                    <th style="width: 33%">Name</th>
+                    <th style="width: 33%" class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int m = 0; }
+                @foreach (StaticRoute staticRoute in Model.StaticRoutes)
+                {
+                    <tr>
+                        <td scope="row">@(m + 1)</td>
+                        <td>@staticRoute.DestinationSubnet</td>
+                        <td class="text-right">
+                            <a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = staticRoute.StaticRouteID },Context.Request.Scheme)','Edit Static Route')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit" aria-hidden="true"></i></a>
+                            <a asp-action="DelStaticRoute" asp-route-id="@m" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
+                        </td>
+                        @{ m++;}
+                    </tr>
+                }
+            </tbody>
+            <tr>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="StaticRoute" asp-action="Create">Add New</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="StaticRoute" asp-action="Index">View All</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="StaticRoute" asp-action="Index">Delete All</a></td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-6">
+        <h3 class="text-center"><i class="fas fa-users"></i> Groups</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 33%">#</th>
+                    <th style="width: 33%">Name</th>
+                    <th style="width: 33%" class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int n = 0; }
+                @foreach (Group group in Model.Groups)
+                {
+                    <tr>
+                        <td scope="row">@(n + 1)</td>
+                        <td>@group.Name</td>
+                        <td class="text-right">
+                            <a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = group.GroupID },Context.Request.Scheme)','Edit Group')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit" aria-hidden="true"></i></a>
+                            <a asp-action="DelGroup" asp-route-id="@n" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
+                        </td>
+                        @{ n++;}
+                    </tr>
+                }
+            </tbody>
+            <tr>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Group" asp-action="Index">Add New</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Group" asp-action="Index">View All</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Group" asp-action="Index">Delete All</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <h3 class="text-center"><i class="fas fa-sliders-h"></i> VPN Settings</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 33%">#</th>
+                    <th style="width: 33%">Name</th>
+                    <th style="width: 33%" class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int o = 0; }
+                @foreach (VpnSetting vpn in Model.VpnSettings)
+                {
+                    <tr>
+                        <td scope="row">@(o + 1)</td>
+                        <td>@vpn.VpnPortal.PortalName</td>
+                        <td class="text-right">
+                            <a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = vpn.VpnSettingID },Context.Request.Scheme)','Edit VPN Settings')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit" aria-hidden="true"></i></a>
+                            <a asp-action="DelVpnSetting" asp-route-id="@o" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
+                        </td>
+                        @{ o++;}
+                    </tr>
+                }
+            </tbody>
+            <tr>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="VpnSetting" asp-action="Create">Add New</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="VpnSetting" asp-action="Index">View All</a></td>
+                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="VpnSetting" asp-action="Index">Delete All</a></td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-6">
+        <hr />
+        <form asp-action="Index">
+            <div class="col col-12 float-left">
+                <a onclick="showInPopup('@Url.Action("TestStream","Home",null,Context.Request.Scheme)','Test Connection')" class="btn btn-outline-danger btn-block text-black-50">Test Connection</a>
+            </div>
+            <div class="col col-12 float-left">
+                <a asp-action="StreamConf" asp-controller="Home" class="btn btn-outline-danger btn-block text-black-50">Stream Configuration File</a>
+            </div>
+            <div class="col col-12 float-left">
+                <button type="submit" asp-route-id="1" class="btn btn-outline-danger btn-block text-black-50">Download Configuration File</button>
+            </div>
+        </form> 
+    </div>
+</div>

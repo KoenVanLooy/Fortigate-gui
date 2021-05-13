@@ -122,59 +122,6 @@ namespace Fortigate_Gui.Migrations
                     b.ToTable("Action");
                 });
 
-            modelBuilder.Entity("Fortigate_Gui.Models.Client", b =>
-                {
-                    b.Property<int>("ClientID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("EmployeeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FactoryName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ClientID");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.ToTable("Client");
-                });
-
-            modelBuilder.Entity("Fortigate_Gui.Models.ConfigFile", b =>
-                {
-                    b.Property<int>("ConfigfileID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ClientID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CustomerID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FilterID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ConfigfileID");
-
-                    b.HasIndex("ClientID");
-
-                    b.HasIndex("CustomerID");
-
-                    b.HasIndex("FilterID");
-
-                    b.ToTable("ConfigFile");
-                });
-
             modelBuilder.Entity("Fortigate_Gui.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerID")
@@ -184,9 +131,6 @@ namespace Fortigate_Gui.Migrations
 
                     b.Property<bool>("Admin")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ConfigfileID")
-                        .HasColumnType("int");
 
                     b.Property<string>("Firstname")
                         .HasColumnType("nvarchar(max)");
@@ -199,33 +143,11 @@ namespace Fortigate_Gui.Migrations
 
                     b.HasKey("CustomerID");
 
-                    b.HasIndex("ConfigfileID");
-
                     b.HasIndex("UserID")
                         .IsUnique()
                         .HasFilter("[UserID] IS NOT NULL");
 
                     b.ToTable("Customer");
-                });
-
-            modelBuilder.Entity("Fortigate_Gui.Models.Employee", b =>
-                {
-                    b.Property<int>("EmployeeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ClientID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EmployeeID");
-
-                    b.HasIndex("ClientID");
-
-                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("Fortigate_Gui.Models.EnumAcces", b =>
@@ -288,21 +210,6 @@ namespace Fortigate_Gui.Migrations
                     b.ToTable("EnumType");
                 });
 
-            modelBuilder.Entity("Fortigate_Gui.Models.Filter", b =>
-                {
-                    b.Property<int>("FilterID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ConfigFilter")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("FilterID");
-
-                    b.ToTable("Filter");
-                });
-
             modelBuilder.Entity("Fortigate_Gui.Models.FirewallAddress", b =>
                 {
                     b.Property<int>("FirewallAddressID")
@@ -342,56 +249,7 @@ namespace Fortigate_Gui.Migrations
 
                     b.HasKey("FortiUserID");
 
-                    b.ToTable("User");
-                });
-
-            modelBuilder.Entity("Fortigate_Gui.Models.Fortigate_Gui.Models.VpnPortal", b =>
-                {
-                    b.Property<int>("VpnPortalID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("AutoConnect")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ConfigFileID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IpPool")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(79)")
-                        .HasMaxLength(79);
-
-                    b.Property<bool>("KeepAlive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PortalName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(35)")
-                        .HasMaxLength(35);
-
-                    b.Property<bool>("SavePassword")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("SplitTunneling")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SplitTunnelingRoute")
-                        .HasColumnType("nvarchar(79)")
-                        .HasMaxLength(79);
-
-                    b.Property<bool>("TunnelMode")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("WebMode")
-                        .HasColumnType("bit");
-
-                    b.HasKey("VpnPortalID");
-
-                    b.HasIndex("ConfigFileID");
-
-                    b.ToTable("VpnPortal");
+                    b.ToTable("FortiUser");
                 });
 
             modelBuilder.Entity("Fortigate_Gui.Models.Group", b =>
@@ -401,16 +259,11 @@ namespace Fortigate_Gui.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ConfigFileID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("GroupID");
-
-                    b.HasIndex("ConfigFileID");
 
                     b.ToTable("Group");
                 });
@@ -477,9 +330,6 @@ namespace Fortigate_Gui.Migrations
                     b.Property<bool>("AvFilter")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ConfigfileID")
-                        .HasColumnType("int");
-
                     b.Property<string>("DestinationAddress")
                         .HasColumnType("nvarchar(max)");
 
@@ -513,8 +363,6 @@ namespace Fortigate_Gui.Migrations
                     b.HasKey("Ip4PolicyID");
 
                     b.HasIndex("ActionID");
-
-                    b.HasIndex("ConfigfileID");
 
                     b.HasIndex("DestinationInterfaceID");
 
@@ -620,6 +468,50 @@ namespace Fortigate_Gui.Migrations
                     b.HasIndex("GroupID");
 
                     b.ToTable("UserGroup");
+                });
+
+            modelBuilder.Entity("Fortigate_Gui.Models.VpnPortal", b =>
+                {
+                    b.Property<int>("VpnPortalID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("AutoConnect")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("IpPool")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(79)")
+                        .HasMaxLength(79);
+
+                    b.Property<bool>("KeepAlive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PortalName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
+
+                    b.Property<bool>("SavePassword")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("SplitTunneling")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SplitTunnelingRoute")
+                        .HasColumnType("nvarchar(79)")
+                        .HasMaxLength(79);
+
+                    b.Property<bool>("TunnelMode")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("WebMode")
+                        .HasColumnType("bit");
+
+                    b.HasKey("VpnPortalID");
+
+                    b.ToTable("VpnPortal");
                 });
 
             modelBuilder.Entity("Fortigate_Gui.Models.VpnSetting", b =>
@@ -893,62 +785,11 @@ namespace Fortigate_Gui.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Fortigate_Gui.Models.Client", b =>
-                {
-                    b.HasOne("Fortigate_Gui.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID");
-                });
-
-            modelBuilder.Entity("Fortigate_Gui.Models.ConfigFile", b =>
-                {
-                    b.HasOne("Fortigate_Gui.Models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Fortigate_Gui.Models.Customer", null)
-                        .WithMany("Configfiles")
-                        .HasForeignKey("CustomerID");
-
-                    b.HasOne("Fortigate_Gui.Models.Filter", "Filter")
-                        .WithMany()
-                        .HasForeignKey("FilterID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Fortigate_Gui.Models.Customer", b =>
                 {
-                    b.HasOne("Fortigate_Gui.Models.ConfigFile", "Configfile")
-                        .WithMany()
-                        .HasForeignKey("ConfigfileID");
-
                     b.HasOne("Fortigate_Gui.Areas.Identity.Data.CustomUser", "CustomUser")
                         .WithOne("Customer")
                         .HasForeignKey("Fortigate_Gui.Models.Customer", "UserID");
-                });
-
-            modelBuilder.Entity("Fortigate_Gui.Models.Employee", b =>
-                {
-                    b.HasOne("Fortigate_Gui.Models.Client", null)
-                        .WithMany("Employees")
-                        .HasForeignKey("ClientID");
-                });
-
-            modelBuilder.Entity("Fortigate_Gui.Models.Fortigate_Gui.Models.VpnPortal", b =>
-                {
-                    b.HasOne("Fortigate_Gui.Models.ConfigFile", "configFile")
-                        .WithMany("VpnPortals")
-                        .HasForeignKey("ConfigFileID");
-                });
-
-            modelBuilder.Entity("Fortigate_Gui.Models.Group", b =>
-                {
-                    b.HasOne("Fortigate_Gui.Models.ConfigFile", "ConfigFile")
-                        .WithMany("Groups")
-                        .HasForeignKey("ConfigFileID");
                 });
 
             modelBuilder.Entity("Fortigate_Gui.Models.Interface", b =>
@@ -975,10 +816,6 @@ namespace Fortigate_Gui.Migrations
                     b.HasOne("Fortigate_Gui.Models.Action", "Action")
                         .WithMany()
                         .HasForeignKey("ActionID");
-
-                    b.HasOne("Fortigate_Gui.Models.ConfigFile", null)
-                        .WithMany("Ip4Policies")
-                        .HasForeignKey("ConfigfileID");
 
                     b.HasOne("Fortigate_Gui.Models.Zone", "DestinationInterface")
                         .WithMany()
@@ -1034,13 +871,13 @@ namespace Fortigate_Gui.Migrations
 
             modelBuilder.Entity("Fortigate_Gui.Models.VpnSetting", b =>
                 {
-                    b.HasOne("Fortigate_Gui.Models.Group", "group")
+                    b.HasOne("Fortigate_Gui.Models.Group", "Group")
                         .WithMany()
                         .HasForeignKey("GroupID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fortigate_Gui.Models.Fortigate_Gui.Models.VpnPortal", "vpnPortal")
+                    b.HasOne("Fortigate_Gui.Models.VpnPortal", "VpnPortal")
                         .WithMany()
                         .HasForeignKey("VpnPortalID");
                 });

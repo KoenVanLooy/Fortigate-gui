@@ -1,15 +1,21 @@
 ﻿@model IEnumerable<Fortigate_Gui.Models.StaticRoute>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "StaticRoutes";
 }
 
-<h1>Index</h1>
+<div class="row">
+    <div class="col-4">
+        <p>
+            <a asp-action="Create" class="btn btn-outline-danger">New StaticRoute</a>
+        </p>
+    </div>
+    <div class="col-8">
+        <h1><i class="fas fa-route"></i> StaticRoutes</h1>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<table class="table" id="datatable">
     <thead>
         <tr>
             <th>
@@ -21,7 +27,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Gateway)
             </th>
-            <th></th>
+            <th class="text-right">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -36,13 +42,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Gateway)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.StaticRouteID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.StaticRouteID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.StaticRouteID">Delete</a>
-                <a asp-controller="Home" asp-action="AddStaticRoute" class="btn btn-primary" asp-route-id="@item.StaticRouteID">Add Conffile</a>
+            <td class="text-right">
+                <a asp-action="Edit" asp-route-id="@item.StaticRouteID" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
+                <a asp-action="Delete" asp-route-id="@item.StaticRouteID" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
+                <a asp-controller="Home" asp-action="AddStaticRoute" class="btn btn-outline-danger" asp-route-id="@item.StaticRouteID"><i class="far fa-plus-square"></i></a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>

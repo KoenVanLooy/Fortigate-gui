@@ -1,19 +1,26 @@
 ﻿@model IEnumerable<Fortigate_Gui.Models.Ip4Policy>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "IPv4 Policy";
 }
 
-<h1 class="text-center"><i class="fas fa-code"></i> Ip4Policy</h1>
 <div class="row">
-    <p class="col-3 d-inline">
-        <a onclick="showInPopup('@Url.Action("Create","Ip4Policy",null,Context.Request.Scheme)','Create Ip4Policy')" class="btn btn-primary">Create New</a>
-    </p>
+    <div class="col-4">
+        <p>
+            <a onclick="showInPopup('@Url.Action("Create","Ip4Policy",null,Context.Request.Scheme)','Add Ip4Policy')" class="btn btn-outline-danger">New Ip4Policy</a>
+        </p>
+    </div>
+    <div class="col-8">
+        <h1><i class="fas fa-code"></i> Ip4Policy</h1>
+    </div>
+</div>
 
+
+<div class="row">
     <input class="col-6 form-control d-inline float-right" type="search" id="searchpolicy" placeholder="Search Ip4Policy..." />
 </div>
+
 <table class="table" id="policytable">
-    
         <tr>
             @*<th>
                 @Html.DisplayNameFor(model => model.SourceInterface)
@@ -30,7 +37,7 @@
             @*<th>
                 @Html.DisplayNameFor(model => model.Type)
             </th>*@
-            <th></th>
+        <th class="text-right">Actions</th>
         </tr>
     
     
@@ -51,15 +58,12 @@
             @*<td>
                 @Html.DisplayFor(modelItem => item.Type)
             </td>*@
-            <td>
-                <a onclick="showInPopup('@Url.Action("Edit","Ip4Policy",new { id = item.Ip4PolicyID },Context.Request.Scheme)','Edit Ip4Policy')" class="btn btn-success">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                    Edit
-                </a>
+            <td class="text-right">
+                <a onclick="showInPopup('@Url.Action("Edit","Ip4Policy",new { id = item.Ip4PolicyID },Context.Request.Scheme)','Edit Ip4Policy')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
                 <form asp-action="Delete" asp-route-id="@item.Ip4PolicyID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
-                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                    <button type="submit" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></button>
                 </form>
-                <a asp-controller="Home" asp-action="AddIp4Policy" class="btn btn-primary" asp-route-id="@item.Ip4PolicyID">Add Conffile</a>
+                <a asp-controller="Home" asp-action="AddIp4Policy" class="btn btn-outline-primary" asp-route-id="@item.Ip4PolicyID"><i class="far fa-plus-square"></i></a>
             </td>
         </tr>
 }

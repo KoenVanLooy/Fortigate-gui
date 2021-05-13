@@ -4,11 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Registered Users & Admins</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -19,12 +16,9 @@
                 @Html.DisplayNameFor(model => model.Lastname)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CustomUser)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Admin)
             </th>
-            <th></th>
+            <th class="text-right">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -38,16 +32,11 @@
                     @Html.DisplayFor(modelItem => item.Lastname)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CustomUser.Id)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Admin)
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.CustomerID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CustomerID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CustomerID">Delete</a> |
-                    <a asp-action="ChangeAdminStatus" asp-route-id="@item.CustomerID">Change Admin Status</a>  
+                <td class="text-right">
+                    <a asp-action="Details" asp-route-id="@item.CustomerID" class="btn btn-outline-danger">Details</a>
+                    <a asp-action="ChangeAdminStatus" asp-route-id="@item.CustomerID" class="btn btn-outline-danger">Change Admin Status</a>  
                 </td>
             </tr>
         }

@@ -7,8 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Fortigate_Gui\**" />
+    <Content Remove="Fortigate_Gui\**" />
+    <EmbeddedResource Remove="Fortigate_Gui\**" />
+    <None Remove="Fortigate_Gui\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20210510081133_Initial.cs" />
+    <Compile Remove="Migrations\20210510081133_Initial.Designer.cs" />
     <Compile Remove="Migrations\20210510165517_ChangeNavigationProperties.cs" />
     <Compile Remove="Migrations\20210510165517_ChangeNavigationProperties.Designer.cs" />
+    <Compile Remove="Migrations\20210510171510_GroupNotConf.cs" />
+    <Compile Remove="Migrations\20210510171510_GroupNotConf.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fortigate_Gui\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
