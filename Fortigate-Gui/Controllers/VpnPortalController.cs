@@ -24,7 +24,7 @@ namespace Fortigate_Gui.Controllers
         // GET: VpnPortal
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.VpnPortals.Include(v => v.configFile);
+            var applicationDbContext = _context.VpnPortals;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,7 +36,7 @@ namespace Fortigate_Gui.Controllers
             // eerst controleren of de id is overschreven, indien neen, nieuw model aanmaken, indien ja model ophalen en tonen
             if (id == 0)
             {
-                ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID");
+               
                 return View(new VpnPortal());
             }
             else
@@ -46,7 +46,7 @@ namespace Fortigate_Gui.Controllers
                 {
                     return NotFound();
                 }
-                ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID", vpnPortal.ConfigFileID);
+               
                 return View(vpnPortal);
             }
         }
@@ -77,7 +77,6 @@ namespace Fortigate_Gui.Controllers
                 }
                 return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.VpnPortals.ToList()) });
             }
-            ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID", vpnPortal.ConfigFileID);
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "AddOrEdit", vpnPortal) });
         }
 

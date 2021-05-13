@@ -14,14 +14,10 @@ namespace Fortigate_Gui.Data
             : base(options)
         {
         }
-        public DbSet<Client> Clients { get; set; }
-        public DbSet<ConfigFile> ConfigFiles { get; set; }
-        public DbSet<Employee> Employees { get; set; }
         public DbSet<EnumAcces> EnumAcces { get; set; }
         public DbSet<EnumMode> EnumModes { get; set; }
         public DbSet<EnumType> EnumTypes { get; set; }
         public DbSet<EnumPhysical> EnumPhysicals { get; set; }
-        public DbSet<Filter> Filters { get; set; }
         public DbSet<Interface> Interfaces { get; set; }
         public DbSet<Ip4Policy> Ip4Policies { get; set; }
         public DbSet<VpnPortal> VpnPortals { get; set; }
@@ -50,13 +46,9 @@ namespace Fortigate_Gui.Data
             base.OnModelCreating(modelbuilder);
 
             modelbuilder.HasDefaultSchema("Fortigate");
-
-            modelbuilder.Entity<Client>().ToTable("Client");
-            modelbuilder.Entity<ConfigFile>().ToTable("ConfigFile");
-            modelbuilder.Entity<Employee>().ToTable("Employee");
+      
             modelbuilder.Entity<EnumAcces>().ToTable("EnumAcces");
             modelbuilder.Entity<EnumMode>().ToTable("EnumMode");
-            modelbuilder.Entity<Filter>().ToTable("Filter");
             modelbuilder.Entity<Interface>().ToTable("Interface");
             modelbuilder.Entity<Ip4Policy>().ToTable("Ip4Policy");
             modelbuilder.Entity<VpnSetting>().ToTable("VpnSetting");
@@ -66,7 +58,7 @@ namespace Fortigate_Gui.Data
             modelbuilder.Entity<ZoneInterface>().ToTable("ZoneInterface");
             modelbuilder.Entity<ZonePolicy>().ToTable("ZonePolicy");
             modelbuilder.Entity<FirewallAddress>().ToTable("FirewallAddress");
-            modelbuilder.Entity<FortiUser>().ToTable("User");
+            modelbuilder.Entity<FortiUser>().ToTable("FortiUser");
             modelbuilder.Entity<Group>().ToTable("Group");
             modelbuilder.Entity<UserGroup>().ToTable("UserGroup");
             modelbuilder.Entity<EnumType>().ToTable("EnumType");

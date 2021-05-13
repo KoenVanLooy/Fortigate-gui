@@ -30,9 +30,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.SplitTunnelingRoute)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.configFile)
-            </th>
+           
             <th>Actions</th>
         </tr>
     </thead>
@@ -67,9 +65,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.SplitTunnelingRoute)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.configFile.ConfigfileID)
-                </td>
+                
                 <td>
                     <a onclick="showInPopup('@Url.Action("AddOrEdit", "VpnPortal", new { id = item.VpnPortalID}, Context.Request.Scheme)', 'Edit VPN Portal')" class="btn btn-outline-success"><i class="far fa-edit"></i></a>
                     <form asp-action="Delete" asp-route-id="@item.VpnPortalID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">

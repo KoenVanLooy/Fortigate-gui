@@ -39,8 +39,6 @@ namespace Fortigate_Gui.Models
 
             //navigation properties
             //één configfile
-            public int? ConfigFileID { get; set; }
-            public ConfigFile configFile { get; set; }
 
         }
     }

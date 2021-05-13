@@ -25,7 +25,7 @@ namespace Fortigate_Gui.Controllers
         // GET: Group
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Groups.Include(c => c.ConfigFile);
+            var applicationDbContext = _context.Groups;
             return View(await applicationDbContext.ToListAsync());
         }
 

@@ -13,9 +13,6 @@ namespace Fortigate_Gui.Models
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
 
-        public int? ConfigFileID { get; set; }
-        public ConfigFile ConfigFile { get; set; }
-
         //navigation properties
         //meerdere usergroups
         public List<UserGroup> UserGroups { get; set; }
