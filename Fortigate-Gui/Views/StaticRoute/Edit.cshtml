@@ -1,41 +1,33 @@
-﻿@model Fortigate_Gui.Models.StaticRoute
+﻿@model Fortigate_Gui.ViewModels.EditStaticRouteViewModel
 
 @{
     ViewData["Title"] = "Edit";
+    Layout = null;
 }
 
-<h1>Edit</h1>
-
-<h4>StaticRoute</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="StaticRouteID" />
+            <input type="hidden" asp-for="StaticRoute.StaticRouteID" />
             <div class="form-group">
-                <label asp-for="InterfaceID" class="control-label"></label>
-                <select asp-for="InterfaceID" class="form-control" asp-items="ViewBag.InterfaceID"></select>
-                <span asp-validation-for="InterfaceID" class="text-danger"></span>
+                <label asp-for="StaticRoute.InterfaceID" class="control-label"></label>
+                <select asp-for="StaticRoute.InterfaceID" class="form-control" asp-items="Model.Interfaces"></select>
+                <span asp-validation-for="StaticRoute.InterfaceID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DestinationSubnet" class="control-label"></label>
-                <input asp-for="DestinationSubnet" class="form-control" />
-                <span asp-validation-for="DestinationSubnet" class="text-danger"></span>
+                <label asp-for="StaticRoute.DestinationSubnet" class="control-label"></label>
+                <input asp-for="StaticRoute.DestinationSubnet" class="form-control" />
+                <span asp-validation-for="StaticRoute.DestinationSubnet" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Gateway" class="control-label"></label>
-                <input asp-for="Gateway" class="form-control" />
-                <span asp-validation-for="Gateway" class="text-danger"></span>
+                <label asp-for="StaticRoute.Gateway" class="control-label"></label>
+                <input asp-for="StaticRoute.Gateway" class="form-control" />
+                <span asp-validation-for="StaticRoute.Gateway" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-outline-danger" />
+                <input type="submit" value="Submit" class="btn btn-outline-danger btn-block" />
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

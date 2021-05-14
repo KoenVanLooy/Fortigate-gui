@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-4">
         <p>
-            <a asp-action="Create" class="btn btn-outline-danger">New StaticRoute</a>
+            <a onclick="showInPopup('@Url.Action("Create","StaticRoute",null,Context.Request.Scheme)','Add Static Route')" class="btn btn-outline-danger">New Static Route</a>
         </p>
     </div>
     <div class="col-8">
@@ -15,39 +15,6 @@
     </div>
 </div>
 
-<table class="table" id="datatable">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Interface)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DestinationSubnet)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gateway)
-            </th>
-            <th class="text-right">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Interface.Alias)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DestinationSubnet)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gateway)
-            </td>
-            <td class="text-right">
-                <a asp-action="Edit" asp-route-id="@item.StaticRouteID" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
-                <a asp-action="Delete" asp-route-id="@item.StaticRouteID" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
-                <a asp-controller="Home" asp-action="AddStaticRoute" class="btn btn-outline-danger" asp-route-id="@item.StaticRouteID"><i class="far fa-plus-square"></i></a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+<div id="view-all">
+    @await Html.PartialAsync("_ViewAll", Model)
+</div>

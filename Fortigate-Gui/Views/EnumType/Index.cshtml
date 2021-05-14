@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Fortigate_Gui.Models.EnumType>
+
+@{
+    ViewData["Title"] = "Type";
+}
+
+<div class="row">
+    <div class="col-4">
+        <p>
+            <a onclick="showInPopup('@Url.Action("Create","EnumType",null,Context.Request.Scheme)','Add Type')" class="btn btn-outline-danger">New Type</a>
+        </p>
+    </div>
+    <div class="col-8">
+        <h1><i class="fab fa-typo3"></i> Type</h1>
+    </div>
+</div>
+
+<div id="view-all">
+    @await Html.PartialAsync("_ViewAll", Model)
+</div>

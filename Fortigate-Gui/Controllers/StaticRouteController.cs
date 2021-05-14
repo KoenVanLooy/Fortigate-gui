@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fortigate_Gui.Data;
 using Fortigate_Gui.Models;
+using Fortigate_Gui.Helper;
+using Fortigate_Gui.ViewModels;
 
 namespace Fortigate_Gui.Controllers
 {
@@ -26,30 +28,15 @@ namespace Fortigate_Gui.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: StaticRoute/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var staticRoute = await _context.StaticRoutes
-                .Include(s => s.Interface)
-                .FirstOrDefaultAsync(m => m.StaticRouteID == id);
-            if (staticRoute == null)
-            {
-                return NotFound();
-            }
-
-            return View(staticRoute);
-        }
-
         // GET: StaticRoute/Create
         public IActionResult Create()
         {
-            ViewData["InterfaceID"] = new SelectList(_context.Interfaces, "InterfaceID", "Name");
-            return View();
+            CreateStaticRouteViewModel viewModel = new CreateStaticRouteViewModel
+            {
+                StaticRoute = new StaticRoute(),
+                Interfaces = new SelectList(_context.Interfaces, "InterfaceID", "Name")
+            };
+            return View(viewModel);
         }
 
         // POST: StaticRoute/Create
@@ -57,16 +44,16 @@ namespace Fortigate_Gui.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StaticRouteID,InterfaceID,DestinationSubnet,Gateway")] StaticRoute staticRoute)
+        public async Task<IActionResult> Create(CreateStaticRouteViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(staticRoute);
+                _context.Add(viewModel.StaticRoute);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.StaticRoutes.ToListAsync()) });
             }
-            ViewData["InterfaceID"] = new SelectList(_context.Interfaces, "InterfaceID", "Alias", staticRoute.InterfaceID);
-            return View(staticRoute);
+            viewModel.Interfaces = new SelectList(_context.Interfaces, "InterfaceID", "Name", viewModel.StaticRoute.InterfaceID);
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", viewModel.StaticRoute) });
         }
 
         // GET: StaticRoute/Edit/5
@@ -76,14 +63,18 @@ namespace Fortigate_Gui.Controllers
             {
                 return NotFound();
             }
-
+            
             var staticRoute = await _context.StaticRoutes.FindAsync(id);
             if (staticRoute == null)
             {
                 return NotFound();
             }
-            ViewData["InterfaceID"] = new SelectList(_context.Interfaces, "InterfaceID", "Alias", staticRoute.InterfaceID);
-            return View(staticRoute);
+            EditStaticRouteViewModel viewModel = new EditStaticRouteViewModel
+            {
+                StaticRoute = staticRoute,
+                Interfaces = new SelectList(_context.Interfaces, "InterfaceID", "Name", staticRoute.InterfaceID)
+            };
+            return View(viewModel);
         }
 
         // POST: StaticRoute/Edit/5
@@ -91,54 +82,22 @@ namespace Fortigate_Gui.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StaticRouteID,InterfaceID,DestinationSubnet,Gateway")] StaticRoute staticRoute)
+        public async Task<IActionResult> Edit(int id, EditStaticRouteViewModel viewModel)
         {
-            if (id != staticRoute.StaticRouteID)
+            if (id != viewModel.StaticRoute.StaticRouteID)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(staticRoute);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StaticRouteExists(staticRoute.StaticRouteID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["InterfaceID"] = new SelectList(_context.Interfaces, "InterfaceID", "Alias", staticRoute.InterfaceID);
-            return View(staticRoute);
-        }
+                _context.Update(viewModel.StaticRoute);
+                await _context.SaveChangesAsync();
 
-        // GET: StaticRoute/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.StaticRoutes.ToList()) });
             }
-
-            var staticRoute = await _context.StaticRoutes
-                .Include(s => s.Interface)
-                .FirstOrDefaultAsync(m => m.StaticRouteID == id);
-            if (staticRoute == null)
-            {
-                return NotFound();
-            }
-
-            return View(staticRoute);
+            viewModel.Interfaces = new SelectList(_context.Interfaces, "InterfaceID", "Name", viewModel.StaticRoute.InterfaceID);
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", viewModel.StaticRoute) });
         }
 
         // POST: StaticRoute/Delete/5
@@ -149,7 +108,7 @@ namespace Fortigate_Gui.Controllers
             var staticRoute = await _context.StaticRoutes.FindAsync(id);
             _context.StaticRoutes.Remove(staticRoute);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.StaticRoutes.ToList()) });
         }
 
         private bool StaticRouteExists(int id)

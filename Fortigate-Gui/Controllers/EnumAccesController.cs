@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fortigate_Gui.Data;
 using Fortigate_Gui.Models;
+using Fortigate_Gui.Helper;
 
 namespace Fortigate_Gui.Controllers
 {
@@ -23,24 +24,6 @@ namespace Fortigate_Gui.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.EnumAcces.ToListAsync());
-        }
-
-        // GET: EnumAcces/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var enumAcces = await _context.EnumAcces
-                .FirstOrDefaultAsync(m => m.EnumAccesID == id);
-            if (enumAcces == null)
-            {
-                return NotFound();
-            }
-
-            return View(enumAcces);
         }
 
         // GET: EnumAcces/Create
@@ -60,9 +43,9 @@ namespace Fortigate_Gui.Controllers
             {
                 _context.Add(enumAcces);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.EnumAcces.ToListAsync()) });
             }
-            return View(enumAcces);
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", enumAcces) });
         }
 
         // GET: EnumAcces/Edit/5
@@ -95,43 +78,12 @@ namespace Fortigate_Gui.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(enumAcces);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EnumAccesExists(enumAcces.EnumAccesID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(enumAcces);
-        }
+                _context.Update(enumAcces);
+                await _context.SaveChangesAsync();
 
-        // GET: EnumAcces/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.EnumAcces.ToList()) });
             }
-
-            var enumAcces = await _context.EnumAcces
-                .FirstOrDefaultAsync(m => m.EnumAccesID == id);
-            if (enumAcces == null)
-            {
-                return NotFound();
-            }
-
-            return View(enumAcces);
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", enumAcces) });
         }
 
         // POST: EnumAcces/Delete/5
@@ -142,7 +94,7 @@ namespace Fortigate_Gui.Controllers
             var enumAcces = await _context.EnumAcces.FindAsync(id);
             _context.EnumAcces.Remove(enumAcces);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.EnumAcces.ToList()) });
         }
 
         private bool EnumAccesExists(int id)

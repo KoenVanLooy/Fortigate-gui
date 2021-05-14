@@ -27,21 +27,11 @@
             </div>
             @if (Model.SplitTunneling == true)
             {
-                <div class="form-group" id="DivSplit">
-                    <label asp-for="SplitTunnelingRoute" class="control-label"></label>
-                    <input asp-for="SplitTunnelingRoute" class="form-control" />
-                    <span asp-validation-for="SplitTunnelingRoute" class="text-danger"></span>
-                </div>
+                <script>
+                    $('#DivSplit').show();
+                </script>
             }
-            else
-            {
-                <div class="form-group" id="DivSplit" style="display:none">
-                    <label asp-for="SplitTunnelingRoute" class="control-label"></label>
-                    <input asp-for="SplitTunnelingRoute" class="form-control" />
-                    <span asp-validation-for="SplitTunnelingRoute" class="text-danger"></span>
-                </div>
-            }
-            <div class="form-group" id="DivSplit" style="display:none">
+            <div class="form-group" id="DivSplit" style="display: none">
                 <label asp-for="SplitTunnelingRoute" class="control-label"></label>
                 <input asp-for="SplitTunnelingRoute" class="form-control" />
                 <span asp-validation-for="SplitTunnelingRoute" class="text-danger"></span>
@@ -85,11 +75,7 @@
             $("#DivSplit").toggle();
         })
     </script>*@
-@*<script>
-    if (('#CheckSplit').prop('checked')) {
-        $('#DivSplit').show();
-    };
-</script>*@
+
 
 <script>
     $('#CheckSplit').change(function () {

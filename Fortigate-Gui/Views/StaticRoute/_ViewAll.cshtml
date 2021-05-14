@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Fortigate_Gui.Models.StaticRoute>
+
+<table class="table" id="datatable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Interface)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DestinationSubnet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gateway)
+            </th>
+            <th class="text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Interface.Alias)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DestinationSubnet)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gateway)
+                </td>
+                <td class="text-right">
+                    <a onclick="showInPopup('@Url.Action("Edit","StaticRoute",new {id = item.StaticRouteID },Context.Request.Scheme)','Edit Static Route')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
+                    <form asp-action="Delete" asp-route-id="@item.StaticRouteID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></button>
+                    </form>
+                    <a asp-controller="Home" asp-action="AddStaticRoute" class="btn btn-outline-danger" asp-route-id="@item.StaticRouteID"><i class="far fa-plus-square"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $("#datatable").DataTable();
+    });
+</script>

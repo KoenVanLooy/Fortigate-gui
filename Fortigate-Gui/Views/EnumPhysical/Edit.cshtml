@@ -1,16 +1,15 @@
-﻿@model Fortigate_Gui.Models.EnumAcces
+﻿@model Fortigate_Gui.Models.EnumPhysical
 
 @{
     ViewData["Title"] = "Edit";
     Layout = null;
 }
 
-
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="EnumAccesID" />
+            <input type="hidden" asp-for="EnumPhysicalID" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -22,7 +21,6 @@
         </form>
     </div>
 </div>
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

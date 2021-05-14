@@ -11,45 +11,44 @@ using Fortigate_Gui.Helper;
 
 namespace Fortigate_Gui.Controllers
 {
-    public class EnumModeController : Controller
+    public class EnumTypeController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public EnumModeController(ApplicationDbContext context)
+        public EnumTypeController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: EnumMode
+        // GET: EnumType
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EnumModes.ToListAsync());
+            return View(await _context.EnumTypes.ToListAsync());
         }
 
-
-        // GET: EnumMode/Create
+        // GET: EnumType/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: EnumMode/Create
+        // POST: EnumType/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EnumModeID,Name")] EnumMode enumMode)
+        public async Task<IActionResult> Create([Bind("EnumTypeID,Name")] EnumType enumType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(enumMode);
+                _context.Add(enumType);
                 await _context.SaveChangesAsync();
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.EnumModes.ToListAsync()) });
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.EnumTypes.ToListAsync()) });
             }
-            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", enumMode) });
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", enumType) });
         }
 
-        // GET: EnumMode/Edit/5
+        // GET: EnumType/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -57,50 +56,50 @@ namespace Fortigate_Gui.Controllers
                 return NotFound();
             }
 
-            var enumMode = await _context.EnumModes.FindAsync(id);
-            if (enumMode == null)
+            var enumType = await _context.EnumTypes.FindAsync(id);
+            if (enumType == null)
             {
                 return NotFound();
             }
-            return View(enumMode);
+            return View(enumType);
         }
 
-        // POST: EnumMode/Edit/5
+        // POST: EnumType/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EnumModeID,Name")] EnumMode enumMode)
+        public async Task<IActionResult> Edit(int id, [Bind("EnumTypeID,Name")] EnumType enumType)
         {
-            if (id != enumMode.EnumModeID)
+            if (id != enumType.EnumTypeID)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _context.Update(enumMode);
+                _context.Update(enumType);
                 await _context.SaveChangesAsync();
 
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.EnumModes.ToList()) });
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.EnumTypes.ToList()) });
             }
-            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", enumMode) });
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", enumType) });
         }
 
-        // POST: EnumMode/Delete/5
+        // POST: EnumType/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var enumMode = await _context.EnumModes.FindAsync(id);
-            _context.EnumModes.Remove(enumMode);
+            var enumType = await _context.EnumTypes.FindAsync(id);
+            _context.EnumTypes.Remove(enumType);
             await _context.SaveChangesAsync();
-            return Json(new { html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.EnumModes.ToList()) });
+            return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.EnumTypes.ToList()) });
         }
 
-        private bool EnumModeExists(int id)
+        private bool EnumTypeExists(int id)
         {
-            return _context.EnumModes.Any(e => e.EnumModeID == id);
+            return _context.EnumTypes.Any(e => e.EnumTypeID == id);
         }
     }
 }

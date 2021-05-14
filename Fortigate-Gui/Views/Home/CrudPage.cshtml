@@ -1,8 +1,21 @@
 ﻿
 @{
-    ViewData["Title"] = "Home - CrudPage";
+    ViewData["Title"] = "EnumPage";
 }
-
-<a class="btn btn-block btn-dark" asp-controller="EnumAcces" asp-action="Index">CrudEnumAccess</a>
-<a class="btn btn-block btn-dark" asp-controller="EnumMode" asp-action="Index">CrudEnumMode</a>
-
+<div class="row">
+    <div class="col-6">
+        <a class="btn btn-outline-danger btn-block" asp-controller="EnumAcces" asp-action="Index">Enum Acces</a>
+    </div>
+    <div class="col-6">
+        <a class="btn btn-outline-danger btn-block" asp-controller="EnumMode" asp-action="Index">Enum Mode</a>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-6">
+        <a class="btn btn-outline-danger btn-block" asp-controller="EnumPhysical" asp-action="Index">Enum Physical</a>
+    </div>
+    <div class="col-6">
+        <a class="btn btn-outline-danger btn-block" asp-controller="EnumType" asp-action="Index">Enum Type</a>
+    </div>
+</div>

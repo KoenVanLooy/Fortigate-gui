@@ -159,7 +159,7 @@
                         <td scope="row">@(m + 1)</td>
                         <td>@staticRoute.DestinationSubnet</td>
                         <td class="text-right">
-                            <a onclick="showInPopup('@Url.Action("Edit","Interface",new {id = staticRoute.StaticRouteID },Context.Request.Scheme)','Edit Static Route')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit" aria-hidden="true"></i></a>
+                            <a onclick="showInPopup('@Url.Action("Edit","StaticRoute",new {id = staticRoute.StaticRouteID },Context.Request.Scheme)','Edit Static Route')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit" aria-hidden="true"></i></a>
                             <a asp-action="DelStaticRoute" asp-route-id="@m" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
                         </td>
                         @{ m++;}
