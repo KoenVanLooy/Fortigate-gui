@@ -78,7 +78,7 @@ namespace Fortigate_Gui.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (id == 0)
+                if (id == 0 || id == -1)
                 {
                     List<UserGroup> newUsers = new List<UserGroup>();
                     foreach (int FortiUserID in viewModel.SelectedFortiUsers)
@@ -101,6 +101,7 @@ namespace Fortigate_Gui.Controllers
 
                     //_context.Add(group);
                     //await _context.SaveChangesAsync();
+                    
                 }
                 else
                 {
@@ -154,3 +155,4 @@ namespace Fortigate_Gui.Controllers
         }
     }
 }
+

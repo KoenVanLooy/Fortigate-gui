@@ -170,6 +170,12 @@ namespace Fortigate_Gui.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> AddGroup(int? id)
+        {
+            await AddObjectAsync(id, "sessionGroups", "Group");
+            return RedirectToAction("Index");
+        }
+
         //General AddObject Method Defined by switch case on string Type
         public async Task<IActionResult> AddVpnSetting (int? id)
         { 
@@ -279,6 +285,24 @@ namespace Fortigate_Gui.Controllers
                             SessionHelper.SetObjectAsJson(HttpContext.Session, name, staticRoutes);
                         }
                         break;
+                    case "Group":
+                        groups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, name);
+                        int GIndex = Exists(groups, id, Type);
+                        if (GIndex == -1)
+                        {
+                            groups.Add(_context.Groups.Find(id));
+                            SessionHelper.SetObjectAsJson(HttpContext.Session, name, groups);
+                        }
+                        break;
+                    case "VpnSetting":
+                        vpnSettings = SessionHelper.GetObjectFromJson<List<VpnSetting>>(HttpContext.Session, name);
+                        int VIndex = Exists(vpnSettings, id, Type);
+                        if (VIndex == -1)
+                        {
+                            vpnSettings.Add(_context.VpnSettings.Find(id));
+                            SessionHelper.SetObjectAsJson(HttpContext.Session, name, vpnSettings);
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -369,58 +393,116 @@ namespace Fortigate_Gui.Controllers
 
         }
 
-        public IActionResult DelInterface(int id)
+        public IActionResult DelInterface(int id = 0)
         {
             var sessionInterfaces = SessionHelper.GetObjectFromJson<List<Interface>>(HttpContext.Session, "sessionInterfaces");
-            sessionInterfaces.RemoveAt(id);
+            if (id == 0)
+            {
+                sessionInterfaces.Clear();
+            }
+            else
+            {
+                sessionInterfaces.RemoveAt(id);
+            }
             SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionInterfaces", sessionInterfaces);
             return RedirectToAction("Index");
         }
-        public IActionResult DelZone(int id)
+        public IActionResult DelZone(int id = 0)
         {
             var sessionZone = SessionHelper.GetObjectFromJson<List<Zone>>(HttpContext.Session, "sessionZone");
-            sessionZone.RemoveAt(id);
+            if (id == 0)
+            {
+                sessionZone.Clear();
+            }
+            else
+            {
+                sessionZone.RemoveAt(id);
+            }
             SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionZone", sessionZone);
             return RedirectToAction("Index");
         }
 
-        public IActionResult DelFWAdress(int id)
+        public IActionResult DelFWAdress(int id = 0)
         {
             var sessionFwAddresses = SessionHelper.GetObjectFromJson<List<FirewallAddress>>(HttpContext.Session, "sessionFwAddresses");
-            sessionFwAddresses.RemoveAt(id);
+            if (id == 0)
+            {
+                sessionFwAddresses.Clear();
+            }
+            else
+            {
+                sessionFwAddresses.RemoveAt(id);
+            }
             SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionFwAddresses", sessionFwAddresses);
             return RedirectToAction("Index");
         }
 
-        public IActionResult DelIp4Policy(int id)
+        public IActionResult DelIp4Policy(int id = 0)
         {
             var sessionIp4policies = SessionHelper.GetObjectFromJson<List<Ip4Policy>>(HttpContext.Session, "sessionIp4policies");
-            sessionIp4policies.RemoveAt(id);
+            if (id == 0)
+            {
+                sessionIp4policies.Clear();
+            }
+            else
+            {
+                sessionIp4policies.RemoveAt(id);
+            }
             SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionIp4policies", sessionIp4policies);
             return RedirectToAction("Index");
         }
 
-        public IActionResult DelStaticRoute(int id)
+        public IActionResult DelStaticRoute(int id = 0)
         {
             var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
-            sessionStaticRoutes.RemoveAt(id);
+            if (id == 0)
+            {
+                sessionStaticRoutes.Clear();
+            }
+            else
+            {
+                sessionStaticRoutes.RemoveAt(id);
+            }
             SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionStaticRoutes", sessionStaticRoutes);
             return RedirectToAction("Index");
         }
-        public IActionResult DelGroup(int id)
+        public IActionResult DelGroup(int id = 0)
         {
             var sessionGroups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, "sessionGroups");
-            sessionGroups.RemoveAt(id);
+            if (id == 0)
+            {
+                sessionGroups.Clear();
+            }
+            else
+            {
+                sessionGroups.RemoveAt(id);
+            }
             SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionGroups", sessionGroups);
             return RedirectToAction("Index");
         }
-        public IActionResult DelVpnSetting(int id)
+        public IActionResult DelVpnSetting(int id = 0)
         {
             var sessionVpnSettings = SessionHelper.GetObjectFromJson<List<VpnSetting>>(HttpContext.Session, "sessionVpnSettings");
-            sessionVpnSettings.RemoveAt(id);
+            if (id == 0)
+            {
+                sessionVpnSettings.Clear();
+            }
+            else
+            {
+                sessionVpnSettings.RemoveAt(id);
+            }
             SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionVpnSettings", sessionVpnSettings);
             return RedirectToAction("Index");
         }
+
+        //public IActionResult DelAllGroups()
+        //{
+        //    var sessionGroups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, "sessionGroups");
+        //    sessionGroups.Clear();
+        //    SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionGroups", sessionGroups);
+        //    return RedirectToAction("Index");
+        //}
+
         public async Task<IActionResult> Download()
         {
             var path = @"wwwroot/files/Conffile.txt";
