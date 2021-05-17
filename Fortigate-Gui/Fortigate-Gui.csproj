@@ -14,15 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20210510081133_Initial.cs" />
-    <Compile Remove="Migrations\20210510081133_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20210510165517_ChangeNavigationProperties.cs" />
-    <Compile Remove="Migrations\20210510165517_ChangeNavigationProperties.Designer.cs" />
-    <Compile Remove="Migrations\20210510171510_GroupNotConf.cs" />
-    <Compile Remove="Migrations\20210510171510_GroupNotConf.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Remove="Views\EnumAcces\Delete.cshtml" />
     <Content Remove="Views\EnumAcces\Details.cshtml" />
   </ItemGroup>
@@ -37,6 +28,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.15">
@@ -45,10 +37,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

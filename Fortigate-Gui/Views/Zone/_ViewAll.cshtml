@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Fortigate_Gui.Models.Zone>
+    <script>
+        $(document).ready(function () {
+            $("#datatable").DataTable();
+        });
+    </script>
+    <table class="table" onload="myFunction()" id="datatable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th class="text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td class="text-right">
+                        <a onclick="showInPopup('@Url.Action("Edit","Zone",new { id = item.ZoneID },Context.Request.Scheme)','Edit Zone')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
+                        <form asp-action="Delete" asp-route-id="@item.ZoneID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></button>
+                        </form>
+                        <a asp-controller="Home" asp-action="AddZone" asp-route-id="@item.ZoneID" class="btn btn-outline-danger"><i class="far fa-plus-square"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

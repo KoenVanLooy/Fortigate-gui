@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Fortigate_Gui.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -383,6 +383,7 @@ namespace Fortigate_Gui.Migrations
                     Ip = table.Column<string>(nullable: true),
                     VlanId = table.Column<int>(nullable: false),
                     Subnet = table.Column<string>(maxLength: 20, nullable: false),
+                    VlanInterface = table.Column<string>(nullable: true),
                     EnumModeID = table.Column<int>(nullable: false),
                     EnumTypeID = table.Column<int>(nullable: false),
                     EnumPhysicalID = table.Column<int>(nullable: true)

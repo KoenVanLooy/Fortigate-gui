@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Fortigate_Gui.ViewModels
 {
-    public class CreateFWViewModel
+    public class CreateFWViewModel 
     {
         public FirewallAddress FirewallAddress { get; set; }
-
         public SelectList Zones { get; set; }
+     
     }
 }

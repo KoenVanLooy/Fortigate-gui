@@ -1,0 +1,27 @@
+﻿@model Fortigate_Gui.ViewModels.UploadViewModel
+@{
+    ViewData["Title"] = "SecurityProfiles";
+}
+
+<form enctype="multipart/form-data" asp-action="SecurityProfiles">
+    <div class="form-group">
+        <label asp-for="ConfigFile" class="control-label"></label>
+        <div class="custom-file">
+            <input asp-for="ConfigFile" class="form-control custom-file-input" />
+            <label class="custom-file-label">Choose File</label>
+            <span asp-validation-for="ConfigFile" class="text-danger"></span>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-primary" />
+    <a class="btn btn-primary" asp-controller="Upload" asp-action="Download">Download Security profiles</a>
+    @section Scripts{
+        <script>
+            $(document).ready(function () {
+                $('.custom-file-input').on("change", function () {
+                    var fileName = $(this).val().split("\\").pop();
+                    $(this).next('.custom-file-label').html(fileName);
+                });
+            });
+        </script>
+    }
+</form>

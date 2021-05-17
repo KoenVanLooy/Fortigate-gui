@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<Fortigate_Gui.Models.Interface>
-
+    <script>
+        $(document).ready(function () {
+            $("#datatable").DataTable();
+        });
+    </script>
 
 <table class="table" id="datatable">
     <thead>
@@ -23,8 +27,8 @@
                 @Html.DisplayNameFor(model => model.Subnet)
             </th>
             @*<th>
-                @Html.DisplayNameFor(model => model.EnumAcces)
-            </th>*@
+                    @Html.DisplayNameFor(model => model.EnumAcces)
+                </th>*@
             <th>
                 Mode
             </th>
@@ -54,15 +58,15 @@
                     @Html.DisplayFor(modelItem => item.Subnet)
                 </td>
                 @*<td>
-                    @Html.DisplayFor(modelItem => item.EnumAcces.EnumAccesID)
-                </td>*@
+                        @Html.DisplayFor(modelItem => item.EnumAcces.EnumAccesID)
+                    </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.EnumMode.Name)
                 </td>
                 <td class="text-right">
                     <a onclick="showInPopup('@Url.Action("Edit","Interface",new { id = item.InterfaceID },Context.Request.Scheme)','Edit Interface')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
                     <form asp-action="Delete" asp-route-id="@item.InterfaceID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
-                        <button type="submit" class="btn btn-outline-danger" ><i class="far fa-trash-alt" aria-hidden="true"></i></button>
+                        <button type="submit" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></button>
                     </form>
                     <a asp-controller="Home" asp-action="AddInterface" class="btn btn-outline-danger" asp-route-id="@item.InterfaceID"><i class="far fa-plus-square"></i></a>
                 </td>

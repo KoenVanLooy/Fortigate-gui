@@ -9,23 +9,25 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="ip4Policy.SourceInterfaceID" class="control-label"></label>
-        <select asp-for="ip4Policy.SourceInterfaceID" asp-items="Model.SourceInterface" class="form-control"></select>
+        <select asp-for="ip4Policy.SourceInterfaceID" id="SelectedSrcInterface" asp-items="Model.SourceInterface" class="form-control"></select>
         <span asp-validation-for="ip4Policy.SourceInterfaceID" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="ip4Policy.DestinationInterfaceID" class="control-label"></label>
-        <select asp-for="ip4Policy.DestinationInterfaceID" asp-items="Model.DestinationInterface" class="form-control"></select>
+        <select asp-for="ip4Policy.DestinationInterfaceID" id="SelectedDstInterface" asp-items="Model.DestinationInterface" class="form-control"></select>
         <span asp-validation-for="ip4Policy.DestinationInterfaceID" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="ip4Policy.SourceAddress" class="control-label"></label>
-        <input asp-for="ip4Policy.SourceAddress" class="form-control" />
+        <select asp-for="ip4Policy.SourceAddress" id="SelectedSrcAddress" class="form-control" asp-items="Model.SourceAddress"></select>
         <span asp-validation-for="ip4Policy.SourceAddress" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ip4Policy.DestinationAddress" class="control-label"></label>
-        <input asp-for="ip4Policy.DestinationAddress" class="form-control" />
-        <span asp-validation-for="ip4Policy.DestinationAddress" class="text-danger"></span>
+        <div class="form-group">
+            <label asp-for="ip4Policy.DestinationAddress" class="control-label"></label>
+            <select asp-for="ip4Policy.DestinationAddress" id="SelectedDstAddress" asp-items="Model.DestinationAddress" class="form-control"></select>
+            <span asp-validation-for="ip4Policy.DestinationAddress" class="text-danger"></span>
+        </div>
     </div>
     <div class="form-group">
         <label asp-for="ip4Policy.ActionID" class="control-label"></label>
@@ -86,12 +88,47 @@
             </label>
         </div>
         <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-outline-danger btn-block" />
+            <input type="submit" value="Create" class="btn btn-primary col col-12" />
         </div>
     </div>
 </form>
 
 <script>
+  var DestinationUrl = '@Url.Action("FetchDestinationAddress")';
+			var Destinations = $('#SelectedDstAddress');
+            $('#SelectedDstInterface').change(function() {
+                Destinations.empty();
+
+                $.getJSON(DestinationUrl, { ID: $(this).val() },function(data) {
+					if (!data) {
+						return;
+					}
+                    Destinations.append($('<option></option>').val('').text('Please select'));
+                    Destinations.append($('<option></option>').val('all').text('all'));
+					$.each(data, function(index, item) {
+                        Destinations.append($('<option></option>').val(item.Value).text(item.Text));
+					});
+				});
+
+            })
+    var localityUrl = '@Url.Action("FetchSourceAddress")';
+			var localities = $('#SelectedSrcAddress');
+            $('#SelectedSrcInterface').change(function() {
+				localities.empty();
+
+				$.getJSON(localityUrl, { ID: $(this).val() },function(data) {
+					if (!data) {
+						return;
+					}
+                    localities.append($('<option></option>').val('').text('Please select'));
+                    localities.append($('<option></option>').val('all').text('all'));
+					$.each(data, function(index, item) {
+						localities.append($('<option></option>').val(item.Value).text(item.Text));
+					});
+				});
+
+			})
+
     $(function () {
         $('#div_hide').show()
         $('#type').change(function () {

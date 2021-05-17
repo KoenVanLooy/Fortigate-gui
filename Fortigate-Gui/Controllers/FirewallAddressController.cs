@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Fortigate_Gui.Data;
 using Fortigate_Gui.Models;
 using Fortigate_Gui.ViewModels;
+using Fortigate_Gui.Helper;
 
 namespace Fortigate_Gui.Controllers
 {
@@ -22,38 +23,23 @@ namespace Fortigate_Gui.Controllers
 
         // GET: FirewallAddress
         public async Task<IActionResult> Index()
-        {
+        { 
+            //List of FirewallAddresses
             return View(await _context.FirewallAddresses.ToListAsync());
-        }
-
-        // GET: FirewallAddress/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var firewallAddress = await _context.FirewallAddresses
-                .FirstOrDefaultAsync(m => m.FirewallAddressID == id);
-            if (firewallAddress == null)
-            {
-                return NotFound();
-            }
-
-            return View(firewallAddress);
         }
 
         // GET: FirewallAddress/Create
         public async Task<IActionResult> Create()
         {
+
             List<string> zones = new List<string>();
             List<Zone> zonesObjects = await _context.Zones.ToListAsync();
+            //Making from zones(object) => zones.Name List to make a selectlist
             foreach (Zone zone in zonesObjects)
             {
                 zones.Add(zone.Name);
             }
-            CreateFWViewModel viewModel = new CreateFWViewModel
+            CreateFWViewModel viewModel = new CreateFWViewModel //viewModel cause more than one object is given to View
             {
                 FirewallAddress = new FirewallAddress(),
                 Zones = new SelectList(zones)
@@ -72,9 +58,18 @@ namespace Fortigate_Gui.Controllers
             {
                 _context.Add(viewModel.FirewallAddress);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //Update the current view with data from database, to have live refresh we add JSON
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.FirewallAddresses.ToListAsync()) });
             }
-            return View(viewModel);
+            //Update the current view with isValid: false when an error happens in our validation
+            List<string> zones = new List<string>();
+            List<Zone> zonesObjects = await _context.Zones.ToListAsync();
+            foreach (Zone zone in zonesObjects)
+            {
+                zones.Add(zone.Name);
+            }
+            viewModel.Zones = new SelectList(zones);
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", viewModel) });
         }
 
         // GET: FirewallAddress/Edit/5
@@ -84,6 +79,7 @@ namespace Fortigate_Gui.Controllers
             {
                 return NotFound();
             }
+            //Making from zones(object) => zones.Name List to make a selectlist
             List<string> zones = new List<string>();
             List<Zone> zonesObjects = await _context.Zones.ToListAsync();
             foreach (Zone zone in zonesObjects)
@@ -92,7 +88,7 @@ namespace Fortigate_Gui.Controllers
             }
 
             var firewallAddress = await _context.FirewallAddresses.FindAsync(id);
-            EditFWViewModel viewModel = new EditFWViewModel
+            EditFWViewModel viewModel = new EditFWViewModel //viewModel cause More than one object is given to View
             {
                 FirewallAddress = firewallAddress,
                 Zones = new SelectList(zones,firewallAddress.AssociatedZone)
@@ -112,52 +108,30 @@ namespace Fortigate_Gui.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditFWViewModel viewModel)
         {
+            //check if firewalladdress is found
             if (id != viewModel.FirewallAddress.FirewallAddressID)
         
             {
                 return NotFound();
             }
-
+            // ModelState isValid => we can update
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(viewModel.FirewallAddress);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FirewallAddressExists(viewModel.FirewallAddress.FirewallAddressID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(viewModel.FirewallAddress);
+                await _context.SaveChangesAsync();
+               
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.FirewallAddresses.ToListAsync()) });
             }
-            return View(viewModel);
-        }
-
-        // GET: FirewallAddress/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
+            List<string> zones = new List<string>();
+            List<Zone> zonesObjects = await _context.Zones.ToListAsync();
+            foreach (Zone zone in zonesObjects)
             {
-                return NotFound();
+                zones.Add(zone.Name);
             }
-
-            var firewallAddress = await _context.FirewallAddresses
-                .FirstOrDefaultAsync(m => m.FirewallAddressID == id);
-            if (firewallAddress == null)
-            {
-                return NotFound();
-            }
-
-            return View(firewallAddress);
+            viewModel.Zones = new SelectList(zones);
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", viewModel) });
         }
+   
 
         // POST: FirewallAddress/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -167,7 +141,7 @@ namespace Fortigate_Gui.Controllers
             var firewallAddress = await _context.FirewallAddresses.FindAsync(id);
             _context.FirewallAddresses.Remove(firewallAddress);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.FirewallAddresses.ToListAsync()) });
         }
 
         private bool FirewallAddressExists(int id)

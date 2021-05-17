@@ -21,24 +21,24 @@ namespace Fortigate_Gui.Controllers
         {
             _context = context;
             _userManager = userManager;
-
         }
 
         // GET: Customer
         public async Task<IActionResult> Index()
         {
+            //Get customer and Information of CustomUsers
             List<Customer> customers = await _context.Customers.Include(c => c.CustomUser).ToListAsync();
             return View(customers);
         }
 
         // GET: Customer/Details/5
+        // Details gives Link with identityUser
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             Customer customer = await _context.Customers
                 .Include(c => c.CustomUser)
                 .FirstOrDefaultAsync(m => m.CustomerID == id);
@@ -48,65 +48,10 @@ namespace Fortigate_Gui.Controllers
             }
 
             return View(customer);
-        }
-
-
-        // GET: Customer/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Customer customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            //ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", customer.UserID);
-            return View(customer);
-        }
-
-        // POST: Customer/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerID,Firstname,Lastname,UserID")] Customer customer)
-        {
-            if (id != customer.CustomerID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomerExists(customer.CustomerID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            //ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", customer.UserID);
-            return View(customer);
-        }
-
-        
+        }    
 
         // GET: Customer/ChangeAdminStatus/5
+        // Here can the administrator adjust other user to admin
         public async Task<IActionResult> ChangeAdminStatus(int? id)
         {
             if (id == null)
@@ -128,17 +73,19 @@ namespace Fortigate_Gui.Controllers
         //POST:Customer/ChangeAdminStatus/5
         [HttpPost, ActionName("ChangeAdminStatus")]
         [ValidateAntiForgeryToken]
+        // Here can the administrator adjust other user to admin
         public async Task<IActionResult> ChangeAdminStatus(int id)
         {
             Customer customer = await _context.Customers
                  .Include(c => c.CustomUser)
                  .FirstOrDefaultAsync(m => m.CustomerID == id);
-
+            //make user admin
             if (customer.Admin == false)
             {
                 await _userManager.AddToRoleAsync(customer.CustomUser, "Admin");
                 customer.Admin = true;
             }
+            //Remove user admin
             else
             {
                 await _userManager.RemoveFromRoleAsync(customer.CustomUser, "Admin");

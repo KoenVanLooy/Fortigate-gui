@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Fortigate_Gui.Models.FirewallAddress>
+    <script>
+        $(document).ready(function () {
+            $("#datatable").DataTable();
+        });
+    </script>
+<table class="table" id="datatable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subnet)
+            </th>
+            <th class="text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subnet)
+                </td>
+                <td class="text-right">
+                    <a onclick="showInPopup('@Url.Action("Edit","FirewallAddress",new { id = item.FirewallAddressID },Context.Request.Scheme)','Edit FirewallAddress')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
+                    <form asp-action="Delete" asp-route-id="@item.FirewallAddressID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></button>
+                    </form>
+                    <a asp-controller="Home" asp-action="AddFirewallAddress" asp-route-id="@item.FirewallAddressID" class="btn btn-outline-danger"><i class="far fa-plus-square"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

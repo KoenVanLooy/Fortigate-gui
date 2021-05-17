@@ -22,11 +22,13 @@ namespace Fortigate_Gui.ViewModels
         public string IpAddress { get; set; }
         public SelectList Modes { get; set; }
         public SelectList Types { get; set; }
-
+        [Required(ErrorMessage = "Name is required")]
+        [MaxLength(35, ErrorMessage = "Maximum 35 characters")]
         public string VlanName { get; set; }
         public SelectList Physicals { get; set; }
         public IEnumerable<SelectListItem> AccessList { get; set; }
 
+        [Display(Name = "Allow access")]
         public IEnumerable<int> SelectedEnumAcces { get; set; }
     }
 }

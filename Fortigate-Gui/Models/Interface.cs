@@ -12,16 +12,14 @@ namespace Fortigate_Gui.Models
         public int InterfaceID { get; set; }
 
 
-        //[Required(ErrorMessage = "This Field is required.")]
-        //[MaxLength(20,ErrorMessage ="Max 20 characters.")]
+        
         public string Name { get; set; }
 
         [Required(ErrorMessage = "This Field is required.")]
         [MaxLength(20, ErrorMessage = "Max 20 characters.")]
         public string Alias { get; set; }
 
-        //[DisplayName("Ip Address")]
-        //[Required(ErrorMessage = "This Field is required.")]
+        
         public string Ip { get; set; }
 
         [Required(ErrorMessage = "This Field is required.")]
@@ -32,7 +30,7 @@ namespace Fortigate_Gui.Models
         [Required(ErrorMessage = "This Field is required.")]
         public string Subnet { get; set; }
 
-
+        public string VlanInterface { get; set; }
         public List<AccessInterface> AccessInterfaces { get; set; }
 
 

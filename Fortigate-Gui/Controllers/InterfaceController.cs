@@ -78,16 +78,23 @@ namespace Fortigate_Gui.Controllers
             if (viewModel.VlanName == "NO_VLAN")
             {
                 viewModel.Interface.Name = physical.Name;
+                viewModel.Interface.VlanId = 0;
+                viewModel.Interface.VlanInterface = "NO_VLANInterface";
             }
             else
             {
-                viewModel.Interface.Name = viewModel.Interface.Name;
+                viewModel.Interface.Name = viewModel.VlanName;
+                viewModel.Interface.VlanInterface = physical.Name;
             }
 
             if (ModelState.IsValid)
 
             {
                 List<AccessInterface> newLines = new List<AccessInterface>();
+                if (viewModel.SelectedEnumAcces == null)
+                {
+                    viewModel.SelectedEnumAcces = new List<int>();
+                }
                 foreach (int enumAccesID in viewModel.SelectedEnumAcces)
                 {
                     AccessInterface accessInterface = new AccessInterface();
@@ -112,50 +119,21 @@ namespace Fortigate_Gui.Controllers
                 }
                 await _context.SaveChangesAsync();
 
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Interfaces.Include(x => x.EnumType)
+                return Json(new
+                {
+                    isValid = true,
+                    html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Interfaces.Include(x => x.EnumType)
                 .Include(x => x.EnumPhysical)
                 .Include(x => x.EnumMode)
-                .ToListAsync())});
+                .ToListAsync())
+                });
 
             }
             viewModel.Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name", viewModel.Interface.EnumModeID);
             viewModel.AccessList = new SelectList(_context.EnumAcces, "EnumAccesID", "Name");
             viewModel.Types = new SelectList(_context.EnumTypes, "EnumTypeID", "Name");
             viewModel.Physicals = new SelectList(_context.EnumPhysicals, "EnumPhysicalID", "Name");
-          return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", viewModel)}); 
-        }
-
-        public IActionResult Stream()
-        {
-            var connInfo = new Renci.SshNet.PasswordConnectionInfo("10.10.10.1", 221, "admin", "admin");
-            var sshClient = new Renci.SshNet.SshClient(connInfo);
-
-            sshClient.Connect();
-            var stream = sshClient.CreateShellStream("", 0, 0, 0, 0, 0);
-
-            // Send the command
-            stream.WriteLine("config system interface");
-            stream.WriteLine("edit internal1");
-            stream.WriteLine("set vdom root");
-            stream.WriteLine("set mode static");
-            stream.WriteLine("set ip 192.168.65.5 255.255.255.0");
-            stream.WriteLine("set allowaccess ping https ssh");
-            stream.WriteLine("next");
-            stream.WriteLine("end");
-
-
-            // Read with a suitable timeout to avoid hanging
-            string line;
-            while ((line = stream.ReadLine(TimeSpan.FromSeconds(2))) != null)
-            {
-                ViewBag.line = line;
-                // if a termination pattern is known, check it here and break to exit immediately
-            }
-            // ...
-            stream.Close();
-            // ...
-            sshClient.Disconnect();
-            return View();
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", viewModel) });
         }
 
         [NoDirectAccessAttribute]
@@ -168,6 +146,11 @@ namespace Fortigate_Gui.Controllers
 
             var @interface = await _context.Interfaces.Include(x => x.AccessInterfaces).
                 SingleOrDefaultAsync(y => y.InterfaceID == id);
+            if (@interface.VlanId == 0)
+            {
+                @interface.VlanId = 1;
+            }
+            
             if (@interface == null)
             {
                 return NotFound();
@@ -177,11 +160,13 @@ namespace Fortigate_Gui.Controllers
                 Interface = @interface,
                 IpAddress = @interface.Ip,
                 Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name", @interface.EnumModeID),
+                Types = new SelectList(_context.EnumTypes, "EnumTypeID", "Name", @interface.EnumTypeID),
+                VlanName = @interface.Name,
+                Physicals = new SelectList(_context.EnumPhysicals, "EnumPhysicalID", "Name",@interface.EnumPhysicalID),
                 AccessList = new SelectList(_context.EnumAcces, "EnumAccesID", "Name"),
                 SelectedEnumAcces = @interface.AccessInterfaces.Select(ai => ai.EnumAccesID)
             };
-            ////ViewData["EnumAccesID"] = new SelectList(_context.EnumAcces, "EnumAccesID", "Name", @interface.EnumAccesID);
-            //ViewData["EnumModeID"] = new SelectList(_context.EnumModes, "EnumModeID", "Name", @interface.EnumModeID);
+
             return View(viewModel);
         }
 
@@ -194,7 +179,8 @@ namespace Fortigate_Gui.Controllers
         {
             Interface @interface = await _context.Interfaces.Include(i => i.AccessInterfaces)
                .SingleOrDefaultAsync(x => x.InterfaceID == id);
-            if (id != viewModel.Interface.InterfaceID)
+            EnumPhysical physical = _context.EnumPhysicals.SingleOrDefault(x => x.EnumPhysicalID == viewModel.Interface.EnumPhysicalID);
+            if (id != @interface.InterfaceID)
             {
                 return NotFound();
             }
@@ -202,16 +188,28 @@ namespace Fortigate_Gui.Controllers
             if (ModelState.IsValid)
             {
                 @interface.Alias = viewModel.Interface.Alias;
-                @interface.Name = viewModel.Interface.Name;
+                if (viewModel.Interface.EnumTypeID == 1)
+                {
+                    @interface.Name = physical.Name;
+                    @interface.VlanId = 0;
+                    @interface.VlanInterface = "NO_VLANInterface";
+                }
+                else
+                {
+                    @interface.Name = viewModel.VlanName;
+                    @interface.VlanInterface = physical.Name;
+                    @interface.VlanId = viewModel.Interface.VlanId;
+                }
                 @interface.Ip = viewModel.IpAddress;
                 @interface.Subnet = viewModel.Interface.Subnet;
+                @interface.EnumPhysicalID = viewModel.Interface.EnumPhysicalID;
                 @interface.EnumTypeID = viewModel.Interface.EnumTypeID;
                 @interface.EnumModeID = viewModel.Interface.EnumModeID;
 
                 List<AccessInterface> accessInterfaces = new List<AccessInterface>();
                 if (viewModel.SelectedEnumAcces == null)
                 {
-                    return View(viewModel);
+                    viewModel.SelectedEnumAcces = new List<int>();
                 }
                 foreach (int enumAccessID in viewModel.SelectedEnumAcces)
                 {
@@ -229,11 +227,17 @@ namespace Fortigate_Gui.Controllers
                     _context.Update(@interface);
                     await _context.SaveChangesAsync();
                 
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Interfaces.ToListAsync()) });
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", 
+                    await _context.Interfaces.Include(y => y.EnumMode)
+                    .Include(x=>x.EnumType)
+                    .Include(x => x.EnumPhysical)
+                    .ToListAsync()) });
             }
             viewModel.AccessList = new SelectList(_context.Interfaces, "InterfaceID", "Name");
             viewModel.SelectedEnumAcces = @interface.AccessInterfaces.Select(ai => ai.EnumAccesID);
             viewModel.Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name", @interface.EnumModeID);
+            viewModel.Physicals = new SelectList(_context.EnumPhysicals, "EnumPhysicalID", "Name", @interface.EnumPhysicalID);
+            viewModel.Types = new SelectList(_context.EnumTypes, "EnumTypeID", "Name", @interface.EnumTypeID);
 
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", viewModel) });
         }
@@ -248,7 +252,15 @@ namespace Fortigate_Gui.Controllers
             var @interface = await _context.Interfaces.FindAsync(id);
             _context.Interfaces.Remove(@interface);
             await _context.SaveChangesAsync();
-            return Json(new { html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Interfaces.ToListAsync()) });
+            return Json(new
+            {
+                isValid = true,
+                html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll",
+                    await _context.Interfaces.Include(y => y.EnumMode)
+                    .Include(x => x.EnumType)
+                    .Include(x => x.EnumPhysical)
+                    .ToListAsync())
+            });
         }
 
         private bool InterfaceExists(int id)

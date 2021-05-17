@@ -69,6 +69,10 @@ namespace Fortigate_Gui.Controllers
                 if (ModelState.IsValid)
                 {
                     List<ZoneInterface> nieuweRegels = new List<ZoneInterface>();
+                if (viewModel.SelectedInterface == null)
+                {
+                    viewModel.SelectedInterface = new List<int>();
+                }
                     foreach (int InterfaceID in viewModel.SelectedInterface)
                     {
                         ZoneInterface zoneInterface = new ZoneInterface();
@@ -89,11 +93,11 @@ namespace Fortigate_Gui.Controllers
                     }
                     await _context.SaveChangesAsync();
 
-                return Json(new{isValid = true,html = RenderRazorHelper.RenderRazorViewToString(this, "Index", await _context.Zones.ToListAsync())});
+                return Json(new{isValid = true,html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Zones.ToListAsync())});
                 }
                 viewModel.InterfaceList = new SelectList(_context.Interfaces, "InterfaceID", "Name");
-                return View(viewModel);
-            }
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", viewModel) });
+        }
 
             // GET: Zone/Edit/5
             public async Task<IActionResult> Edit(int? id)
@@ -145,7 +149,7 @@ namespace Fortigate_Gui.Controllers
                     List<ZoneInterface> zoneInterfaces = new List<ZoneInterface>();
                     if (viewModel.SelectedInterface == null)
                     {
-                        return View(viewModel);
+                    viewModel.SelectedInterface = new List<int>();
                     }
                     foreach (int interfaceid in viewModel.SelectedInterface)
                     {
@@ -163,12 +167,12 @@ namespace Fortigate_Gui.Controllers
                     _context.Update(zone);
                     await _context.SaveChangesAsync();
 
-                    return RedirectToAction(nameof(Index));
-                }
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Zones.ToListAsync()) });
+            }
                 viewModel.InterfaceList = new SelectList(_context.Interfaces, "InterfaceID", "Name");
                 viewModel.SelectedInterface = zone.ZoneInterfaces.Select(zi => zi.InterfaceID);
-                return View(viewModel);
-            }
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", viewModel) });
+        }
 
             // GET: Zone/Delete/5
             public async Task<IActionResult> Delete(int? id)
@@ -196,8 +200,8 @@ namespace Fortigate_Gui.Controllers
                 var zone = await _context.Zones.FindAsync(id);
                 _context.Zones.Remove(zone);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+            return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Zones.ToListAsync()) });
+        }
 
             private bool ZoneExists(int id)
             {

@@ -18,6 +18,7 @@ namespace Fortigate_Gui.Controllers
 {
     public class HomeController : Controller
     {
+
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
 
@@ -107,10 +108,13 @@ namespace Fortigate_Gui.Controllers
         {
             if (id == 1)
             {
-                using (StreamWriter writer = new StreamWriter(@"wwwroot/files/conffile.txt"))
-                {
-                    writer.WriteLine("hello conffile");
-                }
+                var sessionInterfaces = SessionHelper.GetObjectFromJson<List<Interface>>(HttpContext.Session, "sessionInterfaces");
+                var sessionZones = SessionHelper.GetObjectFromJson<List<Zone>>(HttpContext.Session, "sessionZone");
+                var sessionFwAddresses = SessionHelper.GetObjectFromJson<List<FirewallAddress>>(HttpContext.Session, "sessionFwAddresses");
+                var sessionIp4Policies = SessionHelper.GetObjectFromJson<List<Ip4Policy>>(HttpContext.Session, "sessionIp4policies");
+                var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
+                DownloadScript downloadScript = new DownloadScript(sessionInterfaces, sessionFwAddresses, sessionZones, sessionIp4Policies, sessionStaticRoutes, _context);
+                string ok = await downloadScript.StreamScriptAsync();
                 var path = @"wwwroot/files/Conffile.txt";
                 var memory = new MemoryStream();
                 using (var stream = new FileStream(path, FileMode.Open))
@@ -125,7 +129,7 @@ namespace Fortigate_Gui.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin")]
+        
         public IActionResult Privacy()
         {
             return View();

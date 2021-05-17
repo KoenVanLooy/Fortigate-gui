@@ -10,15 +10,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fortigate_Gui.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210513082342_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210517171334_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Fortigate")
-                .HasAnnotation("ProductVersion", "3.1.13")
+                .HasAnnotation("ProductVersion", "3.1.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -304,6 +304,9 @@ namespace Fortigate_Gui.Migrations
 
                     b.Property<int>("VlanId")
                         .HasColumnType("int");
+
+                    b.Property<string>("VlanInterface")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("InterfaceID");
 

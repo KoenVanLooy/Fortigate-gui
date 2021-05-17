@@ -8,13 +8,16 @@ using Microsoft.EntityFrameworkCore;
 using Fortigate_Gui.Data;
 using Fortigate_Gui.Models;
 using Fortigate_Gui.Helper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fortigate_Gui.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class EnumAccesController : Controller
     {
+        //Default generated Controller with entity frameworkcore for Admin adjustments
         private readonly ApplicationDbContext _context;
-
+        
         public EnumAccesController(ApplicationDbContext context)
         {
             _context = context;

@@ -11,7 +11,7 @@
             </div>
             <div class="form-group" id="div_hide">
                 <label asp-for="Interface.VlanId" class="control-label"></label>
-                <input asp-for="Interface.VlanId" class="form-control" />
+                <input asp-for="Interface.VlanId" min="1" max="4096" value="1" class="form-control" />
                 <span asp-validation-for="Interface.VlanId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -48,31 +48,45 @@
                 <span asp-validation-for="Interface.Subnet" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="SelectedEnumAcces"></label>
                 <select class="custom-select" multiple asp-for="SelectedEnumAcces" asp-items="Model.AccessList"></select>
             </div>
         </div>
         <div class="col-12 float-left">
-            <button type="submit" class="btn btn-outline-danger">Create script</button>
+            <button type="submit" class="col col-12 btn btn-primary">Create Interface</button>
         </div>
     </form>
-    <a asp-action="Stream" asp-controller="Interface">Test stream</a>
 </div>
+@if (Model.Interface.EnumTypeID == 2)
+{
+<script>
+    $(function () {
+        $('#div_hide').show();
+        $('#div_name_input').show();
+    });
+</script>
+}else {
 <script>
     $(function () {
         $('#div_hide').hide();
         $('#div_name_input').hide();
-        $('#type').change(function () {
-            if ($('#type').val() == 2) {
-                $('#div_hide').show();
-                $('#name_inputval').val('');
-                $('#div_name_input').show();
-                $('#div_name_select').hide();
-            } else {
-                $('#div_hide').hide();
-                $('#div_name_input').hide();
-                $('#name_inputval').val('NO_VLAN');
-                $('#div_name_select').show();
-            }
-        });
     });
+</script>
+}
+    <script>
+        $(function () {
+
+            $('#type').change(function () {
+                if ($('#type').val() == 2) {
+                    $('#div_hide').show();
+                    $('#name_inputval').val('');
+                    $('#div_name_input').show();
+                    
+                } else if ($('#type').val() == 1){
+                    $('#div_hide').hide();
+                    $('#div_name_input').hide();
+                    $('#name_inputval').val('NO_VLAN');
+                }
+            });
+        });
 </script>

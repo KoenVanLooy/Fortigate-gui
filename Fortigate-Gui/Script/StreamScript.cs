@@ -42,12 +42,7 @@ namespace Fortigate_Gui.Script
             sshClient.Connect();
             var stream = sshClient.CreateShellStream("", 0, 0, 0, 0, 0);
 
-            ReadFilter readFilter = new ReadFilter();
-            List<string> Lines = readFilter.ReadLines();
-            foreach (string Line in Lines)
-            {
-                stream.WriteLine(Line);
-            }
+            
             // Send the command
             if (_interfaces == null)
             {
@@ -58,14 +53,16 @@ namespace Fortigate_Gui.Script
             {
                 Interface @interface = await _context.Interfaces
                     .Include(x => x.EnumMode)
+                    .Include(x => x.EnumType)
                     .Include(x => x.AccessInterfaces)
                     .ThenInclude(ai => ai.EnumAcces)
                     .Include(x => x.EnumPhysical)
                     .SingleOrDefaultAsync(z => z.InterfaceID == item.InterfaceID);
 
-                stream.WriteLine("edit " + item.Name);
+                stream.WriteLine("edit " + @interface.Name);
+                stream.WriteLine("set alias " + @interface.Alias);
                 stream.WriteLine("set vdom root");
-                stream.WriteLine("set mode " + @interface.EnumMode.Name);
+                stream.WriteLine("set mode static");
                 stream.WriteLine("set ip " + @interface.Ip + " " + @interface.Subnet);
                 string AllowAccess = "";
                 foreach (var accessInterface in @interface.AccessInterfaces)
@@ -73,21 +70,27 @@ namespace Fortigate_Gui.Script
                     AllowAccess += accessInterface.EnumAcces.Name + " ";
                 }
                 stream.WriteLine("set allowaccess " + AllowAccess);
+                if (@interface.EnumType.Name == "VLAN")
+                {
+                    stream.WriteLine("set type vlan");
+                    stream.WriteLine("set interface " + @interface.VlanInterface);
+                    stream.WriteLine("set vlanid " + @interface.VlanId.ToString());
+                }
                 stream.WriteLine("next");
             }
-
             stream.WriteLine("end");
-            stream.WriteLine("config system zone");
-            string lineZone = "";
-            if (_zones == null)
+           
+                if (_zones == null)
             {
                 _zones = new List<Zone>();
             }
+            stream.WriteLine("config system zone");
             foreach (var item in _zones)
             {
                 Zone zone = await _context.Zones.Include(x => x.ZoneInterfaces).ThenInclude(zi => zi.Interface)
                     .SingleOrDefaultAsync(y => y.ZoneID == item.ZoneID);
                 stream.WriteLine("edit " + zone.Name);
+                string lineZone = "";
                 foreach (ZoneInterface zi in zone.ZoneInterfaces)
                 {
                     lineZone += zi.Interface.Name + " ";
@@ -97,6 +100,7 @@ namespace Fortigate_Gui.Script
                 stream.WriteLine("next");
             }
             stream.WriteLine("end");
+
             if (_firewallAddresses == null)
             {
                 _firewallAddresses = new List<FirewallAddress>();
@@ -124,9 +128,10 @@ namespace Fortigate_Gui.Script
                     .Include(y => y.DestinationInterface)
                     .Include(z => z.Action)
                     .Include(t => t.Nat)
+                    .Include(q => q.Ip4PolicyServices).ThenInclude(r => r.Service)
                     .SingleOrDefaultAsync(z => z.Ip4PolicyID == item.Ip4PolicyID);
                 stream.WriteLine("config firewall policy");
-                stream.WriteLine("edit 2");
+                stream.WriteLine("edit "+i.ToString());
                 stream.WriteLine("set srcintf " + ip4Policy.SourceInterface.Name);
                 stream.WriteLine("set dstintf " + ip4Policy.DestinationInterface.Name);
                 stream.WriteLine("set srcaddr " + ip4Policy.SourceAddress);
@@ -134,7 +139,19 @@ namespace Fortigate_Gui.Script
                 stream.WriteLine("set schedule always");
                 stream.WriteLine("set fsso disable");
                 stream.WriteLine("set action " + ip4Policy.Action.Name);
-                stream.WriteLine("set service ALL");
+                string lineservice = "";
+                if (ip4Policy.Ip4PolicyServices.Count != 0)
+                {
+                    foreach (var ip4PolicyService in ip4Policy.Ip4PolicyServices)
+                    {
+                        lineservice += ip4PolicyService.Service.Name + " ";
+                    }
+                    stream.WriteLine("set service " + lineservice);
+                }
+                else
+                {
+                    stream.WriteLine("set service ALL");
+                }
                 stream.WriteLine("set logtraffic all");
                 stream.WriteLine("set nat " + ip4Policy.Nat.Name);
                 stream.WriteLine("set utm-status enable");
@@ -142,12 +159,30 @@ namespace Fortigate_Gui.Script
                 {
                     stream.WriteLine("set av-profile AV_FILTER");
                 }
-                stream.WriteLine("set webfilter-profile WEB_FILTER");
-                stream.WriteLine("set dnsfilter-profile DNS_FILTER");
-                stream.WriteLine("set ips-sensor IPS_FILTER");
-                stream.WriteLine("set application-list APP_FILTER");
-                stream.WriteLine("set profile-protocol-options PROXY_FILTER");
-                stream.WriteLine("set ssl-ssh-profile certificate-inspection");
+                if (ip4Policy.WebFilter == true)
+                {
+                    stream.WriteLine("set webfilter-profile WEB_FILTER");
+                }
+                if (ip4Policy.DnsFilter == true)
+                {
+                    stream.WriteLine("set dnsfilter-profile DNS_FILTER");
+                }
+                if (ip4Policy.IpsFilter == true)
+                {
+                    stream.WriteLine("set ips-sensor IPS_FILTER");
+                }
+                if (ip4Policy.AppFilter)
+                {
+                    stream.WriteLine("set application-list APP_FILTER");
+                }
+                if (ip4Policy.ProxyFilter)
+                {
+                    stream.WriteLine("set profile-protocol-options PROXY_FILTER");
+                }
+                if (ip4Policy.SslFilter)
+                {
+                    stream.WriteLine("set ssl-ssh-profile certificate-inspection");
+                }
                 stream.WriteLine("next");
             }
             stream.WriteLine("end");
@@ -165,8 +200,8 @@ namespace Fortigate_Gui.Script
                     .SingleOrDefaultAsync(y => y.StaticRouteID == item.StaticRouteID);
                 stream.WriteLine("config router static");
                 stream.WriteLine("edit " + j.ToString());
-                stream.WriteLine("set dst " + item.DestinationSubnet);
-                stream.WriteLine("set gateway " + item.Gateway);
+                stream.WriteLine("set dst " + staticRoute.DestinationSubnet);
+                stream.WriteLine("set gateway " + staticRoute.Gateway);
                 stream.WriteLine("set device " + staticRoute.Interface.Name);
                 stream.WriteLine("next");
             }
@@ -209,58 +244,60 @@ namespace Fortigate_Gui.Script
                 stream.WriteLine("next");
                 stream.WriteLine("end");
             }
-            foreach (var item in _vpnSettings)
+            if (_vpnSettings != null)
             {
-                VpnSetting vpnSetting = await _context.VpnSettings.Include(x => x.VpnPortal)
-                    .SingleOrDefaultAsync(y => y.VpnSettingID == item.VpnSettingID);
-                stream.WriteLine("config vpn ssl web portal");
-                stream.WriteLine("edit " + vpnSetting.VpnPortal.PortalName);
-                if (vpnSetting.VpnPortal.TunnelMode == true)
+                foreach (var item in _vpnSettings)
                 {
-                    stream.WriteLine("set tunnel-mode enable");
-                }
-                if (vpnSetting.VpnPortal.SplitTunneling == true)
-                {
-                    stream.WriteLine("set split-tunneling enable");
-                    stream.WriteLine("set split-tunneling-routing-address" + vpnSetting.VpnPortal.SplitTunnelingRoute);
-                }
-                if (vpnSetting.VpnPortal.WebMode == true)
-                {
-                    stream.WriteLine("set web-mode enable");
-                }
-                if (vpnSetting.VpnPortal.AutoConnect == true)
-                {
-                    stream.WriteLine("set auto-connect enable");
-                }
-                if (vpnSetting.VpnPortal.KeepAlive == true)
-                {
-                    stream.WriteLine("set keep-alive enable");
-                }
-                if (vpnSetting.VpnPortal.SavePassword == true)
-                {
-                    stream.WriteLine("set save-password enable");
-                }
-                stream.WriteLine("set ip-pools " + vpnSetting.VpnPortal.IpPool);
-                stream.WriteLine("next");
-                stream.WriteLine("end");
+                    VpnSetting vpnSetting = await _context.VpnSettings.Include(x => x.VpnPortal)
+                        .SingleOrDefaultAsync(y => y.VpnSettingID == item.VpnSettingID);
+                    stream.WriteLine("config vpn ssl web portal");
+                    stream.WriteLine("edit " + vpnSetting.VpnPortal.PortalName);
+                    if (vpnSetting.VpnPortal.TunnelMode == true)
+                    {
+                        stream.WriteLine("set tunnel-mode enable");
+                    }
+                    if (vpnSetting.VpnPortal.SplitTunneling == true)
+                    {
+                        stream.WriteLine("set split-tunneling enable");
+                        stream.WriteLine("set split-tunneling-routing-address" + vpnSetting.VpnPortal.SplitTunnelingRoute);
+                    }
+                    if (vpnSetting.VpnPortal.WebMode == true)
+                    {
+                        stream.WriteLine("set web-mode enable");
+                    }
+                    if (vpnSetting.VpnPortal.AutoConnect == true)
+                    {
+                        stream.WriteLine("set auto-connect enable");
+                    }
+                    if (vpnSetting.VpnPortal.KeepAlive == true)
+                    {
+                        stream.WriteLine("set keep-alive enable");
+                    }
+                    if (vpnSetting.VpnPortal.SavePassword == true)
+                    {
+                        stream.WriteLine("set save-password enable");
+                    }
+                    stream.WriteLine("set ip-pools " + vpnSetting.VpnPortal.IpPool);
+                    stream.WriteLine("next");
+                    stream.WriteLine("end");
 
-                stream.WriteLine("config vpn ssl settings");
-                stream.WriteLine("set servercert " + vpnSetting.ServerCert);
-                stream.WriteLine("set tunnel-ip-pools " + vpnSetting.TunnelIpPool);
-                stream.WriteLine("set tunnel-ipv6-pools " + vpnSetting.TunnelIpv6Pool);
-                stream.WriteLine("set source-interface " + vpnSetting.SourceInterface);
-                stream.WriteLine("set source-address " + vpnSetting.SourceAddress);
-                stream.WriteLine("set source-address6 " + vpnSetting.SourceAddressV6);
-                stream.WriteLine("set default-portal " + vpnSetting.DefaultPort);
-                stream.WriteLine("config authentication-rule");
-                stream.WriteLine("edit 1");
-                stream.WriteLine("set groups " + vpnSetting.Group.Name);
-                stream.WriteLine("set portal " + vpnSetting.VpnPortal.PortalName);
-                stream.WriteLine("next");
-                stream.WriteLine("next");
-                stream.WriteLine("end");
+                    stream.WriteLine("config vpn ssl settings");
+                    stream.WriteLine("set servercert " + vpnSetting.ServerCert);
+                    stream.WriteLine("set tunnel-ip-pools " + vpnSetting.TunnelIpPool);
+                    stream.WriteLine("set tunnel-ipv6-pools " + vpnSetting.TunnelIpv6Pool);
+                    stream.WriteLine("set source-interface " + vpnSetting.SourceInterface);
+                    stream.WriteLine("set source-address " + vpnSetting.SourceAddress);
+                    stream.WriteLine("set source-address6 " + vpnSetting.SourceAddressV6);
+                    stream.WriteLine("set default-portal " + vpnSetting.DefaultPort);
+                    stream.WriteLine("config authentication-rule");
+                    stream.WriteLine("edit 1");
+                    stream.WriteLine("set groups " + vpnSetting.Group.Name);
+                    stream.WriteLine("set portal " + vpnSetting.VpnPortal.PortalName);
+                    stream.WriteLine("next");
+                    stream.WriteLine("next");
+                    stream.WriteLine("end");
+                }
             }
-
             string response = "";
             string line;
             while ((line = stream.ReadLine(TimeSpan.FromSeconds(2))) != null)

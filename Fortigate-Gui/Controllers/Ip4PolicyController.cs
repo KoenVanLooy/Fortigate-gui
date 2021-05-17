@@ -1,7 +1,4 @@
-﻿
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,17 +47,43 @@ namespace Fortigate_Gui.Controllers
         }
 
         // GET: Ip4Policy/Create
+        [HttpGet]
+        public async Task<JsonResult> FetchSourceAddress(int ID)
+        {
+            Zone zone = await _context.Zones.SingleOrDefaultAsync(x => x.ZoneID == ID);
+            var data = _context.FirewallAddresses
+                .Where(fw => fw.AssociatedZone == zone.Name)
+                .Select(l => new { Value = l.Name, Text = l.Name });
+            return Json(data, new Newtonsoft.Json.JsonSerializerSettings());
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> FetchDestinationAddress(int ID)
+        {
+            Zone zone = await _context.Zones.SingleOrDefaultAsync(x => x.ZoneID == ID);
+            var data = _context.FirewallAddresses
+                .Where(fw => fw.AssociatedZone == zone.Name)
+                .Select(l => new { Value = l.Name, Text = l.Name });
+            return Json(data, new Newtonsoft.Json.JsonSerializerSettings());
+        }
 
         [NoDirectAccessAttribute]
         public async Task<IActionResult> Create()
         {
+            Zone zone = await _context.Zones.FirstOrDefaultAsync();
+            List<FirewallAddress> firewallAddresses = await _context.FirewallAddresses
+                .Where(fw => fw.AssociatedZone == zone.Name).ToListAsync();
+
+
             CreateIp4PolicyViewModel viewModel = new CreateIp4PolicyViewModel
             {
                 ip4Policy = new Ip4Policy(),
                 SourceInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name"),
                 DestinationInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name"),
+                SourceAddress = new SelectList(firewallAddresses, "Name", "Name"),
+                DestinationAddress = new SelectList(firewallAddresses, "Name", "Name"),
                 Actions = new SelectList(await _context.Actions.ToListAsync(), "ActionID", "Name"),
-                Nat = new SelectList(await _context.Nat.ToArrayAsync(),"NatID","Name"),
+                Nat = new SelectList(await _context.Nat.ToArrayAsync(), "NatID", "Name"),
                 SelectedService = new List<int>(),
                 ServiceList = new SelectList(_context.Services, "ServiceID", "Name")
             };
@@ -78,13 +101,18 @@ namespace Fortigate_Gui.Controllers
             if (ModelState.IsValid)
             {
                 List<Ip4PolicyService> newLines = new List<Ip4PolicyService>();
-                foreach (int serviceID in viewModel.SelectedService)
+                if (viewModel.SelectedService != null)
                 {
-                    Ip4PolicyService ip4PolicyService = new Ip4PolicyService();
-                    ip4PolicyService.ServiceID = serviceID;
-                    ip4PolicyService.Ip4PolicyID = viewModel.ip4Policy.Ip4PolicyID;
 
-                    newLines.Add(ip4PolicyService);
+
+                    foreach (int serviceID in viewModel.SelectedService)
+                    {
+                        Ip4PolicyService ip4PolicyService = new Ip4PolicyService();
+                        ip4PolicyService.ServiceID = serviceID;
+                        ip4PolicyService.Ip4PolicyID = viewModel.ip4Policy.Ip4PolicyID;
+
+                        newLines.Add(ip4PolicyService);
+                    }
                 }
                 _context.Add(viewModel.ip4Policy);
                 await _context.SaveChangesAsync();
@@ -100,11 +128,11 @@ namespace Fortigate_Gui.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "Index", await _context.Ip4Policies.ToListAsync()) });
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Ip4Policies.ToListAsync()) });
             }
             viewModel.SourceInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name");
             viewModel.DestinationInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name");
-            return View(viewModel);
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", viewModel) }); 
         }
 
         // GET: Ip4Policy/Edit/5
@@ -114,14 +142,21 @@ namespace Fortigate_Gui.Controllers
             {
                 return NotFound();
             }
-            Ip4Policy ip4Policy = await _context.Ip4Policies.FindAsync(id);
+            Ip4Policy ip4Policy = await _context.Ip4Policies
+                .Include(x => x.Ip4PolicyServices)
+                .SingleOrDefaultAsync(y => y.Ip4PolicyID == id);
+
             EditIp4PolicyViewModel viewModel = new EditIp4PolicyViewModel
             {
                 ip4Policy = ip4Policy,
-                SourceInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name",ip4Policy.SourceInterfaceID),
-                DestinationInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name",ip4Policy.DestinationInterfaceID)
+                SourceInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name", ip4Policy.SourceInterfaceID),
+                DestinationInterface = new SelectList(await _context.Zones.ToListAsync(), "ZoneID", "Name", ip4Policy.DestinationInterfaceID),
+                Actions = new SelectList(await _context.Actions.ToListAsync(), "ActionID", "Name", ip4Policy.ActionID),
+                Nat = new SelectList(await _context.Nat.ToArrayAsync(), "NatID", "Name", ip4Policy.NatID),
+                ServiceList = new SelectList(_context.Services, "ServiceID", "Name"),
+                SelectedService = ip4Policy.Ip4PolicyServices.Select(x => x.ServiceID)
             };
-            
+
             if (ip4Policy == null)
             {
                 return NotFound();
@@ -136,6 +171,9 @@ namespace Fortigate_Gui.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditIp4PolicyViewModel viewModel)
         {
+            Ip4Policy ip4Policy = await _context.Ip4Policies
+                .Include(i => i.Ip4PolicyServices)
+                .SingleOrDefaultAsync(x => x.Ip4PolicyID == id);
             if (id != viewModel.ip4Policy.Ip4PolicyID)
             {
                 return NotFound();
@@ -143,25 +181,45 @@ namespace Fortigate_Gui.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                ip4Policy.NatID = viewModel.ip4Policy.NatID;
+                ip4Policy.SourceInterfaceID = viewModel.ip4Policy.SourceInterfaceID;
+                ip4Policy.DestinationInterfaceID = viewModel.ip4Policy.DestinationInterfaceID;
+                ip4Policy.SourceAddress = viewModel.ip4Policy.SourceAddress;
+                ip4Policy.DestinationAddress = viewModel.ip4Policy.DestinationAddress;
+                ip4Policy.ActionID = viewModel.ip4Policy.ActionID;
+                ip4Policy.NatID = viewModel.ip4Policy.NatID;
+                ip4Policy.DnsFilter = viewModel.ip4Policy.DnsFilter;
+                ip4Policy.AppFilter = viewModel.ip4Policy.AppFilter;
+                ip4Policy.AvFilter = viewModel.ip4Policy.AvFilter;
+                ip4Policy.IpsFilter = viewModel.ip4Policy.IpsFilter;
+                ip4Policy.ProxyFilter = viewModel.ip4Policy.ProxyFilter;
+                ip4Policy.SslFilter = viewModel.ip4Policy.SslFilter;
+                ip4Policy.WebFilter = viewModel.ip4Policy.WebFilter;
+
+                List<Ip4PolicyService> ip4PolicyServices = new List<Ip4PolicyService>();
+                if (viewModel.SelectedService == null)
                 {
-                    _context.Update(viewModel.ip4Policy);
-                    await _context.SaveChangesAsync();
+                    viewModel.SelectedService = new List<int>();
                 }
-                catch (DbUpdateConcurrencyException)
+                foreach (int serviceID in viewModel.SelectedService)
                 {
-                    if (!Ip4PolicyExists(viewModel.ip4Policy.Ip4PolicyID))
+                    ip4PolicyServices.Add(
+                    new Ip4PolicyService
                     {
-                        return NotFound();
+                        ServiceID = serviceID,
+                        Ip4PolicyID = viewModel.ip4Policy.Ip4PolicyID
                     }
-                    else
-                    {
-                        throw;
-                    }
+                  );
                 }
-                return RedirectToAction(nameof(Index));
+                ip4Policy.Ip4PolicyServices.RemoveAll(x => !ip4PolicyServices.Contains(x));
+                ip4Policy.Ip4PolicyServices.AddRange(ip4PolicyServices.Where(x => !ip4Policy.Ip4PolicyServices.Contains(x)));
+
+                _context.Update(ip4Policy);
+                await _context.SaveChangesAsync();
+
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Ip4Policies.ToListAsync()) });
             }
-            return View(viewModel.ip4Policy);
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", viewModel) });
         }
 
         // GET: Ip4Policy/Delete/5

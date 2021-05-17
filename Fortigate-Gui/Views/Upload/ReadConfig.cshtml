@@ -1,0 +1,23 @@
+﻿@model Fortigate_Gui.ViewModels.UploadViewModel
+
+
+<form enctype="multipart/form-data" asp-action="ReadConfig">
+    <div class="form-group">
+        <label asp-for="ConfigFile" class="control-label"></label>
+        <div class="custom-file">
+            <input asp-for="ConfigFile" class="form-control custom-file-input" />
+            <label class="custom-file-label">Choose File</label>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-primary" />
+    @section Scripts{
+        <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        });
+        </script>
+    }
+</form>
