@@ -27,24 +27,7 @@ namespace Fortigate_Gui.Controllers
                 return View(await _context.Zones.ToListAsync());
             }
 
-            // GET: Zone/Details/5
-            public async Task<IActionResult> Details(int? id)
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var zone = await _context.Zones
-                    .FirstOrDefaultAsync(m => m.ZoneID == id);
-                if (zone == null)
-                {
-                    return NotFound();
-                }
-
-                return View(zone);
-            }
-
+            
             // GET: Zone/Create
             public IActionResult Create()
             {
@@ -174,23 +157,6 @@ namespace Fortigate_Gui.Controllers
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", viewModel) });
         }
 
-            // GET: Zone/Delete/5
-            public async Task<IActionResult> Delete(int? id)
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var zone = await _context.Zones
-                    .FirstOrDefaultAsync(m => m.ZoneID == id);
-                if (zone == null)
-                {
-                    return NotFound();
-                }
-
-                return View(zone);
-            }
 
             // POST: Zone/Delete/5
             [HttpPost, ActionName("Delete")]

@@ -5,37 +5,47 @@
     ViewData["Title"] = "Edit";
 }
 
-    <form asp-action="Edit" asp-route-id="@Model.ip4Policy.Ip4PolicyID" onsubmit="return jQueryAjaxPost(this);">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="ip4Policy.Ip4PolicyID" />
-        <div class="form-group">
-            <label asp-for="ip4Policy.SourceInterfaceID" class="control-label"></label>
-            <select asp-for="ip4Policy.SourceInterfaceID" asp-items="Model.SourceInterface" class="form-control"></select>
-            <span asp-validation-for="ip4Policy.SourceInterfaceID" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="ip4Policy.DestinationInterfaceID" class="control-label"></label>
-            <select asp-for="ip4Policy.DestinationInterfaceID" asp-items="Model.DestinationInterface" class="form-control"></select>
-            <span asp-validation-for="ip4Policy.DestinationInterfaceID" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="ip4Policy.SourceAddress" class="control-label"></label>
-            <input asp-for="ip4Policy.SourceAddress" class="form-control" />
-            <span asp-validation-for="ip4Policy.SourceAddress" class="text-danger"></span>
-        </div>
+<form asp-action="Edit" asp-route-id="@Model.ip4Policy.Ip4PolicyID" onsubmit="return jQueryAjaxPost(this);">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="ip4Policy.Ip4PolicyID" />
+    <div class="form-group">
+        <label asp-for="ip4Policy.SourceInterfaceID" class="control-label"></label>
+        <select asp-for="ip4Policy.SourceInterfaceID" id="SelectedSrcInterface" asp-items="Model.SourceInterface" class="form-control"></select>
+        <span asp-validation-for="ip4Policy.SourceInterfaceID" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.DestinationInterfaceID" class="control-label"></label>
+        <select asp-for="ip4Policy.DestinationInterfaceID" id="SelectedDstInterface" asp-items="Model.DestinationInterface" class="form-control"></select>
+        <span asp-validation-for="ip4Policy.DestinationInterfaceID" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.SourceAddress" class="control-label"></label>
+        <select asp-for="ip4Policy.SourceAddress" id="SelectedSrcAddress" class="form-control" asp-items="Model.SourceAddress"><option value="all">all</option></select>
+        <span asp-validation-for="ip4Policy.SourceAddress" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <div class="form-group">
             <label asp-for="ip4Policy.DestinationAddress" class="control-label"></label>
-            <input asp-for="ip4Policy.DestinationAddress" class="form-control" />
+            <select asp-for="ip4Policy.DestinationAddress" id="SelectedDstAddress" asp-items="Model.DestinationAddress" class="form-control"><option value="all">all</option></select>
             <span asp-validation-for="ip4Policy.DestinationAddress" class="text-danger"></span>
         </div>
-        @*<div class="form-group">
-            <label asp-for="ip4Policy.Type" class="control-label"></label>
-            <input asp-for="ip4Policy.Type" class="form-control" />
-            <span asp-validation-for="ip4Policy.Type" class="text-danger"></span>
-        </div>*@
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-outline-danger btn-block" />
-        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.ActionID" class="control-label"></label>
+        <select asp-for="ip4Policy.ActionID" asp-items="Model.Actions" id="type" class="form-control"></select>
+        <span asp-validation-for="ip4Policy.ActionID" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ip4Policy.NatID" class="control-label"></label>
+        <select asp-for="ip4Policy.NatID" asp-items="Model.Nat" id="type" class="form-control"></select>
+        <span asp-validation-for="ip4Policy.NatID" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SelectedService" class="control-label"></label>
+        <select class="custom-select" multiple asp-for="SelectedService" asp-items="Model.ServiceList"></select>
+    </div>
+
+    <div id="div_hide">
         <div class="form-check">
             <input class="form-check-input" type="checkbox" asp-for="ip4Policy.DnsFilter">
             <label class="form-check-label" asp-for="ip4Policy.DnsFilter">
@@ -78,5 +88,57 @@
                 WEB_FILTER
             </label>
         </div>
-    </form>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary col col-12" />
+    </div>
 
+</form>
+
+<script>
+    var DestinationUrl = '@Url.Action("FetchDestinationAddress")';
+    var Destinations = $('#SelectedDstAddress');
+
+            $('#SelectedDstInterface').change(function() {
+                Destinations.empty();
+                $.getJSON(DestinationUrl, { ID: $(this).val() },function(data) {
+					if (!data) {
+						return;
+					}
+                    Destinations.append($('<option></option>').val('').text('Please select'));
+                    Destinations.append($('<option></option>').val('all').text('all'));
+					$.each(data, function(index, item) {
+                        Destinations.append($('<option></option>').val(item.Value).text(item.Text));
+					});
+				});
+
+            })
+    var localityUrl = '@Url.Action("FetchSourceAddress")';
+			var localities = $('#SelectedSrcAddress');
+            $('#SelectedSrcInterface').change(function() {
+				localities.empty();
+
+				$.getJSON(localityUrl, { ID: $(this).val() },function(data) {
+					if (!data) {
+						return;
+					}
+                    localities.append($('<option></option>').val('').text('Please select'));
+                    localities.append($('<option></option>').val('all').text('all'));
+					$.each(data, function(index, item) {
+						localities.append($('<option></option>').val(item.Value).text(item.Text));
+					});
+				});
+
+			})
+
+    $(function () {
+        $('#div_hide').show()
+        $('#type').change(function () {
+            if ($('#type').val() == 2) {
+                $('#div_hide').hide();
+            } else {
+                $('#div_hide').show();
+            }
+        });
+    });
+</script>

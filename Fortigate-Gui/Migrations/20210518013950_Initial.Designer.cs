@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fortigate_Gui.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210517171334_Initial")]
+    [Migration("20210518013950_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -220,13 +220,19 @@ namespace Fortigate_Gui.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AssociatedZone")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
 
                     b.Property<string>("Subnet")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
 
                     b.HasKey("FirewallAddressID");
 
@@ -336,6 +342,7 @@ namespace Fortigate_Gui.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("DestinationAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("DestinationInterfaceID")
@@ -354,6 +361,7 @@ namespace Fortigate_Gui.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("SourceAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SourceInterfaceID")
@@ -438,10 +446,14 @@ namespace Fortigate_Gui.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("DestinationSubnet")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
 
                     b.Property<string>("Gateway")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
 
                     b.Property<int>("InterfaceID")
                         .HasColumnType("int");
@@ -564,7 +576,7 @@ namespace Fortigate_Gui.Migrations
                         .HasColumnType("nvarchar(79)")
                         .HasMaxLength(79);
 
-                    b.Property<int?>("VpnPortalID")
+                    b.Property<int>("VpnPortalID")
                         .HasColumnType("int");
 
                     b.HasKey("VpnSettingID");
@@ -584,7 +596,9 @@ namespace Fortigate_Gui.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
 
                     b.HasKey("ZoneID");
 
@@ -884,7 +898,9 @@ namespace Fortigate_Gui.Migrations
 
                     b.HasOne("Fortigate_Gui.Models.VpnPortal", "VpnPortal")
                         .WithMany()
-                        .HasForeignKey("VpnPortalID");
+                        .HasForeignKey("VpnPortalID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Fortigate_Gui.Models.ZoneInterface", b =>

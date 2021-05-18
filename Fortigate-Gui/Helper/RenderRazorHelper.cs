@@ -12,6 +12,7 @@ namespace Fortigate_Gui.Helper
 {
     public class RenderRazorHelper
     {
+        // Converts razorView To Html, this is used for Ajax calls
         public static string RenderRazorViewToString(Controller controller, string viewName, object model = null)
         {
             controller.ViewData.Model = model;

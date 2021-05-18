@@ -10,6 +10,7 @@ namespace Fortigate_Gui.ValidationAttributes
         [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
         public class NoDirectAccessAttribute : ActionFilterAttribute
         {
+        //cannot access url directly
             public override void OnActionExecuting(ActionExecutingContext filterContext)
             {
                 if (filterContext.HttpContext.Request.GetTypedHeaders().Referer == null ||

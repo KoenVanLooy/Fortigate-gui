@@ -19,13 +19,13 @@
     </div>
     <div class="form-group">
         <label asp-for="ip4Policy.SourceAddress" class="control-label"></label>
-        <select asp-for="ip4Policy.SourceAddress" id="SelectedSrcAddress" class="form-control" asp-items="Model.SourceAddress"></select>
+        <select asp-for="ip4Policy.SourceAddress" id="SelectedSrcAddress" class="form-control" asp-items="Model.SourceAddress"><option value="all" >all</option></select>
         <span asp-validation-for="ip4Policy.SourceAddress" class="text-danger"></span>
     </div>
     <div class="form-group">
         <div class="form-group">
             <label asp-for="ip4Policy.DestinationAddress" class="control-label"></label>
-            <select asp-for="ip4Policy.DestinationAddress" id="SelectedDstAddress" asp-items="Model.DestinationAddress" class="form-control"></select>
+            <select asp-for="ip4Policy.DestinationAddress" id="SelectedDstAddress" asp-items="Model.DestinationAddress" class="form-control"><option value="all">all</option></select>
             <span asp-validation-for="ip4Policy.DestinationAddress" class="text-danger"></span>
         </div>
     </div>
@@ -87,18 +87,19 @@
                 WEB_FILTER
             </label>
         </div>
+    </div>
         <div class="form-group">
             <input type="submit" value="Create" class="btn btn-primary col col-12" />
         </div>
-    </div>
+   
 </form>
 
 <script>
-  var DestinationUrl = '@Url.Action("FetchDestinationAddress")';
-			var Destinations = $('#SelectedDstAddress');
+    var DestinationUrl = '@Url.Action("FetchDestinationAddress")';
+    var Destinations = $('#SelectedDstAddress');
+    
             $('#SelectedDstInterface').change(function() {
                 Destinations.empty();
-
                 $.getJSON(DestinationUrl, { ID: $(this).val() },function(data) {
 					if (!data) {
 						return;

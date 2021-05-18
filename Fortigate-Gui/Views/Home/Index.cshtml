@@ -2,7 +2,6 @@
 
 @{ ViewData["Title"] = "Home Page"; }
 
-
 <div class="row">
     <div class="col-6">
         <h3 class="text-center"><i class="fas fa-info-circle"></i> Interfaces</h3>
@@ -31,8 +30,7 @@
                 }
             </tbody>
             <tr>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Interface" asp-action="Create">Add New</a></td>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Interface" asp-action="Index">View All</a></td>
+                <td colspan="2" class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Interface" asp-action="Index">View All</a></td>
                 <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Home" asp-action="DelInterface">Delete All</a></td>
             </tr>
         </table>
@@ -64,8 +62,7 @@
                 }
             </tbody>
             <tr>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Zone" asp-action="Create">Add New</a></td>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Zone" asp-action="Index">View All</a></td>
+                <td colspan="2" class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Zone" asp-action="Index">View All</a></td>
                 <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Home" asp-action="DelZone">Delete All</a></td>
             </tr>
         </table>
@@ -99,8 +96,7 @@
                 }
             </tbody>
             <tr>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="FirewallAddress" asp-action="Index">Add New</a></td>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="FirewallAddress" asp-action="Index">View All</a></td>
+                <td colspan="2" class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="FirewallAddress" asp-action="Index">View All</a></td>
                 <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Home" asp-action="DelFWAdress">Delete All</a></td>
             </tr>
         </table>
@@ -132,8 +128,7 @@
                 }
             </tbody>
             <tr>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Ip4Policy" asp-action="Index">Add New</a></td>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Ip4Policy" asp-action="Index">View All</a></td>
+                <td colspan="2" class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Ip4Policy" asp-action="Index">View All</a></td>
                 <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Home" asp-action="DelIp4Policy">Delete All</a></td>
             </tr>
         </table>
@@ -167,8 +162,7 @@
                 }
             </tbody>
             <tr>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="StaticRoute" asp-action="Create">Add New</a></td>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="StaticRoute" asp-action="Index">View All</a></td>
+                <td colspan="2" class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="StaticRoute" asp-action="Index">View All</a></td>
                 <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Home" asp-action="DelStaticRoute">Delete All</a></td>
             </tr>
         </table>
@@ -199,8 +193,7 @@
                 }
             </tbody>
             <tr>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Group" asp-action="Index">Add New</a></td>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Group" asp-action="Index">View All</a></td>
+                <td colspan="2" class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Group" asp-action="Index">View All</a></td>
                 <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Home" asp-action="DelGroup">Delete All</a></td>
             </tr>
         </table>
@@ -234,8 +227,7 @@
                 }
             </tbody>
             <tr>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="VpnSetting" asp-action="Create">Add New</a></td>
-                <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="VpnSetting" asp-action="Index">View All</a></td>
+                <td colspan="2" class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="VpnSetting" asp-action="Index">View All</a></td>
                 <td class="text-center"><a class="btn btn-outline-danger btn-block" asp-controller="Home" asp-action="DelVpnSetting">Delete All</a></td>
             </tr>
         </table>
@@ -252,6 +244,6 @@
             <div class="col col-12 float-left">
                 <button type="submit" asp-route-id="1" class="btn btn-outline-danger btn-block text-black-50">Download Configuration File</button>
             </div>
-        </form> 
+        </form>
     </div>
 </div>

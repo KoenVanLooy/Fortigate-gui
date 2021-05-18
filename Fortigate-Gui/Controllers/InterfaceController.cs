@@ -25,6 +25,7 @@ namespace Fortigate_Gui.Controllers
         //Get Create:index
         public async Task<IActionResult> Index()
         {
+            //Gives List with include
             return View(await _context.Interfaces.Include(x => x.EnumType)
                 .Include(x => x.EnumPhysical) 
                 .Include(x => x.EnumMode)
@@ -32,33 +33,18 @@ namespace Fortigate_Gui.Controllers
         }
 
         // GET: Interfacess/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var @interface = await _context.Interfaces
-                .Include(x => x.AccessInterfaces)
-                .Include(y => y.EnumMode)
-                .FirstOrDefaultAsync(m => m.InterfaceID == id);
-            if (@interface == null)
-            {
-                return NotFound();
-            }
-
-            return View(@interface);
-        }
+       
         [NoDirectAccessAttribute]
         public IActionResult Create()
         {
             CreateInterfaceViewModel viewModel = new CreateInterfaceViewModel
             {
+               
                 Interface = new Interface(),
                 Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name"),
                 Types = new SelectList(_context.EnumTypes,"EnumTypeID","Name"),
                 Physicals = new SelectList(_context.EnumPhysicals,"EnumPhysicalID","Name"),
+                //Many to Many relations EnumAccess
                 SelectedEnumAcces = new List<int>(),
                 AccessList = new SelectList(_context.EnumAcces, "EnumAccesID", "Name")
             };
@@ -75,6 +61,7 @@ namespace Fortigate_Gui.Controllers
         {
             viewModel.Interface.Ip = viewModel.IpAddress;
             EnumPhysical physical = _context.EnumPhysicals.SingleOrDefault(x => x.EnumPhysicalID == viewModel.Interface.EnumPhysicalID);
+            // Coupling viewModel to Model NO_VLAN sets name different
             if (viewModel.VlanName == "NO_VLAN")
             {
                 viewModel.Interface.Name = physical.Name;
@@ -86,7 +73,7 @@ namespace Fortigate_Gui.Controllers
                 viewModel.Interface.Name = viewModel.VlanName;
                 viewModel.Interface.VlanInterface = physical.Name;
             }
-
+            //Saves from viewModel to DB
             if (ModelState.IsValid)
 
             {
@@ -103,6 +90,8 @@ namespace Fortigate_Gui.Controllers
 
                     newLines.Add(accessInterface);
                 }
+
+                //Save To DB
                 _context.Add(viewModel.Interface);
                 await _context.SaveChangesAsync();
                 Interface @interface = await _context.Interfaces
@@ -115,12 +104,14 @@ namespace Fortigate_Gui.Controllers
 
                 foreach (AccessInterface accessInterface1 in newLines)
                 {
+                    //Add all selected EnumAccess
                     @interface.AccessInterfaces.Add(accessInterface1);
                 }
                 await _context.SaveChangesAsync();
 
                 return Json(new
                 {
+                    //If modelstate is valid => return ViewALL
                     isValid = true,
                     html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.Interfaces.Include(x => x.EnumType)
                 .Include(x => x.EnumPhysical)
@@ -129,6 +120,7 @@ namespace Fortigate_Gui.Controllers
                 });
 
             }
+            //If modelstate is invalid => return SelectLists
             viewModel.Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name", viewModel.Interface.EnumModeID);
             viewModel.AccessList = new SelectList(_context.EnumAcces, "EnumAccesID", "Name");
             viewModel.Types = new SelectList(_context.EnumTypes, "EnumTypeID", "Name");
@@ -206,6 +198,7 @@ namespace Fortigate_Gui.Controllers
                 @interface.EnumTypeID = viewModel.Interface.EnumTypeID;
                 @interface.EnumModeID = viewModel.Interface.EnumModeID;
 
+                //Add all newly selected EnumAccess
                 List<AccessInterface> accessInterfaces = new List<AccessInterface>();
                 if (viewModel.SelectedEnumAcces == null)
                 {
@@ -221,6 +214,7 @@ namespace Fortigate_Gui.Controllers
                     }
                   );
                 }
+                //removeall from interface to reset all enumAccess
                 @interface.AccessInterfaces.RemoveAll(ai => !accessInterfaces.Contains(ai));
                 @interface.AccessInterfaces.AddRange(accessInterfaces.Where(zi => !@interface.AccessInterfaces.Contains(zi)));
                 
@@ -233,6 +227,7 @@ namespace Fortigate_Gui.Controllers
                     .Include(x => x.EnumPhysical)
                     .ToListAsync()) });
             }
+            // reset view with SelectLists
             viewModel.AccessList = new SelectList(_context.Interfaces, "InterfaceID", "Name");
             viewModel.SelectedEnumAcces = @interface.AccessInterfaces.Select(ai => ai.EnumAccesID);
             viewModel.Modes = new SelectList(_context.EnumModes, "EnumModeID", "Name", @interface.EnumModeID);

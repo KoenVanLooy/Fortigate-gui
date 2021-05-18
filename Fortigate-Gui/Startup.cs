@@ -73,7 +73,7 @@ namespace Fortigate_Gui
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
 
-                //CreateUserRoles(serviceProvider).Wait();
+                CreateUserRoles(serviceProvider).Wait();
             });
         }
 
@@ -92,7 +92,7 @@ namespace Fortigate_Gui
                 roleResult = await roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
-            CustomUser user = Context.Users.FirstOrDefault(u => u.Email == "tom@sch.com");
+            CustomUser user = Context.Users.FirstOrDefault(u => u.Email == "admin@fortigate.com");
             if (user != null)
             {
                 DbSet<IdentityUserRole<string>> roles = Context.UserRoles;

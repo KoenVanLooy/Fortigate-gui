@@ -128,9 +128,9 @@ namespace Fortigate_Gui.Migrations
                 {
                     FirewallAddressID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    AssociatedZone = table.Column<string>(nullable: true),
-                    Subnet = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 35, nullable: false),
+                    AssociatedZone = table.Column<string>(maxLength: 35, nullable: false),
+                    Subnet = table.Column<string>(maxLength: 35, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -223,7 +223,7 @@ namespace Fortigate_Gui.Migrations
                 {
                     ZoneID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 35, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -458,7 +458,7 @@ namespace Fortigate_Gui.Migrations
                     SourceAddressV6 = table.Column<string>(maxLength: 79, nullable: false),
                     DefaultPort = table.Column<string>(maxLength: 35, nullable: false),
                     GroupID = table.Column<int>(nullable: false),
-                    VpnPortalID = table.Column<int>(nullable: true)
+                    VpnPortalID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -476,7 +476,7 @@ namespace Fortigate_Gui.Migrations
                         principalSchema: "Fortigate",
                         principalTable: "VpnPortal",
                         principalColumn: "VpnPortalID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -488,8 +488,8 @@ namespace Fortigate_Gui.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SourceInterfaceID = table.Column<int>(nullable: true),
                     DestinationInterfaceID = table.Column<int>(nullable: true),
-                    SourceAddress = table.Column<string>(nullable: true),
-                    DestinationAddress = table.Column<string>(nullable: true),
+                    SourceAddress = table.Column<string>(nullable: false),
+                    DestinationAddress = table.Column<string>(nullable: false),
                     ActionID = table.Column<int>(nullable: true),
                     NatID = table.Column<int>(nullable: true),
                     DnsFilter = table.Column<bool>(nullable: false),
@@ -570,8 +570,8 @@ namespace Fortigate_Gui.Migrations
                     StaticRouteID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InterfaceID = table.Column<int>(nullable: false),
-                    DestinationSubnet = table.Column<string>(nullable: true),
-                    Gateway = table.Column<string>(nullable: true)
+                    DestinationSubnet = table.Column<string>(maxLength: 35, nullable: false),
+                    Gateway = table.Column<string>(maxLength: 35, nullable: false)
                 },
                 constraints: table =>
                 {

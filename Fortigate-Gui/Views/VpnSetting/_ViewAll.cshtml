@@ -1,4 +1,9 @@
 ﻿@model IEnumerable<Fortigate_Gui.Models.VpnSetting>
+    <script>
+        $(document).ready(function () {
+            $("#datatable").DataTable();
+        });
+    </script>
 
 <table class="table" id="datatable">
     <thead>
@@ -47,7 +52,7 @@
                     @Html.DisplayFor(modelItem => item.VpnPortal.IpPool)
                 </td>
                 <td class="text-right">
-                    <a onclick="ShowInPopup('@Url.Action("AddOrEdit", "VpnSetting", new { id = item.VpnSettingID}, Context.Request.Scheme)', 'Edit VPN Setting')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit", "VpnSetting", new { id = item.VpnSettingID}, Context.Request.Scheme)', 'Edit VPN Setting')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
                     <form asp-action="Delete" asp-route-id="@item.VpnSettingID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
                         <button type="submit" class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></button>
                     </form>

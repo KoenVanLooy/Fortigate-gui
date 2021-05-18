@@ -29,9 +29,10 @@ namespace Fortigate_Gui.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken] 
         public async Task<ActionResult> SecurityProfiles(UploadViewModel viewModel)
         {
+            //saves the newly uploaded File to Security profiles
             if (ModelState.IsValid)
             {
                 var file = viewModel.ConfigFile;
@@ -44,6 +45,7 @@ namespace Fortigate_Gui.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Download()
         {
+            //FileDownload with memorystream
             var path = @"wwwroot/files/FortiGate_Security_Profiles.txt";
             var memory = new MemoryStream();
             using (var stream = new FileStream(path, FileMode.Open))
@@ -75,6 +77,7 @@ namespace Fortigate_Gui.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ReadConfig(UploadViewModel viewModel)
         {
+            //Upload configuration file for reading
             var file = viewModel.ConfigFile;
             await UploadFile(file, "UploadConffile.txt");
             TempData["msg"] = "File Uploaded successfully.";

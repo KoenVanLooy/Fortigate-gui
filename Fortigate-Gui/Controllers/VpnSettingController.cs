@@ -82,11 +82,11 @@ namespace Fortigate_Gui.Controllers
                     _context.Update(viewModel.VpnSetting);
                     await _context.SaveChangesAsync();
                 }
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.VpnSettings.ToList()) });
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.VpnSettings.Include(x => x.Group).Include(x => x.VpnPortal).ToList()) });
             }
             viewModel.Groups = new SelectList(_context.Groups, "GroupID", "Name", viewModel.VpnSetting.GroupID);
             viewModel.VpnPortals = new SelectList(_context.VpnPortals, "VpnPortalID", "IpPool", viewModel.VpnSetting.VpnPortalID);
-            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "AddOrEdit", viewModel.VpnSetting) });
+            return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "AddOrEdit", viewModel) });
         }
 
         // POST: VpnSetting/Delete/5
@@ -97,7 +97,8 @@ namespace Fortigate_Gui.Controllers
             var vpnSetting = await _context.VpnSettings.FindAsync(id);
             _context.VpnSettings.Remove(vpnSetting);
             await _context.SaveChangesAsync();
-            return Json(new { html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.VpnSettings.ToList()) });
+            return Json(new { html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.VpnSettings
+                .Include(x => x.Group).Include(x => x.VpnPortal).ToList()) });
         }
 
         private bool VpnSettingExists(int id)

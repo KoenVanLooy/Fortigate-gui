@@ -340,6 +340,7 @@ namespace Fortigate_Gui.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("DestinationAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("DestinationInterfaceID")
@@ -358,6 +359,7 @@ namespace Fortigate_Gui.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("SourceAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SourceInterfaceID")
@@ -442,10 +444,14 @@ namespace Fortigate_Gui.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("DestinationSubnet")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
 
                     b.Property<string>("Gateway")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
 
                     b.Property<int>("InterfaceID")
                         .HasColumnType("int");
@@ -568,7 +574,7 @@ namespace Fortigate_Gui.Migrations
                         .HasColumnType("nvarchar(79)")
                         .HasMaxLength(79);
 
-                    b.Property<int?>("VpnPortalID")
+                    b.Property<int>("VpnPortalID")
                         .HasColumnType("int");
 
                     b.HasKey("VpnSettingID");
@@ -588,7 +594,9 @@ namespace Fortigate_Gui.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(35)")
+                        .HasMaxLength(35);
 
                     b.HasKey("ZoneID");
 
@@ -888,7 +896,9 @@ namespace Fortigate_Gui.Migrations
 
                     b.HasOne("Fortigate_Gui.Models.VpnPortal", "VpnPortal")
                         .WithMany()
-                        .HasForeignKey("VpnPortalID");
+                        .HasForeignKey("VpnPortalID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Fortigate_Gui.Models.ZoneInterface", b =>

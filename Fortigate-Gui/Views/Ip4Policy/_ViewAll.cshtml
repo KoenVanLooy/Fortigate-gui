@@ -1,50 +1,45 @@
 ﻿@model IEnumerable<Fortigate_Gui.Models.Ip4Policy>
-<table class="table" id="policytable">
-    <tr>
-        @*<th>
-                @Html.DisplayNameFor(model => model.SourceInterface)
+<script>
+    $(document).ready(function () {
+        $("#datatable").DataTable();
+    });
+</script>
+
+<table class="table" id="datatable">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.SourceAddress)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DestinationInterface)
-            </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.SourceAddress)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DestinationAddress)
-        </th>
-        @*<th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>*@
-        <th class="text-right">Actions</th>
-    </tr>
+                @Html.DisplayNameFor(model => model.DestinationAddress)
+            </th>
 
+            <th class="text-right">Actions</th>
+        </tr>
+    </thead>
 
     @foreach (var item in Model)
     {
-        <tr class="Search">
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.SourceInterface)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DestinationInterface)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.SourceAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DestinationAddress)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>*@
-            <td class="text-right">
-                <a onclick="showInPopup('@Url.Action("Edit","Ip4Policy",new { id = item.Ip4PolicyID },Context.Request.Scheme)','Edit Ip4Policy')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
-                <form asp-action="Delete" asp-route-id="@item.Ip4PolicyID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
-                    <button type="submit" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></button>
-                </form>
-                <a asp-controller="Home" asp-action="AddIp4Policy" class="btn btn-outline-primary" asp-route-id="@item.Ip4PolicyID"><i class="far fa-plus-square"></i></a>
-            </td>
-        </tr>
+<tbody>
+    <tr>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.SourceAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DestinationAddress)
+        </td>
+
+        <td class="text-right">
+            <a onclick="showInPopup('@Url.Action("Edit","Ip4Policy",new { id = item.Ip4PolicyID },Context.Request.Scheme)','Edit Ip4Policy')" class="btn btn-outline-danger"><i class="btn-outline-danger far fa-edit"></i></a>
+            <form asp-action="Delete" asp-route-id="@item.Ip4PolicyID" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger"><i class="far fa-trash-alt" aria-hidden="true"></i></button>
+            </form>
+            <a asp-controller="Home" asp-action="AddIp4Policy" class="btn btn-outline-danger" asp-route-id="@item.Ip4PolicyID"><i class="far fa-plus-square"></i></a>
+        </td>
+    </tr>
+</tbody>
     }
 </table>

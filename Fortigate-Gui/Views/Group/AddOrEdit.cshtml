@@ -16,8 +16,8 @@
                 <span asp-validation-for="Group.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <select asp-for="SelectedFortiUsers" asp-items="Model.FortiUserList"></select>
-            </div>
+                <select class="custom-select" asp-for="SelectedFortiUsers" asp-items="Model.FortiUserList"></select>
+            </div> 
             <div class="form-group">
                 <input type="submit" value="Submit" class="btn btn-outline-danger btn-block" />
             </div>

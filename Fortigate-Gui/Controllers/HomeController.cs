@@ -27,6 +27,8 @@ namespace Fortigate_Gui.Controllers
             _logger = logger;
             _context = context;
         }
+
+        //if you have a Configuration file you can read the objects and they will be automatically generated in the application
         public async Task<IActionResult> Reader()
         {
             ReadConfigfile readConfigfile = new ReadConfigfile(_context);
@@ -47,6 +49,7 @@ namespace Fortigate_Gui.Controllers
         //httpGet
         public IActionResult Index()
         {
+            //Getting the session variables
             var sessionInterfaces = SessionHelper.GetObjectFromJson<List<Interface>>(HttpContext.Session, "sessionInterfaces");
             var sessionZones = SessionHelper.GetObjectFromJson<List<Zone>>(HttpContext.Session, "sessionZone");
             var sessionFwAddresses = SessionHelper.GetObjectFromJson<List<FirewallAddress>>(HttpContext.Session, "sessionFwAddresses");
@@ -54,6 +57,7 @@ namespace Fortigate_Gui.Controllers
             var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
             var sessionGroups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, "sessionGroups");
             var sessionVpnSettings = SessionHelper.GetObjectFromJson<List<VpnSetting>>(HttpContext.Session, "sessionVpnSettings");
+            // initiating Session Variables
             if (sessionInterfaces == null)
             {
                 sessionInterfaces = new List<Interface>();
@@ -91,7 +95,7 @@ namespace Fortigate_Gui.Controllers
                 sessionStaticRoutes = new List<StaticRoute>();
             }
             CreateConfViewModel viewModel = new CreateConfViewModel
-            {
+            { //Giving ViewModel SessionVariables
                 Zones = sessionZones,
                 Interfaces = sessionInterfaces,
                 FirewallAddresses = sessionFwAddresses,
@@ -108,12 +112,16 @@ namespace Fortigate_Gui.Controllers
         {
             if (id == 1)
             {
+                // Get Session Variables
                 var sessionInterfaces = SessionHelper.GetObjectFromJson<List<Interface>>(HttpContext.Session, "sessionInterfaces");
                 var sessionZones = SessionHelper.GetObjectFromJson<List<Zone>>(HttpContext.Session, "sessionZone");
                 var sessionFwAddresses = SessionHelper.GetObjectFromJson<List<FirewallAddress>>(HttpContext.Session, "sessionFwAddresses");
                 var sessionIp4Policies = SessionHelper.GetObjectFromJson<List<Ip4Policy>>(HttpContext.Session, "sessionIp4policies");
                 var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
-                DownloadScript downloadScript = new DownloadScript(sessionInterfaces, sessionFwAddresses, sessionZones, sessionIp4Policies, sessionStaticRoutes, _context);
+                var sessionGroups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, "sessionGroups");
+                var sessionVpnSettings = SessionHelper.GetObjectFromJson<List<VpnSetting>>(HttpContext.Session, "sessionVpnSettings");
+                //DownloadScript script to client
+                DownloadScript downloadScript = new DownloadScript(sessionInterfaces, sessionFwAddresses, sessionZones, sessionIp4Policies, sessionStaticRoutes, sessionGroups,sessionVpnSettings, _context);
                 string ok = await downloadScript.StreamScriptAsync();
                 var path = @"wwwroot/files/Conffile.txt";
                 var memory = new MemoryStream();
@@ -125,16 +133,11 @@ namespace Fortigate_Gui.Controllers
                 var ext = Path.GetExtension(path).ToLowerInvariant();
                 return File(memory, GetMimeTypes()[ext], Path.GetFileName(path));
             }
-            bool test = viewModel.DnsFilter;
             return RedirectToAction(nameof(Index));
         }
 
-        
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+        [Authorize(Roles = "Admin")]
+        //admins can adjust speciale Crudoperations
         public IActionResult CrudPage()
         {
             return View();
@@ -180,7 +183,6 @@ namespace Fortigate_Gui.Controllers
             return RedirectToAction("Index");
         }
 
-        //General AddObject Method Defined by switch case on string Type
         public async Task<IActionResult> AddVpnSetting (int? id)
         { 
             await AddObjectAsync(id, "sessionVpnSettings", "VpnSetting");
@@ -397,129 +399,133 @@ namespace Fortigate_Gui.Controllers
 
         }
 
+        // Delete sessionObject from sessionLists if id == 0 clear all else clear id
         public IActionResult DelInterface(int id = 0)
         {
             var sessionInterfaces = SessionHelper.GetObjectFromJson<List<Interface>>(HttpContext.Session, "sessionInterfaces");
-            if (id == 0)
+            if (sessionInterfaces != null)
             {
-                sessionInterfaces.Clear();
+                if (id == 0)
+                {
+                    sessionInterfaces.Clear();
+                }
+                else
+                {
+                    sessionInterfaces.RemoveAt(id);
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionInterfaces", sessionInterfaces);
             }
-            else
-            {
-                sessionInterfaces.RemoveAt(id);
-            }
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionInterfaces", sessionInterfaces);
             return RedirectToAction("Index");
         }
         public IActionResult DelZone(int id = 0)
         {
             var sessionZone = SessionHelper.GetObjectFromJson<List<Zone>>(HttpContext.Session, "sessionZone");
-            if (id == 0)
+            if (sessionZone != null)
             {
-                sessionZone.Clear();
+                if (id == 0)
+                {
+                    sessionZone.Clear();
+                }
+                else
+                {
+                    sessionZone.RemoveAt(id);
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionZone", sessionZone);
             }
-            else
-            {
-                sessionZone.RemoveAt(id);
-            }
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionZone", sessionZone);
             return RedirectToAction("Index");
         }
 
         public IActionResult DelFWAdress(int id = 0)
         {
             var sessionFwAddresses = SessionHelper.GetObjectFromJson<List<FirewallAddress>>(HttpContext.Session, "sessionFwAddresses");
-            if (id == 0)
+            if (sessionFwAddresses != null)
             {
-                sessionFwAddresses.Clear();
+                if (id == 0)
+                {
+                    sessionFwAddresses.Clear();
+                }
+                else
+                {
+                    sessionFwAddresses.RemoveAt(id);
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionFwAddresses", sessionFwAddresses);
             }
-            else
-            {
-                sessionFwAddresses.RemoveAt(id);
-            }
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionFwAddresses", sessionFwAddresses);
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            
         }
 
         public IActionResult DelIp4Policy(int id = 0)
         {
             var sessionIp4policies = SessionHelper.GetObjectFromJson<List<Ip4Policy>>(HttpContext.Session, "sessionIp4policies");
-            if (id == 0)
+            if (sessionIp4policies != null)
             {
-                sessionIp4policies.Clear();
+
+                if (id == 0)
+                {
+                    sessionIp4policies.Clear();
+                }
+                else
+                {
+                    sessionIp4policies.RemoveAt(id);
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionIp4policies", sessionIp4policies);
             }
-            else
-            {
-                sessionIp4policies.RemoveAt(id);
-            }
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionIp4policies", sessionIp4policies);
             return RedirectToAction("Index");
         }
 
         public IActionResult DelStaticRoute(int id = 0)
         {
             var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
-            if (id == 0)
+            if (sessionStaticRoutes != null)
             {
-                sessionStaticRoutes.Clear();
+                if (id == 0)
+                {
+                    sessionStaticRoutes.Clear();
+                }
+                else
+                {
+                    sessionStaticRoutes.RemoveAt(id);
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionStaticRoutes", sessionStaticRoutes);
             }
-            else
-            {
-                sessionStaticRoutes.RemoveAt(id);
-            }
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionStaticRoutes", sessionStaticRoutes);
             return RedirectToAction("Index");
         }
         public IActionResult DelGroup(int id = 0)
         {
             var sessionGroups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, "sessionGroups");
-            if (id == 0)
+            if (sessionGroups != null)
             {
-                sessionGroups.Clear();
+                if (id == 0)
+                {
+                    sessionGroups.Clear();
+                }
+                else
+                {
+                    sessionGroups.RemoveAt(id);
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionGroups", sessionGroups);
             }
-            else
-            {
-                sessionGroups.RemoveAt(id);
-            }
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionGroups", sessionGroups);
             return RedirectToAction("Index");
         }
         public IActionResult DelVpnSetting(int id = 0)
         {
             var sessionVpnSettings = SessionHelper.GetObjectFromJson<List<VpnSetting>>(HttpContext.Session, "sessionVpnSettings");
-            if (id == 0)
+            if (sessionVpnSettings != null)
             {
-                sessionVpnSettings.Clear();
+                if (id == 0)
+                {
+                    sessionVpnSettings.Clear();
+                }
+                else
+                {
+                    sessionVpnSettings.RemoveAt(id);
+                }
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionVpnSettings", sessionVpnSettings);
             }
-            else
-            {
-                sessionVpnSettings.RemoveAt(id);
-            }
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionVpnSettings", sessionVpnSettings);
             return RedirectToAction("Index");
         }
 
-        //public IActionResult DelAllGroups()
-        //{
-        //    var sessionGroups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, "sessionGroups");
-        //    sessionGroups.Clear();
-        //    SessionHelper.SetObjectAsJson(HttpContext.Session, "sessionGroups", sessionGroups);
-        //    return RedirectToAction("Index");
-        //}
-
-        public async Task<IActionResult> Download()
-        {
-            var path = @"wwwroot/files/Conffile.txt";
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(path, FileMode.Open))
-            {
-                await stream.CopyToAsync(memory);
-            }
-            memory.Position = 0;
-            var ext = Path.GetExtension(path).ToLowerInvariant();
-            return File(memory, GetMimeTypes()[ext], Path.GetFileName(path));
-        }
-
+ 
         public Dictionary<string, string> GetMimeTypes()
         {
             return new Dictionary<string, string>
@@ -529,6 +535,8 @@ namespace Fortigate_Gui.Controllers
                 {".doc","application/vnd.ms-word"}
             };
         }
+
+        //Streaming configuration file
         public async Task<IActionResult> StreamConf ()
         {
             var sessionInterfaces = SessionHelper.GetObjectFromJson<List<Interface>>(HttpContext.Session, "sessionInterfaces");
@@ -538,31 +546,45 @@ namespace Fortigate_Gui.Controllers
             var sessionStaticRoutes = SessionHelper.GetObjectFromJson<List<StaticRoute>>(HttpContext.Session, "sessionStaticRoutes");
             var sessionGroups = SessionHelper.GetObjectFromJson<List<Group>>(HttpContext.Session, "sessionGroups");
             var sessionVpnSettings = SessionHelper.GetObjectFromJson<List<VpnSetting>>(HttpContext.Session, "sessionVpnSetting");
-            StreamScript Script = new StreamScript(sessionInterfaces, sessionFwAddresses, sessionZones,  ip4policies, sessionStaticRoutes, sessionGroups, sessionVpnSettings, _context);
-            await Script.StreamScriptAsync();
+            try
+            {
+                StreamScript Script = new StreamScript(sessionInterfaces, sessionFwAddresses, sessionZones, ip4policies, sessionStaticRoutes, sessionGroups, sessionVpnSettings, _context);
+                await Script.StreamScriptAsync();
+            }
+            catch (Exception ex)
+            {
+
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> TestStream()
+        // Testing the connection
+        public  IActionResult TestStream()
         {
             TestConnectionViewModel viewModel = new TestConnectionViewModel
             {
-                IpAddress = "",
-                PassWord = "",
-                UserName = ""
+                IpAddress = " ",
+                PassWord = " ",
+                UserName = " "
 
             };
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> TestStream(TestConnectionViewModel viewModel)
+        public IActionResult TestStream(TestConnectionViewModel viewModel)
         {
             string UserName = viewModel.UserName;
             string Password = viewModel.PassWord;
             string IpAddress = viewModel.IpAddress;
+            if (UserName == null || Password == null || IpAddress == null)
+            {
+                UserName = "Noconnect";
+                Password = "Noconnect";
+                IpAddress = "Noconnect";
 
-           
+            }
 
             var connInfo = new Renci.SshNet.PasswordConnectionInfo(IpAddress, 221, UserName, Password);
             var sshClient = new Renci.SshNet.SshClient(connInfo);

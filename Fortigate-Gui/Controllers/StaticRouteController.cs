@@ -50,7 +50,7 @@ namespace Fortigate_Gui.Controllers
             {
                 _context.Add(viewModel.StaticRoute);
                 await _context.SaveChangesAsync();
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.StaticRoutes.ToListAsync()) });
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", await _context.StaticRoutes.Include(s => s.Interface).ToListAsync()) });
             }
             viewModel.Interfaces = new SelectList(_context.Interfaces, "InterfaceID", "Name", viewModel.StaticRoute.InterfaceID);
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Create", viewModel.StaticRoute) });
@@ -94,7 +94,7 @@ namespace Fortigate_Gui.Controllers
                 _context.Update(viewModel.StaticRoute);
                 await _context.SaveChangesAsync();
 
-                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.StaticRoutes.ToList()) });
+                return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.StaticRoutes.Include(s => s.Interface).ToList()) });
             }
             viewModel.Interfaces = new SelectList(_context.Interfaces, "InterfaceID", "Name", viewModel.StaticRoute.InterfaceID);
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "Edit", viewModel.StaticRoute) });
@@ -108,7 +108,7 @@ namespace Fortigate_Gui.Controllers
             var staticRoute = await _context.StaticRoutes.FindAsync(id);
             _context.StaticRoutes.Remove(staticRoute);
             await _context.SaveChangesAsync();
-            return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.StaticRoutes.ToList()) });
+            return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.StaticRoutes.Include(s => s.Interface).ToList()) });
         }
 
         private bool StaticRouteExists(int id)

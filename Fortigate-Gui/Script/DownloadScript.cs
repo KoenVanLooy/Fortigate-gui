@@ -16,9 +16,11 @@ namespace Fortigate_Gui.Script
         private List<Zone> _zones;
         private List<Ip4Policy> _ip4Policies;
         private List<StaticRoute> _staticRoutes;
+        private List<Group> _groups;
+        private List<VpnSetting> _vpnSettings;
         private readonly ApplicationDbContext _context;
         public DownloadScript(List<Interface> interfaces, List<FirewallAddress> firewallAddresses,
-            List<Zone> zones, List<Ip4Policy> ip4Policies, List<StaticRoute> staticRoutes, ApplicationDbContext context)
+            List<Zone> zones, List<Ip4Policy> ip4Policies, List<StaticRoute> staticRoutes, List<Group> groups, List<VpnSetting> vpnSettings, ApplicationDbContext context)
         {
             _zones = zones;
             _interfaces = interfaces;
@@ -26,6 +28,8 @@ namespace Fortigate_Gui.Script
             _ip4Policies = ip4Policies;
             _staticRoutes = staticRoutes;
             _context = context;
+            _groups = groups;
+            _vpnSettings = vpnSettings;
 
         }
 
@@ -171,6 +175,98 @@ namespace Fortigate_Gui.Script
                 }
                 stream.WriteLine("end");
 
+
+                string members = "";
+                if (_groups == null)
+                {
+                    _groups = new List<Group>();
+                }
+                foreach (var item in _groups)
+                {
+                    Group group = await _context.Groups.Include(x => x.UserGroups).ThenInclude(u => u.FortiUser)
+                        .SingleOrDefaultAsync(y => y.GroupID == item.GroupID);
+                    foreach (UserGroup ug in group.UserGroups)
+                    {
+                        stream.WriteLine("config user local");
+                        stream.WriteLine("edit " + ug.FortiUser.Name);
+                        stream.WriteLine("set type password");
+                        stream.WriteLine("set passwd " + ug.FortiUser.Password);
+                        stream.WriteLine("next");
+                        stream.WriteLine("end");
+                        members += ug.FortiUser.Name + " ";
+                    }
+                    stream.WriteLine("config user group");
+                    stream.WriteLine("edit " + item.Name);
+                    stream.WriteLine("set member " + members);
+                    stream.WriteLine("next");
+                    stream.WriteLine("end");
+                }
+                if (_vpnSettings != null)
+                {
+                    stream.WriteLine("config system interface");
+                    stream.WriteLine("edit ssl.root");
+                    stream.WriteLine("set set vdom root");
+                    stream.WriteLine("set type tunnel");
+                    stream.WriteLine("set alias SSL VPN interface");
+                    stream.WriteLine("set role lan");
+                    stream.WriteLine("set snmp-index 5");
+                    stream.WriteLine("next");
+                    stream.WriteLine("end");
+                }
+                if (_vpnSettings != null)
+                {
+                    foreach (var item in _vpnSettings)
+                    {
+                        VpnSetting vpnSetting = await _context.VpnSettings.Include(x => x.VpnPortal)
+                            .SingleOrDefaultAsync(y => y.VpnSettingID == item.VpnSettingID);
+                        stream.WriteLine("config vpn ssl web portal");
+                        stream.WriteLine("edit " + vpnSetting.VpnPortal.PortalName);
+                        if (vpnSetting.VpnPortal.TunnelMode == true)
+                        {
+                            stream.WriteLine("set tunnel-mode enable");
+                        }
+                        if (vpnSetting.VpnPortal.SplitTunneling == true)
+                        {
+                            stream.WriteLine("set split-tunneling enable");
+                            stream.WriteLine("set split-tunneling-routing-address" + vpnSetting.VpnPortal.SplitTunnelingRoute);
+                        }
+                        if (vpnSetting.VpnPortal.WebMode == true)
+                        {
+                            stream.WriteLine("set web-mode enable");
+                        }
+                        if (vpnSetting.VpnPortal.AutoConnect == true)
+                        {
+                            stream.WriteLine("set auto-connect enable");
+                        }
+                        if (vpnSetting.VpnPortal.KeepAlive == true)
+                        {
+                            stream.WriteLine("set keep-alive enable");
+                        }
+                        if (vpnSetting.VpnPortal.SavePassword == true)
+                        {
+                            stream.WriteLine("set save-password enable");
+                        }
+                        stream.WriteLine("set ip-pools " + vpnSetting.VpnPortal.IpPool);
+                        stream.WriteLine("next");
+                        stream.WriteLine("end");
+
+                        stream.WriteLine("config vpn ssl settings");
+                        stream.WriteLine("set servercert " + vpnSetting.ServerCert);
+                        stream.WriteLine("set tunnel-ip-pools " + vpnSetting.TunnelIpPool);
+                        stream.WriteLine("set tunnel-ipv6-pools " + vpnSetting.TunnelIpv6Pool);
+                        stream.WriteLine("set source-interface " + vpnSetting.SourceInterface);
+                        stream.WriteLine("set source-address " + vpnSetting.SourceAddress);
+                        stream.WriteLine("set source-address6 " + vpnSetting.SourceAddressV6);
+                        stream.WriteLine("set default-portal " + vpnSetting.DefaultPort);
+                        stream.WriteLine("config authentication-rule");
+                        stream.WriteLine("edit 1");
+                        stream.WriteLine("set groups " + vpnSetting.Group.Name);
+                        stream.WriteLine("set portal " + vpnSetting.VpnPortal.PortalName);
+                        stream.WriteLine("next");
+                        stream.WriteLine("next");
+                        stream.WriteLine("end");
+                    }
+                }
                 return "ok";
             }
 

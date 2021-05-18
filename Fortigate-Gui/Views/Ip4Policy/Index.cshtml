@@ -15,33 +15,7 @@
     </div>
 </div>
 
-
-<div class="row">
-    <input class="col-6 form-control d-inline float-right" type="search" id="searchpolicy" placeholder="Search Ip4Policy..." />
-</div>
 <div id="view-all">
     @await Html.PartialAsync("_ViewAll", Model)
 </div>
 
-
-
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        function Contains(text_one, text_two) {
-            if (text_one.indexOf(text_two) != -1)
-                return true;
-        }
-        $("#searchpolicy").keyup(function () {
-            var searchText = $("#searchpolicy").val().toLowerCase();
-            $(".Search").each(function () {
-                if (!Contains($(this).text().toLowerCase(), searchText)) {
-                    $(this).hide();
-                } else {
-                    $(this).show();
-                }
-            });
-        });
-    });
-</script>

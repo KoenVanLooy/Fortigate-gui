@@ -507,61 +507,9 @@ config firewall profile-protocol-options
     next
 end
 config system interface
-edit internal1
-set alias LAN
-set vdom root
-set mode static
-set ip 192.168.10.254 255.255.255.0
-set allowaccess http https ssh 
-next
-edit wan1
-set alias TELENET
-set vdom root
-set mode static
-set ip 192.168.0.129 255.255.255.0
-set allowaccess http https ssh 
-next
 end
 config system zone
-edit ZONE_INTERNET
-set interface wan1 
-next
-edit ZONE_LAN
-set interface internal1 
-next
 end
-config firewall address
-edit LAN_192.168.10.0/24
-set associated-interface ZONE_LAN
-set subnet 192.168.10.0/24
-next
 end
-config firewall policy
-edit 2
-set srcintf ZONE_LAN
-set dstintf ZONE_INTERNET
-set srcaddr LAN_192.168.10.0/24
-set dstaddr all
-set schedule always
-set fsso disable
-set action accept
-set service ALL
-set logtraffic all
-set nat enable
-set utm-status enable
-set av-profile AV_FILTER
-set webfilter-profile WEB_FILTER
-set dnsfilter-profile DNS_FILTER
-set ips-sensor IPS_FILTER
-set application-list APP_FILTER
-set profile-protocol-options PROXY_FILTER
-set ssl-ssh-profile certificate-inspection
-next
 end
-config router static
-edit 1
-set dst 0.0.0.0/0
-set gateway 192.168.0.1
-set device wan1
-next
 end

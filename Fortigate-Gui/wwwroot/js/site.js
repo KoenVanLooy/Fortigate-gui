@@ -54,36 +54,37 @@ jQueryAjaxPost = form => {
         console.log(ex)
     }
 }
-    jQueryAjaxPostTestStream = form => {
-        try {
-            $.ajax({
-                type: 'POST',
-                url: form.action,
-                data: new FormData(form),
-                contentType: false,
-                processData: false,
-                success: function (res) {
-                    if (res.isValid) {
-                        $('#view-all').html(res.html)
-                        $('#form-modal .modal-body').html('Test Connection');
-                        $('#form-modal .modal-title').html('Succesfully connected');
-                        $('#form-modal').modal('show');
-                        $.notify('connected succesfully', { globalPosition: 'top center', className: 'success' });
-                    }
-                    else
-                        $('#form-modal .modal-body').html(res.html);
-                },
-                error: function (err) {
-                    console.log(err)
+jQueryAjaxPostTestStream = form => {
+    try {
+        $.ajax({
+            type: 'POST',
+            url: form.action,
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (res) {
+                if (res.isValid) {
+                    $('#view-all').html(res.html)
+                    $('#form-modal .modal-body').html('You can now stream to fortigate!');
+                    $('#form-modal .modal-title').html('Succesfully connected');
+                    $('#form-modal').modal('show');
+                    $.notify('connected succesfully', { globalPosition: 'top center', className: 'success' });
                 }
-            })
-            //to prevent default form submit event
-            return false;
-        } catch (ex) {
-            console.log(ex)
-        }
+                else {
+                    $('#form-modal .modal-title').html('Connection Failed.');
+                    $('#form-modal .modal-body').html('Oops something went wrong connecting to fortigate.');
+                }
+            },
+            error: function (err) {
+                console.log(err)
+            }
+        })
+        //to prevent default form submit event
+        return false;
+    } catch (ex) {
+        console.log(ex)
     }
-
+}
     jQueryAjaxDelete = form => {
         if (confirm('are you sure to delete this record?')) {
             try {

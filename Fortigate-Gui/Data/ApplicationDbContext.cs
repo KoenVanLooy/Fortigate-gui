@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fortigate_Gui.Data
 {
+    //Dbcontext
     public class ApplicationDbContext : IdentityDbContext<CustomUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

@@ -45,8 +45,6 @@ namespace Fortigate_Gui.Controllers
                     SelectedFortiUsers = new List<int>()
                 };
                 return View(viewModel);
-                //ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID");
-                //return View(new Group());
             }
             else
             {
@@ -59,12 +57,11 @@ namespace Fortigate_Gui.Controllers
                 AddOrEditGroupViewModel viewModel = new AddOrEditGroupViewModel()
                 {
                     Group = group,
+                    //Many to Many selectlist
                     FortiUserList = new SelectList(_context.FortiUsers, "FortiUserID", "Name"),
                     SelectedFortiUsers = group.UserGroups.Select(x => x.FortiUserID)
                 };
                 return View(viewModel);
-                //ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID", group.ConfigFileID);
-                //return View(group);
             }
         }
 
@@ -78,8 +75,9 @@ namespace Fortigate_Gui.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (id == 0 || id == -1)
+                if (id == 0)
                 {
+                    //Add newUser selected in view
                     List<UserGroup> newUsers = new List<UserGroup>();
                     foreach (int FortiUserID in viewModel.SelectedFortiUsers)
                     {
@@ -93,15 +91,12 @@ namespace Fortigate_Gui.Controllers
                     _context.Add(viewModel.Group);
                     await _context.SaveChangesAsync();
 
+                    //AddRange selects all users to group
                     Group group = await _context.Groups.Include(x => x.UserGroups)
                         .SingleOrDefaultAsync(x => x.GroupID == viewModel.Group.GroupID);
                     group.UserGroups.AddRange(newUsers);
                     _context.Update(group);
                     await _context.SaveChangesAsync();
-
-                    //_context.Add(group);
-                    //await _context.SaveChangesAsync();
-                    
                 }
                 else
                 {
@@ -127,13 +122,9 @@ namespace Fortigate_Gui.Controllers
                     _context.Update(group);
                     await _context.SaveChangesAsync();
 
-                    //_context.Update(group);
-                    //await _context.SaveChangesAsync();
                 }
                 return Json(new { isValid = true, html = RenderRazorHelper.RenderRazorViewToString(this, "_ViewAll", _context.Groups.ToList()) });
             }
-                
-            //ViewData["ConfigFileID"] = new SelectList(_context.ConfigFiles, "ConfigfileID", "ConfigfileID", group.ConfigFileID);
             return Json(new { isValid = false, html = RenderRazorHelper.RenderRazorViewToString(this, "AddOrEdit", viewModel) });
         }
 

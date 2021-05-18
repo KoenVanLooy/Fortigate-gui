@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Fortigate_Gui.Helper
 {
+    //Helper For SessionAttributes
     public static class SessionHelper
     {
         public static void SetObjectAsJson(this ISession session, string key, object value)

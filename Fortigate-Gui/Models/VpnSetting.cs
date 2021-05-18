@@ -52,7 +52,7 @@ namespace Fortigate_Gui.Models
         public Group Group { get; set; }
 
         //één portal
-        public int? VpnPortalID { get; set; }
+        public int VpnPortalID { get; set; }
         public VpnPortal VpnPortal { get; set; }
     }
 }
